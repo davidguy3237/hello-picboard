@@ -358,11 +358,11 @@ template {
 @tailwind utilities;
 
 /* This makes all pages at full height, not sure if want to do that at this point */
-/* html,
+html,
 body,
 :root {
   height: 100%;
-} */
+}
 
 @layer base {
   :root {
