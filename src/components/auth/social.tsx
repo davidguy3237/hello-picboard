@@ -16,3 +16,5 @@ export function Social() {
     </div>
   );
 }
+
+// TODO: Maybe change the icons that are being used.
