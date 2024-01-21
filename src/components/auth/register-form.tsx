@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Loader2 } from "lucide-react";
+import { register } from "@/actions/register";
 
 export function RegisterForm() {
   const [isPending, startTransition] = useTransition();
@@ -35,22 +36,32 @@ export function RegisterForm() {
   });
 
   const onSubmit = async (registerData: z.infer<typeof RegisterSchema>) => {
+    // setError("");
+    // setSuccess("");
+
+    // startTransition(async () => {
+    //   const res = await fetch("/api/auth/register", {
+    //     method: "POST",
+    //     body: JSON.stringify(registerData),
+    //   });
+
+    //   if (!res.ok) {
+    //     console.error("SOMETHING WRONG HAPPENED");
+    //   }
+
+    //   const body = await res.json();
+    //   setError(body.error);
+    //   setSuccess(body.success);
+    // });
+
     setError("");
     setSuccess("");
 
-    startTransition(async () => {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify(registerData),
+    startTransition(() => {
+      register(registerData).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
       });
-
-      if (!res.ok) {
-        console.error("SOMETHING WRONG HAPPENED");
-      }
-
-      const body = await res.json();
-      setError(body.error);
-      setSuccess(body.success);
     });
   };
 

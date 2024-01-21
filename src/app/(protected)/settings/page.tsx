@@ -5,7 +5,7 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      {/* {JSON.stringify(session)} */}
+      {JSON.stringify(session)}
       <p>This is the settings page</p>
       <form
         action={async () => {

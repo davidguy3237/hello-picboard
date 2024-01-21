@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Loader2 } from "lucide-react";
+import { login } from "@/actions/login";
 
 export function LoginForm() {
   const [isPending, startTransition] = useTransition();
@@ -34,24 +35,30 @@ export function LoginForm() {
   });
 
   const onSubmit = async (loginData: z.infer<typeof LoginSchema>) => {
+    // setError("");
+    // setSuccess("");
+    // startTransition(async () => {
+    //   const res = await fetch("/api/auth/login", {
+    //     method: "POST",
+    //     body: JSON.stringify(loginData),
+    //   });
+    //   if (!res.ok) {
+    //     console.error("SOMETHING WRONG HAPPENED");
+    //   }
+    //   console.log("BLAH BLAH");
+    //   console.log(res);
+    //   const body = await res.json();
+    //   setError(body.error);
+    //   setSuccess(body.success);
+    // });
     setError("");
     setSuccess("");
 
-    startTransition(async () => {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify(loginData),
+    startTransition(() => {
+      login(loginData).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
       });
-
-      if (!res.ok) {
-        console.error("SOMETHING WRONG HAPPENED");
-      }
-      console.log("BLAH BLAH");
-      console.log(res);
-
-      const body = await res.json();
-      setError(body.error);
-      setSuccess(body.success);
     });
   };
 

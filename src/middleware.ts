@@ -7,7 +7,7 @@ import {
   publicRoutes,
 } from "@/routes";
 
-export const { auth } = NextAuth(authConfig);
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
