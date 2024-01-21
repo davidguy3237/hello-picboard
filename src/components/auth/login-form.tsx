@@ -49,9 +49,9 @@ export function LoginForm() {
       console.log("BLAH BLAH");
       console.log(res);
 
-      // const body = await res.json();
-      // setError(body.error);
-      // setSuccess(body.success);
+      const body = await res.json();
+      setError(body.error);
+      setSuccess(body.success);
     });
   };
 
