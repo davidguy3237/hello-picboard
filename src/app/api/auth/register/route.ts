@@ -1,5 +1,8 @@
 import { RegisterSchema } from "@/schemas";
 import { NextRequest } from "next/server";
+import bcrypt from "bcrypt";
+import db from "@/lib/db";
+import { getUserByEmail } from "@/data/user";
 
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
@@ -8,7 +11,27 @@ export async function POST(request: NextRequest) {
 
   if (!validatedFields.success) {
     return new Response(JSON.stringify({ error: "Invalid fields!" }));
-  } else {
-    return new Response(JSON.stringify({ success: "Valid credentials!" }));
   }
+
+  const { email, username, password } = validatedFields.data;
+
+  const existingUser = await getUserByEmail(email);
+
+  if (existingUser) {
+    return new Response(JSON.stringify({ error: "Email already in use!" }));
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await db.user.create({
+    data: {
+      email,
+      username,
+      password: hashedPassword,
+    },
+  });
+
+  // TODO: Send verification token email
+
+  return new Response(JSON.stringify({ success: "Account created!" }));
 }
