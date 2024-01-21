@@ -26,7 +26,7 @@ export const register = async (
 
   await db.user.create({
     data: {
-      username,
+      name: username,
       email,
       password: hashedPassword,
     },

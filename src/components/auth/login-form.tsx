@@ -58,6 +58,7 @@ export function LoginForm() {
       login(loginData).then((data) => {
         setError(data.error);
         setSuccess(data.success);
+        // TODO: probably don't need these once you get redirected at login
       });
     });
   };

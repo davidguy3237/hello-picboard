@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
@@ -21,6 +22,7 @@ export async function POST(request: NextRequest) {
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
+    return new Response(JSON.stringify({ success: "Login success!" }));
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -33,6 +35,10 @@ export async function POST(request: NextRequest) {
             JSON.stringify({ error: "Something went wrong!" }),
           );
       }
+    }
+    if (isRedirectError(error)) {
+      console.log("INSIDE REDIRECT ERROR");
+      throw error;
     }
     console.log("WHAT IS HAPPENING");
     console.log(error);
