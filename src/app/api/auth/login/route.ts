@@ -36,6 +36,9 @@ export async function POST(request: NextRequest) {
     }
     console.log("WHAT IS HAPPENING");
     console.log(error);
-    throw error;
+    return new Response(
+      JSON.stringify({ error: "This is not working correctly" }),
+    );
+    // throw error;
   }
 }
