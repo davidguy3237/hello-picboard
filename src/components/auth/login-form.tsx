@@ -70,6 +70,7 @@ export function LoginForm() {
   };
 
   return (
+    // TODO: check if password is correct for unverified emails before resending confirmation email
     <CardWrapper
       headerLabel="Welcome back"
       backButtonLabel="Don't have an account?"
@@ -109,11 +110,7 @@ export function LoginForm() {
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
-            {isPending ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              "Login"
-            )}
+            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Login"}
           </Button>
         </form>
       </Form>
