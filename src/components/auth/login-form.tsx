@@ -21,6 +21,7 @@ import { FormSuccess } from "@/components/form-success";
 import { Loader2 } from "lucide-react";
 import { login } from "@/actions/login";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export function LoginForm() {
   const [isPending, startTransition] = useTransition();
@@ -102,6 +103,14 @@ export function LoginForm() {
                   <FormControl>
                     <Input {...field} disabled={isPending} type="password" />
                   </FormControl>
+                  <Button
+                    size="sm"
+                    variant="link"
+                    asChild
+                    className="px-0 font-normal"
+                  >
+                    <Link href="/auth/reset-password">Forgot password?</Link>
+                  </Button>
                   <FormMessage />
                 </FormItem>
               )}

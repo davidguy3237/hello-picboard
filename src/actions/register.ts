@@ -8,9 +8,7 @@ import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/email";
 
-export const register = async (
-  registerData: z.infer<typeof RegisterSchema>,
-) => {
+export async function register(registerData: z.infer<typeof RegisterSchema>) {
   const validatedFields = RegisterSchema.safeParse(registerData);
 
   if (!validatedFields.success) {
@@ -39,4 +37,4 @@ export const register = async (
   await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
   return { success: "Confirmation email sent" };
-};
+}

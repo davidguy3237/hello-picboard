@@ -9,7 +9,7 @@ import { generateVerificationToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
 import { sendVerificationEmail } from "@/lib/email";
 
-export const login = async (loginData: z.infer<typeof LoginSchema>) => {
+export async function login(loginData: z.infer<typeof LoginSchema>) {
   const validatedFields = LoginSchema.safeParse(loginData);
 
   if (!validatedFields.success) {
@@ -55,4 +55,4 @@ export const login = async (loginData: z.infer<typeof LoginSchema>) => {
 
     throw error;
   }
-};
+}
