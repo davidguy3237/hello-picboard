@@ -20,11 +20,18 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Loader2 } from "lucide-react";
 import { login } from "@/actions/login";
+import { useSearchParams } from "next/navigation";
 
 export function LoginForm() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use!"
+      : "";
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -56,9 +63,9 @@ export function LoginForm() {
 
     startTransition(() => {
       login(loginData).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
-        // TODO: probably don't need these once you get redirected at login
+        setError(data?.error);
+        // TODO: Add when we add 2 factor authentication
+        // setSuccess(data?.success);
       });
     });
   };
@@ -100,7 +107,7 @@ export function LoginForm() {
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             {isPending ? (

@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
-    return new Response(JSON.stringify({ success: "Login success!" }));
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -36,12 +35,7 @@ export async function POST(request: NextRequest) {
           );
       }
     }
-    if (isRedirectError(error)) {
-      console.log("INSIDE REDIRECT ERROR");
-      throw error;
-    }
-    console.log("WHAT IS HAPPENING");
-    console.log(error);
+
     throw error;
   }
 }
