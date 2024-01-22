@@ -48,3 +48,12 @@ model Account {
 
 // Regarding indexes:
 // https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/relation-mode#indexes
+
+model VerificationToken {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+}

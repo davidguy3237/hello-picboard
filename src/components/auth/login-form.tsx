@@ -64,8 +64,7 @@ export function LoginForm() {
     startTransition(() => {
       login(loginData).then((data) => {
         setError(data?.error);
-        // TODO: Add when we add 2 factor authentication
-        // setSuccess(data?.success);
+        setSuccess(data?.success);
       });
     });
   };

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   await db.user.create({
     data: {
       email,
-      username,
+      name: username,
       password: hashedPassword,
     },
   });

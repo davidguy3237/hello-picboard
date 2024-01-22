@@ -18,7 +18,10 @@ export default {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
-    Twitter, // TODO: Add Twitter button
+    // Twitter({ // TODO: Setup twitter oauth after deploying because they won't accept localhost
+    //   clientId: process.env.TWITTER_CLIENT_ID,
+    //   clientSecret: process.env.TWITTER_CLIENT_SECRET,
+    // }),
     Credentials({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);
