@@ -39,7 +39,6 @@ export function ResetPasswordForm() {
     setError("");
     setSuccess("");
 
-    console.log(resetEmailObj);
     startTransition(() => {
       resetPassword(resetEmailObj).then((data) => {
         setError(data?.error);
