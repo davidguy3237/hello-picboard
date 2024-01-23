@@ -8,24 +8,25 @@ import { FormSuccess } from "@/components/form-success";
 import { UserRole } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { admin } from "@/actions/admin";
+import { toast } from "sonner";
 
 export default function AdminPage() {
   const onServerActionClick = () => {
     admin().then((data) => {
       if (data.error) {
-        console.log(data.error);
+        toast.error("FORBIDDEN SERVER ACTIONS");
       }
       if (data.success) {
-        console.log(data.success);
+        toast.success("ALLOWED SERVER ACTIONS");
       }
     });
   };
   const onApiRouteClick = () => {
     fetch("/api/admin").then((response) => {
       if (response.ok) {
-        console.log("OKAY");
+        toast.success("ALLOWED API ROUTE");
       } else {
-        console.error("FORBIDDEN");
+        toast.error("FORBIDDEN API ROUTE");
       }
     });
   };
