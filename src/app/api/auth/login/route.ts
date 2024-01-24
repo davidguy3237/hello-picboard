@@ -35,7 +35,16 @@ export async function POST(request: NextRequest) {
           );
       }
     }
+<<<<<<< HEAD
 
     throw error;
+=======
+    console.log("WHAT IS HAPPENING");
+    console.log(error);
+    return new Response(
+      JSON.stringify({ error: "This is not working correctly" }),
+    );
+    // throw error;
+>>>>>>> d744e6c33e5b3d9586a576bdd2f7cc61d14b048a
   }
 }
