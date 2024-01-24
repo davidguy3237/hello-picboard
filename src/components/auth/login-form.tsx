@@ -30,6 +30,7 @@ export function LoginForm() {
   const [showTwoFactor, setShowTwoFactor] = useState(false);
 
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Another account already exists with the same e-mail address."
@@ -64,7 +65,7 @@ export function LoginForm() {
     setSuccess("");
 
     startTransition(() => {
-      login(loginData)
+      login(loginData, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset();
