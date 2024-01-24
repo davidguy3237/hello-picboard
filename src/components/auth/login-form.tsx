@@ -32,7 +32,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use!"
+      ? "Another account already exists with the same e-mail address."
       : "";
 
   const form = useForm<z.infer<typeof LoginSchema>>({

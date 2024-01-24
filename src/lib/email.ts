@@ -38,6 +38,6 @@ export async function sendTwoFactorTokenEmail(email: string, token: string) {
     from: "onboarding@resend.dev",
     to: email,
     subject: "2FA Code",
-    html: `<p>Your 2FA code: ${token}. This code expires in 1 hour.</p>`,
+    html: `<p>Your 2FA code: ${token}. This code expires in 5 minutes.</p>`,
   });
 }
