@@ -8,6 +8,7 @@
 // https://medium.com/nerd-for-tech/sending-emails-with-nextjs-and-amazon-simple-email-services-ses-8e4e10d1d397
 
 import { Resend } from "resend";
+import { generateTwoFactorToken } from "./tokens";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const domain = process.env.NEXT_PUBLIC_APP_URL;
@@ -44,12 +45,13 @@ export async function sendPasswordChangedEmail(email: string, token: string) {
     html: `<p>Your password has been changed. If you didn't make this change, please <a href="${resetLink}">reset your password</a> immediately. </p>`,
   });
 }
-// TODO: See if this can be made nonblocking
-export async function sendTwoFactorTokenEmail(email: string, token: string) {
+
+export async function sendTwoFactorTokenEmail(email: string) {
+  const twoFactorToken = await generateTwoFactorToken(email);
   await resend.emails.send({
     from: "onboarding@resend.dev",
-    to: email,
+    to: twoFactorToken.email,
     subject: "2FA Code",
-    html: `<p>Your 2FA code: ${token}. This code expires in 5 minutes.</p>`,
+    html: `<p>Your 2FA code: ${twoFactorToken.token}. This code expires in 5 minutes.</p>`,
   });
 }

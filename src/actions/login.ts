@@ -89,9 +89,7 @@ export async function login(
         },
       });
     } else {
-      const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-      await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
-
+      sendTwoFactorTokenEmail(existingUser.email);
       return { twoFactor: true };
     }
   }
