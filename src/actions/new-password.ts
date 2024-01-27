@@ -1,11 +1,11 @@
 "use server";
 
 import * as z from "zod";
-import bcrypt from "bcryptjs";
 import { NewPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
 import db from "@/lib/db";
+import { hashPassword } from "@/lib/passwords";
 
 export async function newPassword(
   newPasswordObj: z.infer<typeof NewPasswordSchema>,
@@ -39,7 +39,7 @@ export async function newPassword(
     return { error: "Email does not exist!" };
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = hashPassword(password);
 
   await db.user.update({
     where: { id: existingUser.id },

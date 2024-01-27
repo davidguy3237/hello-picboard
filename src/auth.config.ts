@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
@@ -6,6 +5,7 @@ import { getUserByEmail } from "@/data/user";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Twitter from "next-auth/providers/twitter";
+import { comparePasswords } from "./lib/passwords";
 
 export default {
   providers: [
@@ -24,6 +24,8 @@ export default {
     // }),
     Credentials({
       async authorize(credentials) {
+        console.log("I AM INSIDE AUTHORIZE");
+        console.log(credentials);
         const validatedFields = LoginSchema.safeParse(credentials);
 
         if (validatedFields.success) {
@@ -34,7 +36,7 @@ export default {
             return null;
           }
 
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+          const passwordsMatch = comparePasswords(password, user.password);
 
           if (passwordsMatch) {
             return user;

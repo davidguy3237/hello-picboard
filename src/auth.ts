@@ -27,6 +27,7 @@ export const {
   },
   callbacks: {
     async signIn({ user, account }) {
+      console.log("I AM INSIDE THE SIGNIN CALLBACK");
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") {
         return true;
@@ -57,6 +58,7 @@ export const {
       return true;
     },
     async session({ session, token }: { session: Session; token?: any }) {
+      console.log("I AM INSIDE SESSION CALLBACK");
       if (session.user) {
         if (token.sub) {
           session.user.id = token.sub;
@@ -75,6 +77,7 @@ export const {
       return session;
     },
     async jwt({ token }) {
+      console.log("I AM INSIDE JWT CALLBACK");
       if (!token.sub) {
         return token;
       }

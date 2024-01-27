@@ -17,8 +17,8 @@ enum UserRole {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
+  name          String   @unique
+  email         String   @unique
   emailVerified DateTime?
   image         String?
   password      String?
@@ -26,6 +26,8 @@ model User {
   accounts      Account[]
   isTwoFactorEnabled Boolean @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+
+  @@index([name, email])
 }
 
 model Account {

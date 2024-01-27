@@ -17,3 +17,16 @@ export async function getUserById(id: string | undefined) {
     return null;
   }
 }
+
+export async function getUserByUsername(username: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: {
+        name: username,
+      },
+    });
+    return user;
+  } catch {
+    return null;
+  }
+}
