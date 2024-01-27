@@ -25,11 +25,20 @@ export default auth((req) => {
     if (isLoggedIn) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
+
+    if (
+      nextUrl.pathname === "/auth/new-password" &&
+      !nextUrl.searchParams.get("token")
+    ) {
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+
     return null;
   }
 
   if (!isLoggedIn && !isPublicRoute) {
     let callbackUrl = nextUrl.pathname;
+
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;
     }

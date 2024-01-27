@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { RegisterSchema } from "@/schemas";
 import db from "@/lib/db";
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail, getUserByUsername } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/email";
 import { hashPassword } from "@/lib/passwords";
@@ -18,10 +18,16 @@ export async function register(registerData: z.infer<typeof RegisterSchema>) {
   const { email, username, password } = validatedFields.data;
   const hashedPassword = hashPassword(password);
 
-  const existingUser = await getUserByEmail(email);
+  const existingUserEmail = await getUserByEmail(email);
 
-  if (existingUser) {
-    return { error: "Email already in use!" };
+  if (existingUserEmail) {
+    return { error: "This email is already taken!" };
+  }
+
+  const existingUsername = await getUserByUsername(username);
+
+  if (existingUsername) {
+    return { error: "This username is already taken!" };
   }
 
   await db.user.create({
@@ -36,5 +42,5 @@ export async function register(registerData: z.infer<typeof RegisterSchema>) {
 
   await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
-  return { success: "Confirmation email sent" };
+  return { success: "Please check your email for a confirmation link!" };
 }

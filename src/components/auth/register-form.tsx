@@ -32,28 +32,11 @@ export function RegisterForm() {
       email: "",
       username: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
   const onSubmit = async (registerData: z.infer<typeof RegisterSchema>) => {
-    // setError("");
-    // setSuccess("");
-
-    // startTransition(async () => {
-    //   const res = await fetch("/api/auth/register", {
-    //     method: "POST",
-    //     body: JSON.stringify(registerData),
-    //   });
-
-    //   if (!res.ok) {
-    //     console.error("SOMETHING WRONG HAPPENED");
-    //   }
-
-    //   const body = await res.json();
-    //   setError(body.error);
-    //   setSuccess(body.success);
-    // });
-
     setError("");
     setSuccess("");
 
@@ -70,7 +53,7 @@ export function RegisterForm() {
       headerLabel="Create an account"
       backButtonLabel="Already have an account?"
       backButtonHref="/login"
-      showSocial
+      showSocial={!isPending}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -95,7 +78,7 @@ export function RegisterForm() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input {...field} disabled={isPending} />
+                    <Input {...field} disabled={isPending} maxLength={30} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,6 +90,19 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled={isPending} type="password" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <Input {...field} disabled={isPending} type="password" />
                   </FormControl>

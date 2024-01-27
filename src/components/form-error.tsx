@@ -9,7 +9,7 @@ export function FormError({ message }: FormErrorProps) {
 
   return (
     <div className="flex items-center gap-x-2 rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-      <AlertTriangleIcon className="h-4 w-4" />
+      <AlertTriangleIcon className="h-6 w-6" />
       <p>{message}</p>
     </div>
   );

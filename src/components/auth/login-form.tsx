@@ -25,8 +25,8 @@ import Link from "next/link";
 
 export function LoginForm() {
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
   const [showTwoFactor, setShowTwoFactor] = useState(false);
 
   const searchParams = useSearchParams();
@@ -45,22 +45,6 @@ export function LoginForm() {
   });
 
   const onSubmit = async (loginData: z.infer<typeof LoginSchema>) => {
-    // setError("");
-    // setSuccess("");
-    // startTransition(async () => {
-    //   const res = await fetch("/api/auth/login", {
-    //     method: "POST",
-    //     body: JSON.stringify(loginData),
-    //   });
-    //   if (!res.ok) {
-    //     console.error("SOMETHING WRONG HAPPENED");
-    //   }
-    //   console.log("BLAH BLAH");
-    //   console.log(res);
-    //   const body = await res.json();
-    //   setError(body.error);
-    //   setSuccess(body.success);
-    // });
     setError("");
     setSuccess("");
 
@@ -93,7 +77,7 @@ export function LoginForm() {
       headerLabel="Welcome back"
       backButtonLabel="Don't have an account?"
       backButtonHref="/register"
-      showSocial
+      showSocial={!isPending}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -139,8 +123,10 @@ export function LoginForm() {
                           {...field}
                           disabled={isPending}
                           type="password"
+                          maxLength={255}
                         />
                       </FormControl>
+                      <FormMessage />
                       <Button
                         size="sm"
                         variant="link"
@@ -151,7 +137,6 @@ export function LoginForm() {
                           Forgot password?
                         </Link>
                       </Button>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />

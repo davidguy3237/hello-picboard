@@ -28,32 +28,9 @@ export function NewVerificationForm() {
       .catch(() => {
         setError("Something went wrong!");
       });
-
-    // TODO: Do not understand why it is being run multiple times, investigate later
-    // console.log("INSIDE USECALLBACK");
-    // if (success || error) {
-    //   console.log("THERE IS ALREADY A SUCCESS OR ERROR");
-    // } else if (!token) {
-    //   console.log("THERE IS NO TOKEN");
-    //   setError("Missing token!");
-    // } else {
-    //   console.log("THERE IS NO SUCCESS/ERROR AND THERE IS A TOKEN");
-    //   newVerification(token)
-    //     .then((data) => {
-    //       console.log("UPDATING STATUS");
-    //       setSuccess(data.success);
-    //       setError(data.error);
-    //     })
-    //     .catch(() => {
-    //       console.log("DID SOMETHING GO WRONG VERIFYING TOKEN?");
-    //       setError("Something went wrong!");
-    //     });
-    // }
   }, [token]);
 
   useEffect(() => {
-    // TODO: check if useEffect still multiple times during production
-    // console.log("INSIDE USE EFFECT");
     onSubmit();
   }, [onSubmit]);
 

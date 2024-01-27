@@ -9,7 +9,7 @@ export function ErrorCard() {
       backButtonLabel="Back to login"
     >
       <div className="flex w-full justify-center">
-        <BsExclamationTriangle className="text-destructive" />
+        <BsExclamationTriangle className="h-8 w-8 text-destructive" />
       </div>
     </CardWrapper>
   );

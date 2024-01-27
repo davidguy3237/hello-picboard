@@ -6,6 +6,8 @@ import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
 import db from "@/lib/db";
 import { hashPassword } from "@/lib/passwords";
+import { generatePasswordResetToken } from "@/lib/tokens";
+import { sendPasswordChangedEmail } from "@/lib/email";
 
 export async function newPassword(
   newPasswordObj: z.infer<typeof NewPasswordSchema>,
@@ -49,6 +51,14 @@ export async function newPassword(
   await db.passwordResetToken.delete({
     where: { id: existingToken.id },
   });
+
+  const passwordResetToken = await generatePasswordResetToken(
+    existingUser.email,
+  );
+  await sendPasswordChangedEmail(
+    passwordResetToken.email,
+    passwordResetToken.token,
+  );
 
   return { success: "Password updated!" };
 }

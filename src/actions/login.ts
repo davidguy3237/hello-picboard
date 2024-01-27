@@ -14,6 +14,7 @@ import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/email";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import db from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import { comparePasswords } from "@/lib/passwords";
 
 export async function login(
   loginData: z.infer<typeof LoginSchema>,
@@ -30,20 +31,27 @@ export async function login(
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
-    return { error: "Invalid credentials!" };
+    return { error: "Incorrect Email or Password!" };
+  }
+
+  const passwordsMatch = comparePasswords(password, existingUser.password);
+
+  if (!passwordsMatch) {
+    return { error: "Incorrect Email or Password!" };
   }
 
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(
       existingUser.email,
     );
-
     await sendVerificationEmail(
       verificationToken.email,
       verificationToken.token,
     );
 
-    return { success: "Confirmation email sent!" };
+    return {
+      success: "Please check your email to continue signing in.",
+    };
   }
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
@@ -98,7 +106,7 @@ export async function login(
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { error: "Invalid credentials!" };
+          return { error: "Incorrect Email or Password!" };
         default:
           return { error: "Something went wrong!" };
       }

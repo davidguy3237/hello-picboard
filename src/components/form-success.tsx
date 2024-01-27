@@ -9,7 +9,7 @@ export function FormSuccess({ message }: FormSuccessProps) {
 
   return (
     <div className="flex items-center gap-x-2 rounded-md bg-emerald-500/15 p-3 text-sm text-emerald-500">
-      <CheckCircle2 className="h-4 w-4" />
+      <CheckCircle2 className=" h-6 w-6" />
       <p>{message}</p>
     </div>
   );

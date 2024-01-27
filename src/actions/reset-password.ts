@@ -3,7 +3,7 @@ import * as z from "zod";
 import { ResetPasswordSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { generatePasswordResetToken } from "@/lib/tokens";
-import { sendPasswordResetEmail } from "@/lib/email";
+import { sendResetPasswordEmail } from "@/lib/email";
 
 export async function resetPassword(
   values: z.infer<typeof ResetPasswordSchema>,
@@ -19,14 +19,20 @@ export async function resetPassword(
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser) {
-    return { error: "Email not found!" };
+    return {
+      success:
+        "If this account exists, we will send you an email to reset your password.",
+    };
   }
 
   const passwordResetToken = await generatePasswordResetToken(email);
-  await sendPasswordResetEmail(
+  await sendResetPasswordEmail(
     passwordResetToken.email,
     passwordResetToken.token,
   );
 
-  return { success: "Reset email sent!" };
+  return {
+    success:
+      "If this account exists, we will send you an email to reset your password.",
+  };
 }
