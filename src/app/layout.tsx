@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -26,8 +27,15 @@ export default async function RootLayout({
     <SessionProvider session={session}>
       <html lang="en">
         <body className={cn(lato.className, "bg-background")}>
-          <Toaster closeButton position="top-center" />
-          {children}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Toaster closeButton richColors position="top-center" />
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </SessionProvider>
