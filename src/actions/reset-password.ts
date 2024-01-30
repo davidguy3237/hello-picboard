@@ -26,10 +26,8 @@ export async function resetPassword(
   }
 
   const passwordResetToken = await generatePasswordResetToken(email);
-  await sendResetPasswordEmail(
-    passwordResetToken.email,
-    passwordResetToken.token,
-  );
+
+  sendResetPasswordEmail(passwordResetToken.email, passwordResetToken.token);
 
   return {
     success:

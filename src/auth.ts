@@ -19,6 +19,7 @@ export const {
   },
   events: {
     async linkAccount({ user }) {
+      console.log("I AM INSIDE LINKACCOUNT");
       await db.user.update({
         where: { id: user.id },
         data: { emailVerified: new Date() },
@@ -26,8 +27,10 @@ export const {
     },
   },
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile, email, credentials }) {
       console.log("I AM INSIDE THE SIGNIN CALLBACK");
+      // console.log({user: user, account: account, profile: profile, email: email, credentials: credentials});
+
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") {
         return true;
@@ -57,31 +60,15 @@ export const {
 
       return true;
     },
-    async session({ session, token }: { session: Session; token?: any }) {
-      console.log("I AM INSIDE SESSION CALLBACK");
-      if (session.user) {
-        if (token.sub) {
-          session.user.id = token.sub;
-        }
-
-        if (token.role) {
-          session.user.role = token.role;
-        }
-
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
-        session.user.isOAuth = token.isOAuth;
-      }
-
-      return session;
-    },
-    async jwt({ token }) {
+    async jwt({ token, user, account, profile, trigger, session }) {
       console.log("I AM INSIDE JWT CALLBACK");
+      // if (token) {
+      //   console.log({ token: token, user: user, account: account, profile: profile, trigger: trigger, session: session });
+      // }
       if (!token.sub) {
         return token;
       }
-
+      // If user exists, pass relevant info into the JWT token, which then gets passed into the session to be used
       const existingUser = await getUserById(token.sub);
       if (!existingUser) {
         return token;
@@ -92,10 +79,40 @@ export const {
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+
+      if (trigger === "update" && session) {
+        token = { ...token, ...session };
+      }
       return token;
+    },
+    async session({ session, token }: { session: Session; token?: any }) {
+      console.log("I AM INSIDE SESSION CALLBACK");
+      // console.log({ startingSession: session, token: token });
+
+      if (session.user) {
+        if (token.sub) {
+          session.user.id = token.sub;
+        }
+
+        if (token.role) {
+          session.user.role = token.role;
+        }
+        // pass user info from token into session to be accessed by client
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
+        session.user.isOAuth = token.isOAuth;
+      }
+      // console.log({ updatedSession: session });
+      return session;
     },
   },
   adapter: PrismaAdapter(db),
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 7,
+  },
+  secret: process.env.AUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
   ...authConfig,
 });

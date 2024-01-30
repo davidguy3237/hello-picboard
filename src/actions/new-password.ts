@@ -55,10 +55,7 @@ export async function newPassword(
   const passwordResetToken = await generatePasswordResetToken(
     existingUser.email,
   );
-  await sendPasswordChangedEmail(
-    passwordResetToken.email,
-    passwordResetToken.token,
-  );
+  sendPasswordChangedEmail(passwordResetToken.email, passwordResetToken.token);
 
   return { success: "Password updated!" };
 }

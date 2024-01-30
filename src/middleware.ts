@@ -6,10 +6,13 @@ import {
   authRoutes,
   publicRoutes,
 } from "@/routes";
+import { auth } from "@/auth";
 
-const { auth } = NextAuth(authConfig);
+// Prisma is not compatible with the edge runtime so need to a separate auth function for middleware
+// const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
+  console.log("I AM INSIDE MIDDLEWARE");
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 

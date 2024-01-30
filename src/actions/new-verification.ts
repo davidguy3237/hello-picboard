@@ -30,7 +30,7 @@ export async function newVerification(token: string) {
     },
   });
 
-  await db.verificationToken.delete({
+  db.verificationToken.delete({
     where: { id: existingToken.id },
   });
 

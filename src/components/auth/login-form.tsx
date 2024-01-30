@@ -41,6 +41,7 @@ export function LoginForm() {
     defaultValues: {
       email: "",
       password: "",
+      code: "",
     },
   });
 

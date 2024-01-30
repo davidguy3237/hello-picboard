@@ -8,6 +8,7 @@ import { currentUser } from "@/lib/auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/email";
 import { hashPassword, comparePasswords } from "@/lib/passwords";
+import { revalidatePath } from "next/cache";
 
 export async function settings(values: z.infer<typeof settingsSchema>) {
   const user = await currentUser();
@@ -64,5 +65,8 @@ export async function settings(values: z.infer<typeof settingsSchema>) {
     },
   });
 
-  return { success: "Settings Updated!" };
+  revalidatePath("/");
+  return {
+    success: "Settings Updated!",
+  };
 }
