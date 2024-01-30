@@ -3,13 +3,23 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import UserButton from "@/components/auth/user-button";
+import { UserButton } from "@/components/user-dropdown/user-button";
+import { HomeButton } from "@/components/navbar/home-button";
+import { UploadButton } from "@/components/navbar/upload-button";
+import { SearchBar } from "@/components/navbar/search-bar";
 
-export default function Navbar() {
+export function Navbar() {
   const pathname = usePathname();
   return (
-    <nav className="flex w-[600px] items-center justify-between rounded-xl bg-secondary p-4 shadow-sm">
-      <div className="flex gap-x-2">
+    <nav className="fixed top-0 z-10 flex w-full items-center justify-between bg-secondary p-2">
+      <div className="flex">
+        <HomeButton />
+        <UploadButton />
+      </div>
+      <div>
+        <SearchBar />
+      </div>
+      {/* <div className="flex gap-x-2">
         <Button
           asChild
           variant={pathname === "/server" ? "default" : "outline"}
@@ -31,7 +41,7 @@ export default function Navbar() {
         >
           <Link href="/settings">Settings</Link>
         </Button>
-      </div>
+      </div> */}
       <UserButton />
     </nav>
   );

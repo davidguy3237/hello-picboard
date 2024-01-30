@@ -7,7 +7,7 @@ interface LogoutButtonProps {
   children?: React.ReactNode;
 }
 
-export default function LogoutButton({ children }: LogoutButtonProps) {
+export function LogoutButton({ children }: LogoutButtonProps) {
   const onClick = () => {
     logOut();
     // signOut(); <--- Use one or the other, not both

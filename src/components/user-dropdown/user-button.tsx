@@ -9,9 +9,10 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { User, LogOut } from "lucide-react";
 import useCurrentUser from "@/hooks/use-current-user";
-import LogoutButton from "@/components/auth/logout-button";
+import { LogoutButton } from "@/components/auth/logout-button";
+import { SettingsButton } from "./settings-button";
 
-export default function UserButton() {
+export function UserButton() {
   const user = useCurrentUser();
 
   return (
@@ -25,6 +26,7 @@ export default function UserButton() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="end">
+        <SettingsButton />
         <LogoutButton>
           <DropdownMenuItem>
             <LogOut className="mr-2 h-4 w-4" />

@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
 
 const lato = Lato({
   weight: ["100", "300", "400", "700", "900"],
@@ -24,7 +25,7 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en">
-        <body className={lato.className}>
+        <body className={cn(lato.className, "bg-background")}>
           <Toaster closeButton position="top-center" />
           {children}
         </body>
