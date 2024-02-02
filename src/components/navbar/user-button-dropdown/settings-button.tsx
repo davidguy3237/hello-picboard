@@ -1,7 +1,7 @@
 "use client";
 
 import { Settings } from "lucide-react";
-import { DropdownMenuItem } from "../ui/dropdown-menu";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 export function SettingsButton() {
   return (

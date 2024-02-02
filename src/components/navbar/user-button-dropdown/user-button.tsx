@@ -10,7 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { User, LogOut } from "lucide-react";
 import useCurrentUser from "@/hooks/use-current-user";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { SettingsButton } from "./settings-button";
+import { SettingsButton } from "@/components/navbar/user-button-dropdown/settings-button";
 
 export function UserButton() {
   const user = useCurrentUser();
@@ -18,7 +18,7 @@ export function UserButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar>
+        <Avatar className="mx-2">
           <AvatarImage src={user?.image || ""} />
           <AvatarFallback className="bg-sky-500">
             <User className="text-white" />
