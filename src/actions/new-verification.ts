@@ -22,17 +22,25 @@ export async function newVerification(token: string) {
     return { error: "Email does not exist!" };
   }
 
-  await db.user.update({
-    where: { id: existingUser.id },
-    data: {
-      emailVerified: new Date(),
-      email: existingToken.email,
-    },
-  });
+  try {
+    await db.user.update({
+      where: { id: existingUser.id },
+      data: {
+        emailVerified: new Date(),
+        email: existingToken.email,
+      },
+    });
+  } catch (error) {
+    return { error: "Something went wrong verifying your email." };
+  }
 
-  db.verificationToken.delete({
-    where: { id: existingToken.id },
-  });
+  try {
+    await db.verificationToken.delete({
+      where: { id: existingToken.id },
+    });
+  } catch (error) {
+    return { error: "Something went wrong!" };
+  }
 
   return { success: "Email verified!" };
 }

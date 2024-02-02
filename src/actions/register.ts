@@ -30,13 +30,17 @@ export async function register(registerData: z.infer<typeof RegisterSchema>) {
     return { error: "This username is already taken!" };
   }
 
-  await db.user.create({
-    data: {
-      name: username,
-      email,
-      password: hashedPassword,
-    },
-  });
+  try {
+    await db.user.create({
+      data: {
+        name: username,
+        email,
+        password: hashedPassword,
+      },
+    });
+  } catch (error) {
+    return { error: "Something went wrong registering your account." };
+  }
 
   const verificationToken = await generateVerificationToken(email);
 
