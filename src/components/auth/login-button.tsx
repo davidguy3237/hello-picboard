@@ -21,7 +21,7 @@ export default function LoginButton({
     router.push("/login");
   };
 
-  if (mode === "redirect") {
+  if (mode === "modal") {
     return (
       <Dialog>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>

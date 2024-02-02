@@ -10,7 +10,7 @@ export function UploadButton() {
 
   return (
     <Button onClick={onClick} variant="outline" size="icon">
-      <Upload className="h-5 w-5" />
+      <Upload />
     </Button>
   );
 }
