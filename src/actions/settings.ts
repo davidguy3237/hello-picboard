@@ -58,12 +58,16 @@ export async function settings(values: z.infer<typeof settingsSchema>) {
     values.newPassword = undefined;
   }
 
-  await db.user.update({
-    where: { id: dbUser.id },
-    data: {
-      ...values,
-    },
-  });
+  try {
+    await db.user.update({
+      where: { id: dbUser.id },
+      data: {
+        ...values,
+      },
+    });
+  } catch (error) {
+    return { error: "Something went wrong updating the settings" };
+  }
 
   revalidatePath("/");
   return {
