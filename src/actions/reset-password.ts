@@ -21,7 +21,7 @@ export async function resetPassword(
   if (!existingUser) {
     return {
       success:
-        "If this account exists, we will send you an email to reset your password.",
+        "If this account exists, we've sent you an email to change your password.",
     };
   }
 
@@ -31,6 +31,6 @@ export async function resetPassword(
 
   return {
     success:
-      "If this account exists, we will send you an email to reset your password.",
+      "If this account exists, we've sent you an email to change your password.",
   };
 }
