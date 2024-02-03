@@ -33,15 +33,10 @@ export function ImageModal({ imageUrl, closeModal }: ImageModalProps) {
               variant="ghost"
               size="icon"
               onClick={() => closeModal()}
-              className="fixed right-10 top-10 rounded-full"
+              className="fixed right-4 top-4 rounded-full"
               aria-label="Close"
             >
-              <X
-                strokeWidth={3}
-                size={32}
-                className=" text-white"
-                aria-label="Close"
-              />
+              <X size={32} className=" text-white" aria-label="Close" />
             </Button>
           </div>
         </FocusOn>,

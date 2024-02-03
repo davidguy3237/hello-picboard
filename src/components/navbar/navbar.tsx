@@ -8,15 +8,15 @@ import { ModeToggle } from "../light-dark-toggle";
 // TODO: change how the navbar is rendered depending on screen size
 export function Navbar() {
   return (
-    <nav className="fixed top-0 z-10 flex w-full items-center justify-between border-b bg-secondary p-2">
+    <nav className=" flex w-full items-center justify-between border-b bg-secondary p-2">
       <div className="flex">
         <HomeButton />
       </div>
-      <div className="flex items-center">
+      <div className="mx-4 flex w-full max-w-screen-sm items-center">
         <UploadButton />
         <SearchBar />
       </div>
-      <div>
+      <div className="flex">
         <ModeToggle />
         <UserButton />
       </div>

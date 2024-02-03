@@ -7,9 +7,9 @@ import { Aperture } from "lucide-react";
 
 export function HomeButton() {
   return (
-    <Link href="/home" className="mr-4 flex items-center">
+    <Link href="/home" className="flex items-center">
       <Aperture className=" mr-2 h-8 w-8" />
-      <span className="text-xl">Home</span>
+      <span className="hidden text-xl sm:inline-block">Home</span>
     </Link>
   );
 }
