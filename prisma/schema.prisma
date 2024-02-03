@@ -19,7 +19,7 @@ enum UserRole {
 
 model User {
   id                    String       @id @default(cuid())
-  name                  String   
+  name                  String       @unique
   email                 String       @unique
   emailVerified         DateTime?
   image                 String?
