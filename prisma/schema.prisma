@@ -24,8 +24,9 @@ model User {
   emailVerified         DateTime?
   image                 String?
   password              String?
-  role                  UserRole     @default(USER)
   isTwoFactorEnabled    Boolean      @default(false)
+  role                  UserRole     @default(USER)
+  createdAt             DateTime     @default(now())
   twoFactorConfirmation TwoFactorConfirmation?
   accounts              Account[]
   posts                 Post[]
@@ -96,7 +97,9 @@ model Post {
   userId       String?
   imageUrl     String  @unique
   thumbnailUrl String  @unique
-  uploadedAt   DateTime
+  width        String
+  height       String
+  createdAt    DateTime @default(now())
   description  String? @db.VarChar(500) 
   tags         Tag[]
   albums       Album[]
@@ -111,6 +114,8 @@ model Tag {
   company String?
   posts   Post[]
   albums  Album[]
+
+  @@unique([name, group])
 }
 
 model Album {
@@ -118,6 +123,7 @@ model Album {
   name        String
   userId      String
   description String? @db.VarChar(500)
+  createdAt   DateTime @default(now())
   posts       Post[]
   tags        Tag[]
 
