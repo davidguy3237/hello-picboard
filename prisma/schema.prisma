@@ -92,22 +92,25 @@ model TwoFactorConfirmation {
 }
 
 model Post {
-  id          String  @id @default(cuid())
-  userId      String?
-  imageUrl    String  @unique
-  uploadedAt  DateTime
-  description String? @db.VarChar(500) 
-  tags        Tag[]
-  albums      Album[]
+  id           String  @id @default(cuid())
+  userId       String?
+  imageUrl     String  @unique
+  thumbnailUrl String  @unique
+  uploadedAt   DateTime
+  description  String? @db.VarChar(500) 
+  tags         Tag[]
+  albums       Album[]
 
   user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model Tag {
-  id     String @id @default(cuid())
-  name   String
-  posts  Post[]
-  albums Album[]
+  id      String @id @default(cuid())
+  name    String
+  group   String?
+  company String?
+  posts   Post[]
+  albums  Album[]
 }
 
 model Album {
