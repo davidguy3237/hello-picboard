@@ -17,8 +17,8 @@ export function UserButton() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Avatar className="mx-2">
+      <DropdownMenuTrigger aria-label="Profile">
+        <Avatar className="mx-2" aria-label="Profile">
           <AvatarImage src={user?.image || ""} />
           <AvatarFallback className="bg-sky-500">
             <User className="text-white" />
