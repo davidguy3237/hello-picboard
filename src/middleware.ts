@@ -39,6 +39,10 @@ export default auth((req) => {
     return null;
   }
 
+  if (nextUrl.pathname === "/" && isLoggedIn) {
+    return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  }
+
   if (!isLoggedIn && !isPublicRoute) {
     let callbackUrl = nextUrl.pathname;
 

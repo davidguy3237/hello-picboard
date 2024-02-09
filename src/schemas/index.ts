@@ -1,3 +1,4 @@
+import { isValidImageFile } from "@/lib/validate-magic-number";
 import { UserRole } from "@prisma/client";
 import * as z from "zod";
 
@@ -102,4 +103,38 @@ export const NewPasswordSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
+  });
+
+export const UploadSchema = z
+  .object({
+    tags: z
+      .array(z.string())
+      .min(1, { message: "Must include at least 1 tag" }),
+    description: z.optional(
+      z
+        .string()
+        .max(500, { message: "Description must be 500 characters or fewer" }),
+    ),
+    image: z
+      .instanceof(File)
+      .refine(
+        (file) => {
+          return file.size <= 1024 * 1024 * 5;
+        },
+        { message: "Image must be 5MB or smaller" },
+      )
+      .refine(
+        async (file) => {
+          return await isValidImageFile(file);
+        },
+        { message: "Must be valid JPEG or PNG file" },
+      ),
+  })
+  .refine((data) => data.tags.every((el) => el.length >= 3), {
+    message: "Tags must be at least 3 characters",
+    path: ["tags"],
+  })
+  .refine((data) => data.tags.every((el) => el.length <= 50), {
+    message: "Tags must be 50 characters or fewer",
+    path: ["tags"],
   });

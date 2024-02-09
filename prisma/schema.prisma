@@ -109,13 +109,9 @@ model Post {
 
 model Tag {
   id      String @id @default(cuid())
-  name    String
-  group   String?
-  company String?
+  name    String @unique
   posts   Post[]
   albums  Album[]
-
-  @@unique([name, group])
 }
 
 model Album {
