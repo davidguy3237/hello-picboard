@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 datasource db {
   provider = "mysql"
@@ -112,6 +113,8 @@ model Tag {
   name    String @unique
   posts   Post[]
   albums  Album[]
+
+  @@fulltext([name])
 }
 
 model Album {
