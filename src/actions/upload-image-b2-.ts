@@ -4,12 +4,19 @@ import * as crypto from "crypto";
 import sharp from "sharp";
 import { currentUser } from "@/lib/auth";
 import { customAlphabet } from "nanoid";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const acceptedTypes = ["image/jpeg", "image/png"];
 const maxFileSize = 1024 * 1024 * 5;
 
-const nanoidCustomAlphabet =
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+const s3 = new S3Client({
+  endpoint: process.env.B2_ENDPOINT,
+  region: process.env.B2_REGION,
+  credentials: {
+    accessKeyId: process.env.B2_APPLICATION_KEY_ID!,
+    secretAccessKey: process.env.B2_APPLICATION_KEY!,
+  },
+});
 
 export async function uploadImageB2(formdata: FormData) {
   if (!formdata) {
@@ -36,42 +43,12 @@ export async function uploadImageB2(formdata: FormData) {
     return { error: "File too large" };
   }
 
-  const applicationKey =
-    process.env.B2_APPLICATION_KEY_ID + ":" + process.env.B2_APPLICATION_KEY;
-  const applicationKeyBuffer = Buffer.from(applicationKey);
-  const applicationKeyBase64 = applicationKeyBuffer.toString("base64");
-
-  const getAuthResult = await fetch(
-    "https://api.backblazeb2.com/b2api/v3/b2_authorize_account",
-    {
-      method: "GET",
-      headers: {
-        Authorization: "Basic " + applicationKeyBase64,
-      },
-    },
-  );
-
-  const { accountId, authorizationToken, apiInfo } = await getAuthResult.json();
-  const { apiUrl, bucketId, bucketName, downloadUrl } = apiInfo.storageApi;
-
-  const getUploadUrlResult = await fetch(
-    `${apiUrl}/b2api/v3/b2_get_upload_url?bucketId=${bucketId}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: authorizationToken,
-      },
-    },
-  );
-
-  const { uploadUrl, authorizationToken: uploadUrlAuthToken } =
-    await getUploadUrlResult.json();
-
-  const nanoid = customAlphabet(nanoidCustomAlphabet, 36);
   const sourcefileExtension = file.type === "image/jpeg" ? ".jpg" : ".png";
   const thumbnailFileExtension = ".webp";
-  const fileName = nanoid();
   const folderName = "thumbnails";
+  const nanoid = customAlphabet(process.env.NANOID_ALPHABET!, 36);
+  const fileName = nanoid();
+  const thumbnailName = fileName + "-thumbnail";
 
   const fileBuffer = Buffer.from(await file.arrayBuffer());
 
@@ -83,47 +60,34 @@ export async function uploadImageB2(formdata: FormData) {
 
   const { data: thumbnailBuffer, info: thumbnailInfo } = thumbnailObject;
 
-  const sourceChecksum = crypto
-    .createHash("sha1")
-    .update(fileBuffer)
-    .digest("hex");
-  const thumbnailChecksum = crypto
-    .createHash("sha1")
-    .update(thumbnailBuffer)
-    .digest("hex");
+  const putSource = new PutObjectCommand({
+    Bucket: process.env.B2_BUCKET_NAME,
+    Key: fileName + sourcefileExtension,
+    ContentType: file.type,
+    ContentLength: file.size,
+    Body: fileBuffer,
+  });
+
+  const putThumbnail = new PutObjectCommand({
+    Bucket: process.env.B2_BUCKET_NAME,
+    Key: folderName + "/" + thumbnailName + thumbnailFileExtension,
+    ContentType: "image/webp",
+    ContentLength: thumbnailInfo.size,
+    Body: thumbnailBuffer,
+  });
 
   try {
-    await fetch(uploadUrl, {
-      method: "POST",
-      headers: {
-        Authorization: uploadUrlAuthToken,
-        "X-Bz-File-Name": fileName + sourcefileExtension,
-        "Content-Type": file.type,
-        "Content-Length": file.size.toString(),
-        "X-Bz-Content-Sha1": sourceChecksum,
-      },
-      body: fileBuffer,
-    });
-    await fetch(uploadUrl, {
-      method: "POST",
-      headers: {
-        Authorization: uploadUrlAuthToken,
-        "X-Bz-File-Name": folderName + "/" + fileName + thumbnailFileExtension,
-        "Content-Type": "image/webp",
-        "Content-Length": thumbnailInfo.size.toString(),
-        "X-Bz-Content-Sha1": thumbnailChecksum,
-      },
-      body: thumbnailBuffer,
-    });
+    await s3.send(putSource);
+    await s3.send(putThumbnail);
   } catch (error) {
     console.log(error);
-    return { error: "Something went wrong!" };
+    return { error: "Something went wrong" };
   }
 
   return {
     success: {
-      sourceUrl: `${downloadUrl}/file/${bucketName}/${fileName}${sourcefileExtension}`,
-      thumbnailUrl: `${downloadUrl}/file/${bucketName}/${folderName}/${fileName}${thumbnailFileExtension}`,
+      sourceUrl: `${process.env.B2_FRIENDLY_URL}/file/${process.env.B2_BUCKET_NAME}/${fileName}${sourcefileExtension}`,
+      thumbnailUrl: `${process.env.B2_FRIENDLY_URL}/file/${process.env.B2_BUCKET_NAME}/${folderName}/${thumbnailName}${thumbnailFileExtension}`,
     },
   };
 }
