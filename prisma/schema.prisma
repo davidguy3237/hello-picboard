@@ -96,12 +96,11 @@ model TwoFactorConfirmation {
 model Post {
   id           String  @id @default(cuid())
   userId       String?
-  imageUrl     String  @unique
+  sourceUrl    String  @unique
   thumbnailUrl String  @unique
-  width        String
-  height       String
-  createdAt    DateTime @default(now())
   description  String? @db.VarChar(500) 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   tags         Tag[]
   albums       Album[]
 

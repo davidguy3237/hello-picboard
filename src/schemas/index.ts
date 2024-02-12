@@ -138,3 +138,25 @@ export const UploadSchema = z
     message: "Tags must be 50 characters or fewer",
     path: ["tags"],
   });
+
+export const NewPostSchema = z
+  .object({
+    tags: z
+      .array(z.string())
+      .min(1, { message: "Must include at least 1 tag" }),
+    description: z.optional(
+      z
+        .string()
+        .max(500, { message: "Description must be 500 characters or fewer" }),
+    ),
+    sourceUrl: z.string().url(),
+    thumbnailUrl: z.string().url(),
+  })
+  .refine((data) => data.tags.every((el) => el.length >= 3), {
+    message: "Tags must be at least 3 characters",
+    path: ["tags"],
+  })
+  .refine((data) => data.tags.every((el) => el.length <= 50), {
+    message: "Tags must be 50 characters or fewer",
+    path: ["tags"],
+  });

@@ -19,17 +19,21 @@ import {
 } from "@/components/ui/form";
 import { searchTags } from "@/actions/search-tags";
 import { useDebounce } from "@/hooks/use-debounce";
+import { newPost } from "@/actions/new-post";
+import { uploadImageB2 } from "@/actions/upload-image-b2-";
+import { writeReadableFileSize } from "@/lib/utils";
 
 interface UploadFormProps {
   file: FileWithPath;
 }
-
-export interface TagOption {
+interface TagOption {
   value: string;
   label: string;
 }
 
 export function UploadForm({ file }: UploadFormProps) {
+  const blobURL = URL.createObjectURL(file);
+
   const form = useForm<z.infer<typeof UploadSchema>>({
     resolver: zodResolver(UploadSchema),
     defaultValues: {
@@ -38,37 +42,6 @@ export function UploadForm({ file }: UploadFormProps) {
       image: file,
     },
   });
-
-  const calculateFileSize = (fileSize: number) => {
-    if (fileSize / 1024 < 1) {
-      return `${fileSize} Bytes`;
-    } else if (fileSize / 1024 / 1024 < 1) {
-      return `${(fileSize / 1024).toFixed(2)} KB`;
-    } else {
-      return `${(fileSize / 1024 / 1024).toFixed(2)} MB`;
-    }
-  };
-
-  const onSubmit = (uploadData: z.infer<typeof UploadSchema>) => {
-    console.log("FORM SUBMITTED");
-    console.log(uploadData);
-  };
-
-  // const fetchOptionsPromise = (inputValue: string) => {
-  //   if (inputValue.length >= 3) {
-  //     return searchTags(inputValue).then((results) => {
-  //       if (results.error) {
-  //         console.error(results.error);
-  //         return new Promise<TagOption[]>((resolve) => resolve([]));
-  //       }
-  //       console.log("GOT RESULTS");
-  //       return results.success as TagOption[];
-  //     });
-  //   } else {
-  //     console.log("NOT LONG ENOUGH");
-  //     return new Promise<TagOption[]>((resolve) => resolve([]));
-  //   }
-  // };
 
   const fetchOptionsCallback = (
     inputValue: string,
@@ -89,6 +62,40 @@ export function UploadForm({ file }: UploadFormProps) {
 
   const debouncedFetchOptions = useDebounce(fetchOptionsCallback, 500);
 
+  const onSubmit = async (uploadData: z.infer<typeof UploadSchema>) => {
+    console.log("FORM SUBMITTED");
+    console.log(uploadData);
+
+    const formdata = new FormData();
+    formdata.append("file", file);
+    const uploadImageResult = await uploadImageB2(formdata);
+
+    if (uploadImageResult.error) {
+      console.error(uploadImageResult.error);
+    }
+    if (uploadImageResult.success) {
+      const { sourceUrl, thumbnailUrl } = uploadImageResult.success;
+
+      const newPostData = {
+        tags: uploadData.tags,
+        description: uploadData.description,
+        sourceUrl,
+        thumbnailUrl,
+      };
+
+      const newPostResult = await newPost(newPostData);
+
+      if (newPostResult.error) {
+        console.error(newPostResult.error);
+      }
+
+      if (newPostResult.success) {
+        console.log(newPostResult.success);
+      }
+      // TODO: create loading state when new post is made
+    }
+  };
+
   return (
     <Card className="flex h-full w-full items-center">
       <CardContent className="flex h-full w-full pt-6">
@@ -100,7 +107,7 @@ export function UploadForm({ file }: UploadFormProps) {
               <FormItem className=" flex h-full basis-1/4 flex-col items-center justify-center pr-4">
                 <img
                   alt=""
-                  src={URL.createObjectURL(file)}
+                  src={blobURL}
                   className="h-full max-w-full object-contain"
                 />
                 <FormMessage />
@@ -112,7 +119,7 @@ export function UploadForm({ file }: UploadFormProps) {
             className="flex w-full basis-3/4 flex-col gap-y-2 border-l pl-4"
           >
             <div>
-              {file.path} - {calculateFileSize(file.size)}
+              {file.path} - {writeReadableFileSize(file.size)}
             </div>
             <FormField
               control={form.control}
