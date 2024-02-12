@@ -1,12 +1,11 @@
-import { v4 as uuidv4 } from "uuid";
-import { randomInt } from "crypto";
+import { randomInt, randomUUID } from "crypto";
 import db from "@/lib/db";
 import { getVerificationTokenByEmail } from "@/data/verification-token";
 import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 
 export async function generateVerificationToken(email: string) {
-  const token = uuidv4();
+  const token = randomUUID();
   // expires in 1 hour. 3600 seconds is 1 hour, but this goes by milliseconds, so have to multiply by 1000
   const expires = new Date(new Date().getTime() + 3600 * 1000);
 
@@ -32,7 +31,7 @@ export async function generateVerificationToken(email: string) {
 }
 
 export async function generatePasswordResetToken(email: string) {
-  const token = uuidv4();
+  const token = randomUUID();
 
   const expires = new Date(new Date().getTime() + 3600 * 1000);
 
