@@ -17,7 +17,7 @@ export async function searchTags(inputValue: string) {
   const searchResults = await db.tag.findMany({
     where: {
       name: {
-        startsWith: inputValue,
+        search: inputValue + "*",
       },
     },
     orderBy: [
