@@ -37,10 +37,10 @@ export function ImageUpload() {
         message: "JPG, JPEG, or PNG files only",
       };
     }
-    if (file.size > 1024 * 1024 * 5) {
+    if (file.size > 1024 * 1024 * 4) {
       return {
         code: "size-too-large",
-        message: "Image must be 5MB or smaller",
+        message: "Image must be 4MB or smaller",
       };
     }
     return null;
@@ -87,7 +87,7 @@ export function ImageUpload() {
                 </span>{" "}
                 or drag and drop
               </p>
-              <p>up to 10 images (JPG or PNG only), 5MB per file</p>
+              <p>up to 10 images (JPG or PNG only), 4MB per file</p>
             </div>
           </div>
         </CardContent>

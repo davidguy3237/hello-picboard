@@ -15,7 +15,7 @@ const s3 = new S3Client({
 });
 
 const acceptedTypes = ["image/jpeg", "image/png"];
-const maxFileSize = 1024 * 1024 * 5; // 5MB
+const maxFileSize = 1024 * 1024 * 4; // 4MB
 
 export async function getSignedURL(
   type: string,

@@ -119,9 +119,9 @@ export const UploadSchema = z
       .instanceof(File)
       .refine(
         (file) => {
-          return file.size <= 1024 * 1024 * 5;
+          return file.size <= 1024 * 1024 * 4;
         },
-        { message: "Image must be 5MB or smaller" },
+        { message: "Image must be 4MB or smaller" },
       )
       .refine(
         async (file) => {

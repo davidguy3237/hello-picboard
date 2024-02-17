@@ -9,7 +9,7 @@ import { customAlphabet } from "nanoid";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const acceptedTypes = ["image/jpeg", "image/png"];
-const maxFileSize = 1024 * 1024 * 5;
+const maxFileSize = 1024 * 1024 * 4; // 4MB
 
 const s3 = new S3Client({
   endpoint: process.env.B2_ENDPOINT,
