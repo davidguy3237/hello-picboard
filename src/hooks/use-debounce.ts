@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 type Timer = ReturnType<typeof setTimeout>;
 
-export function useDebounce(func: Function, delay = 1000) {
+export function useDebounceFunction(func: Function, delay = 1000) {
   const timer = useRef<Timer>();
 
   useEffect(() => {
@@ -25,4 +25,19 @@ export function useDebounce(func: Function, delay = 1000) {
   };
 
   return debouncedFunction;
+}
+
+export function useDebounceValue(value: any, delay = 1000) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }

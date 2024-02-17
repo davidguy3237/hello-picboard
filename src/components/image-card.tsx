@@ -1,16 +1,30 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import dynamic from "next/dynamic";
-import { ArrowUpRightFromSquare } from "lucide-react";
-import { Button } from "./ui/button";
-import { SyntheticEvent } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import useIsWindowSmall from "@/hooks/use-is-window-small";
+import { ArrowUpRightFromSquare } from "lucide-react";
+import { SyntheticEvent } from "react";
 interface ImageProps {
-  imageUrl: string;
+  userId: string;
+  username: string;
+  sourceUrl: string;
+  thumbnailUrl: string;
+  description: string;
+  createdAt: Date;
+  tags: { name: string }[];
 }
 
-export function ImageCard({ imageUrl }: ImageProps) {
+export function ImageCard({
+  sourceUrl,
+  thumbnailUrl,
+  description,
+  createdAt,
+  username,
+  userId,
+  tags,
+}: ImageProps) {
   const isWindowSmall = useIsWindowSmall();
 
   const onClick = () => {
@@ -30,9 +44,9 @@ export function ImageCard({ imageUrl }: ImageProps) {
             decoding="async"
             loading="lazy"
             alt=""
-            src={imageUrl}
-            height={100} // height & weight being overwritten by className
-            width={100} // but having these explicitly declared enables lazy loading
+            src={sourceUrl} // Show the full image on phones
+            height={384} // height & weight being overwritten by className
+            width={320} // but having these explicitly declared enables lazy loading
             className="h-full w-full cursor-pointer object-cover"
             onError={handleOnError}
           />
@@ -43,9 +57,9 @@ export function ImageCard({ imageUrl }: ImageProps) {
                 decoding="async"
                 loading="lazy"
                 alt=""
-                src={imageUrl}
-                height={1} // height & weight being overwritten by className
-                width={1} // but having these explicitly declared seems to enable lazy loading?
+                src={thumbnailUrl}
+                height={384} // height & weight being overwritten by className
+                width={320} // but having these explicitly declared seems to enable lazy loading?
                 className="h-full w-full cursor-pointer object-cover"
                 onError={handleOnError}
               />
@@ -53,31 +67,36 @@ export function ImageCard({ imageUrl }: ImageProps) {
             <DialogContent className="flex h-max max-h-[90%] w-max max-w-[90%] flex-col divide-y overflow-auto xl:h-full xl:max-h-[95%] xl:flex-row xl:divide-x xl:divide-y-0">
               <img
                 alt=""
-                src={imageUrl}
+                src={sourceUrl}
                 className=" mt-4 max-h-full max-w-full self-center object-contain xl:mt-0"
                 onError={handleOnError}
               />
               <div className="w-full flex-shrink-0 pt-2 xl:w-96 xl:pl-4 xl:pt-0">
                 <div>
-                  <p>Uploaded By: Username </p>
-                  <p className="mt-4">January 01, 2023</p>
-                  <p className="mt-4">Width x Height</p>
-                </div>
-                <div className="mt-8">
-                  <p className="">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Similique accusantium, officia, maxime dignissimos maiores
-                    nemo rerum architecto beatae neque animi ratione possimus,
-                    nam consequuntur vero aliquam quisquam aliquid? Corrupti
-                    alias est velit ut recusandae vitae totam deleniti autem?
-                    Voluptatum qui rerum vitae at dicta consectetur reiciendis
-                    hic doloremque eum inventore, temporibus veniam nobis enim
-                    recusandae dolore explicabo incidunt perferendis quisquam.
-                    Obcaecati, omnis perferendis si.
+                  <p>Uploaded By: {username} </p>
+                  <p className="mt-4">
+                    {new Date(createdAt).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </p>
                 </div>
                 <div className="mt-8">
-                  <p className="">Tags</p>
+                  <p className="">{description}</p>
+                </div>
+                <div className="mt-8 flex gap-2">
+                  {tags.map((tag) => (
+                    <Badge
+                      key={tag.name}
+                      variant="secondary"
+                      className="hover:cursor-pointer"
+                      onClick={onClick}
+                    >
+                      {tag.name}
+                    </Badge>
+                  ))}
                 </div>
               </div>
             </DialogContent>

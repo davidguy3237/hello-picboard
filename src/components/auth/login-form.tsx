@@ -107,7 +107,12 @@ export function LoginForm() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={isPending} type="email" />
+                        <Input
+                          {...field}
+                          disabled={isPending}
+                          type="email"
+                          required
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -125,6 +130,7 @@ export function LoginForm() {
                           disabled={isPending}
                           type="password"
                           maxLength={255}
+                          required
                         />
                       </FormControl>
                       <FormMessage />

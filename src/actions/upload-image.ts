@@ -20,7 +20,7 @@ const s3 = new S3Client({
   },
 });
 
-export async function uploadImageB2(formdata: FormData) {
+export async function uploadImage(formdata: FormData) {
   if (!formdata) {
     return { error: "No FormData" };
   }
@@ -57,7 +57,7 @@ export async function uploadImageB2(formdata: FormData) {
   const width = 400;
   const thumbnailObject = await sharp(fileBuffer)
     .resize(width)
-    .webp()
+    .webp({ quality: 50 })
     .toBuffer({ resolveWithObject: true });
 
   const { data: thumbnailBuffer, info: thumbnailInfo } = thumbnailObject;

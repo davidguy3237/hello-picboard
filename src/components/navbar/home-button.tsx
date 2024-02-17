@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "../ui/button";
-import { usePathname } from "next/navigation";
 import { Aperture } from "lucide-react";
+import Link from "next/link";
 
 export function HomeButton() {
   return (

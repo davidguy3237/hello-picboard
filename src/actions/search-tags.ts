@@ -14,10 +14,16 @@ export async function searchTags(inputValue: string) {
     return { error: "Input too short" };
   }
 
+  const fullTextSearchInput = inputValue
+    .trim()
+    .split(" ")
+    .map((word) => "+" + word + "*")
+    .join(" ");
+
   const searchResults = await db.tag.findMany({
     where: {
       name: {
-        search: inputValue + "*",
+        search: fullTextSearchInput,
       },
     },
     orderBy: [

@@ -87,7 +87,7 @@ export function ImageUpload() {
                 </span>{" "}
                 or drag and drop
               </p>
-              <p>up to 10 images (JPEG or PNG only), 5MB per file</p>
+              <p>up to 10 images (JPG or PNG only), 5MB per file</p>
             </div>
           </div>
         </CardContent>

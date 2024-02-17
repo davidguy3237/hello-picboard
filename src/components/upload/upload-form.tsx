@@ -1,14 +1,10 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { FileWithPath } from "react-dropzone";
-import AsyncCreatableSelect from "react-select/async-creatable";
+import { newPost } from "@/actions/new-post";
+import { searchTags } from "@/actions/search-tags";
+import { uploadImage } from "@/actions/upload-image";
 import { Button } from "@/components/ui/button";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UploadSchema } from "@/schemas";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -17,11 +13,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { searchTags } from "@/actions/search-tags";
-import { useDebounce } from "@/hooks/use-debounce";
-import { newPost } from "@/actions/new-post";
-import { uploadImageB2 } from "@/actions/upload-image-b2-";
+import { Textarea } from "@/components/ui/textarea";
+import { useDebounceFunction } from "@/hooks/use-debounce";
 import { writeReadableFileSize } from "@/lib/utils";
+import { UploadSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { useState, useTransition } from "react";
+import { FileWithPath } from "react-dropzone";
+import { useForm } from "react-hook-form";
+import AsyncCreatableSelect from "react-select/async-creatable";
+import * as z from "zod";
 
 interface UploadFormProps {
   file: FileWithPath;
@@ -32,6 +34,8 @@ interface TagOption {
 }
 
 export function UploadForm({ file }: UploadFormProps) {
+  const [isPending, startTransition] = useTransition();
+  const [uploadCompleted, setUploadCompleted] = useState(false);
   const blobURL = URL.createObjectURL(file);
 
   const form = useForm<z.infer<typeof UploadSchema>>({
@@ -60,45 +64,62 @@ export function UploadForm({ file }: UploadFormProps) {
     }
   };
 
-  const debouncedFetchOptions = useDebounce(fetchOptionsCallback, 500);
+  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 500);
 
   const onSubmit = async (uploadData: z.infer<typeof UploadSchema>) => {
-    console.log("FORM SUBMITTED");
-    console.log(uploadData);
+    startTransition(async () => {
+      console.log("FORM SUBMITTED");
+      console.log(uploadData);
 
-    const formdata = new FormData();
-    formdata.append("file", file);
-    const uploadImageResult = await uploadImageB2(formdata);
+      const formdata = new FormData();
+      formdata.append("file", file);
+      const uploadImageResult = await uploadImage(formdata);
 
-    if (uploadImageResult.error) {
-      console.error(uploadImageResult.error);
-    }
-    if (uploadImageResult.success) {
-      const { sourceUrl, thumbnailUrl } = uploadImageResult.success;
-
-      const newPostData = {
-        tags: uploadData.tags,
-        description: uploadData.description,
-        sourceUrl,
-        thumbnailUrl,
-      };
-
-      const newPostResult = await newPost(newPostData);
-
-      if (newPostResult.error) {
-        console.error(newPostResult.error);
+      if (uploadImageResult.error) {
+        console.error(uploadImageResult.error);
       }
+      if (uploadImageResult.success) {
+        const { sourceUrl, thumbnailUrl } = uploadImageResult.success;
 
-      if (newPostResult.success) {
-        console.log(newPostResult.success);
+        const newPostData = {
+          tags: uploadData.tags,
+          description: uploadData.description,
+          sourceUrl,
+          thumbnailUrl,
+        };
+
+        const newPostResult = await newPost(newPostData);
+
+        if (newPostResult.error) {
+          console.error(newPostResult.error);
+        }
+
+        if (newPostResult.success) {
+          console.log(newPostResult.success);
+        }
+
+        setUploadCompleted(true);
       }
-      // TODO: create loading state when new post is made
-    }
+    });
   };
+
+  // TODO: Add Option to delete upload form
 
   return (
     <Card className="flex h-full w-full items-center">
-      <CardContent className="flex h-full w-full pt-6">
+      <CardContent className="relative flex h-full w-full pt-6">
+        {(isPending || uploadCompleted) && (
+          <div className="absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-lg bg-muted/50">
+            {isPending ? (
+              <Loader2 size={48} className="animate-spin" />
+            ) : (
+              <CheckCircle
+                size={48}
+                className=" text-green-500 duration-1000 animate-in fade-in zoom-in"
+              />
+            )}
+          </div>
+        )}
         <Form {...form}>
           <FormField
             control={form.control}
@@ -122,6 +143,7 @@ export function UploadForm({ file }: UploadFormProps) {
               {file.path} - {writeReadableFileSize(file.size)}
             </div>
             <FormField
+              disabled={isPending || uploadCompleted}
               control={form.control}
               name="tags"
               render={({ field: { onChange } }) => (
@@ -129,8 +151,10 @@ export function UploadForm({ file }: UploadFormProps) {
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
                     <AsyncCreatableSelect<TagOption, true>
+                      isDisabled={isPending || uploadCompleted}
                       isMulti
                       isClearable
+                      placeholder="Add tags"
                       loadOptions={debouncedFetchOptions}
                       onChange={(option) => {
                         if (option === null) {
@@ -146,19 +170,26 @@ export function UploadForm({ file }: UploadFormProps) {
               )}
             />
             <FormField
+              disabled={isPending || uploadCompleted}
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea {...field} maxLength={500} />
+                    <Textarea
+                      {...field}
+                      maxLength={500}
+                      disabled={isPending || uploadCompleted}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isPending || uploadCompleted}>
+              Submit
+            </Button>
           </form>
         </Form>
       </CardContent>
