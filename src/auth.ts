@@ -19,7 +19,6 @@ export const {
   },
   events: {
     async linkAccount({ user }) {
-      console.log("I AM INSIDE LINKACCOUNT");
       await db.user.update({
         where: { id: user.id },
         data: { emailVerified: new Date() },
@@ -28,9 +27,6 @@ export const {
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log("I AM INSIDE THE SIGNIN CALLBACK");
-      // console.log({user: user, account: account, profile: profile, email: email, credentials: credentials});
-
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") {
         return true;
@@ -61,10 +57,6 @@ export const {
       return true;
     },
     async jwt({ token, user, account, profile, trigger, session }) {
-      console.log("I AM INSIDE JWT CALLBACK");
-      // if (token) {
-      //   console.log({ token: token, user: user, account: account, profile: profile, trigger: trigger, session: session });
-      // }
       if (!token.sub) {
         return token;
       }
@@ -86,9 +78,6 @@ export const {
       return token;
     },
     async session({ session, token }: { session: Session; token?: any }) {
-      console.log("I AM INSIDE SESSION CALLBACK");
-      // console.log({ startingSession: session, token: token });
-
       if (session.user) {
         if (token.sub) {
           session.user.id = token.sub;
@@ -103,7 +92,6 @@ export const {
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
         session.user.isOAuth = token.isOAuth;
       }
-      // console.log({ updatedSession: session });
       return session;
     },
   },

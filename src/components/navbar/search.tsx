@@ -39,8 +39,6 @@ export function Search() {
   const debouncedHandleChange = useDebounceFunction(handleChange, 500);
 
   const handleClick = (suggestion: string) => {
-    console.log("BUTTON CLICKED");
-
     const searchbar = document.getElementById("search") as HTMLInputElement;
 
     if (searchbar) {
@@ -77,7 +75,7 @@ export function Search() {
   // TODO: Maybe add search submit button so you don't have to hit enter
 
   return (
-    <div className="relative ml-2 w-full">
+    <div className="relative w-full">
       <form onSubmit={handleSubmit} className="relative">
         <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
         <Input
@@ -93,11 +91,11 @@ export function Search() {
           id="search"
         />
         {searchSuggestions.length > 0 && showDropdown && (
-          <ul className="absolute z-10 mt-2 w-full overflow-hidden rounded-md border">
+          <ul className="absolute z-10 mt-2 max-h-40 w-full overflow-scroll rounded-md border">
             {searchSuggestions.map((suggestion) => (
               <li key={suggestion}>
                 <div
-                  className="flex h-10 items-center bg-background pl-2 hover:cursor-pointer hover:bg-secondary"
+                  className="flex h-8 items-center bg-background pl-2 hover:cursor-pointer hover:bg-secondary"
                   // onClick={handleClick} // element disappears when input loses focus so this doesn't work
                   onMouseDown={() => handleClick(suggestion)} // apparently this triggers before input loses focus
                 >

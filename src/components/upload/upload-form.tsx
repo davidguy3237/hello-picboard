@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useDebounceFunction } from "@/hooks/use-debounce";
-import { writeReadableFileSize } from "@/lib/utils";
+import { cn, writeReadableFileSize } from "@/lib/utils";
 import { UploadSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, Loader2 } from "lucide-react";
@@ -67,12 +67,7 @@ export function UploadForm({ file }: UploadFormProps) {
   const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 500);
 
   const onSubmit = async (uploadData: z.infer<typeof UploadSchema>) => {
-    console.log("ON SUBMIT CALLED");
     startTransition(async () => {
-      console.log("INSIDE START TRANSITION");
-      console.log("FORM SUBMITTED");
-      console.log(uploadData);
-
       const formdata = new FormData();
       formdata.append("file", file);
       const uploadImageResult = await uploadImage(formdata);
@@ -93,11 +88,11 @@ export function UploadForm({ file }: UploadFormProps) {
         const newPostResult = await newPost(newPostData);
 
         if (newPostResult.error) {
-          console.error(newPostResult.error);
+          console.error("Creating new post failed: ", newPostResult.error);
         }
 
         if (newPostResult.success) {
-          console.log(newPostResult.success);
+          console.log("Successfully created new post: ", newPostResult.success);
         }
 
         setUploadCompleted(true);
@@ -111,13 +106,17 @@ export function UploadForm({ file }: UploadFormProps) {
     <Card className="flex h-full w-full items-center">
       <CardContent className="relative flex h-full w-full pt-6">
         {(isPending || uploadCompleted) && (
-          <div className="absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-lg bg-muted/50">
+          <div
+            className={cn(
+              "absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-lg bg-muted/50",
+            )}
+          >
             {isPending ? (
               <Loader2 size={48} className="animate-spin" />
             ) : (
               <CheckCircle
                 size={48}
-                className=" text-green-500 duration-1000 animate-in fade-in zoom-in"
+                className=" text-green-500 duration-500 animate-in fade-in zoom-in"
               />
             )}
           </div>

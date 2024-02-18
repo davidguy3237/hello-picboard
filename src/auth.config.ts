@@ -26,8 +26,6 @@ export default {
       async authorize(credentials, request) {
         // Gives full control over how you handle the credentials received from the user.
         // The existence/correctness of a field cannot be guaranteed at compile time, so you should always validate the input before using it
-        console.log("I AM INSIDE AUTHORIZE");
-        console.log(credentials);
         const validatedFields = LoginSchema.safeParse(credentials);
 
         if (validatedFields.success) {
