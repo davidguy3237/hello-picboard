@@ -6,6 +6,7 @@ import { NewPostSchema } from "@/schemas";
 import db from "@/lib/db";
 
 export async function newPost(newPostData: z.infer<typeof NewPostSchema>) {
+  console.log("INSIDE NEW POST FUNCTION");
   const user = await currentUser();
 
   if (!user || !user.id) {

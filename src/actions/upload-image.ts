@@ -21,6 +21,7 @@ const s3 = new S3Client({
 });
 
 export async function uploadImage(formdata: FormData) {
+  console.log("INSIDE UPLOAD IMAGE FUNCTION");
   if (!formdata) {
     return { error: "No FormData" };
   }
