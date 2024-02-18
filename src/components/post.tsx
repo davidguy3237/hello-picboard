@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import useIsWindowSmall from "@/hooks/use-is-window-small";
-import { ArrowUpRightFromSquare } from "lucide-react";
+import { Download } from "lucide-react";
 import { SyntheticEvent } from "react";
 interface ImageProps {
   userId: string;
@@ -16,7 +16,7 @@ interface ImageProps {
   tags: { name: string }[];
 }
 
-export function ImageCard({
+export function Post({
   sourceUrl,
   thumbnailUrl,
   description,
@@ -26,8 +26,11 @@ export function ImageCard({
   tags,
 }: ImageProps) {
   const isWindowSmall = useIsWindowSmall();
+  const urlPathnameArray = sourceUrl.split("/");
+  const filename = urlPathnameArray[urlPathnameArray.length - 1];
 
   const onClick = () => {
+    // TODO: CREATE SEARCH WHEN A TAG IS CLICKED
     console.log("BUTTON CLICKED");
   };
 
@@ -35,7 +38,7 @@ export function ImageCard({
     e.currentTarget.onerror = null;
     e.currentTarget.src = "/image.svg";
   };
-
+  // TODO: maybe wrap thumbnail in link so that it shows full image on hover
   return (
     <div className="relative m-2 flex h-fit w-full items-center justify-center overflow-hidden rounded-sm bg-secondary md:h-96 md:w-80">
       <div className="group h-full w-full">
@@ -84,7 +87,7 @@ export function ImageCard({
                   </p>
                 </div>
                 <div className="mt-8">
-                  <p className="">{description}</p>
+                  <p className=" whitespace-pre-wrap">{description}</p>
                 </div>
                 <div className="mt-8 flex gap-2">
                   {tags.map((tag) => (
@@ -102,14 +105,6 @@ export function ImageCard({
             </DialogContent>
           </Dialog>
         )}
-        <Button
-          className="absolute bottom-0 right-0 hidden rounded-full text-white xl:group-hover:flex xl:group-hover:items-center xl:group-hover:justify-center"
-          variant="ghost"
-          size="icon"
-          onClick={onClick}
-        >
-          <ArrowUpRightFromSquare />
-        </Button>
       </div>
     </div>
   );

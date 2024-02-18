@@ -1,29 +1,35 @@
-import { ImageCard } from "@/components/image-card";
+import { PaginationSection } from "@/components/pagination-section";
+import { Post } from "@/components/post";
+import { PostList } from "@/components/post-list";
 import db from "@/lib/db";
 
-export default async function HomePage({
-  searchParams,
-}: {
+interface HomePageProps {
   searchParams?: {
     q?: string;
-    page?: string;
+    p?: string;
+    sort?: "asc" | "desc";
+    c?: string;
   };
-}) {
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
   const query = searchParams?.q;
-  const page = Number(searchParams?.page || 1);
-  console.log("HOME PAGE");
-  console.log(query, page);
+  const currentPage = Number(searchParams?.p) || 1;
+  const sortDirection = searchParams?.sort || "desc";
+  const postsPerPage = Number(searchParams?.c) || 40;
 
   const tagsToSearch = query
     ?.trim()
     .split(",")
-    .map((tag) => `${tag.trim()}`);
+    .map((tag) => tag.trim());
 
   const whereClause = {
     AND: tagsToSearch?.map((tag) => ({
       tags: {
         some: {
-          name: tag,
+          name: {
+            contains: tag,
+          },
         },
       },
     })),
@@ -31,7 +37,7 @@ export default async function HomePage({
 
   const posts = await db.post.findMany({
     orderBy: {
-      createdAt: "desc",
+      createdAt: sortDirection,
     },
     include: {
       user: {
@@ -45,26 +51,23 @@ export default async function HomePage({
         },
       },
     },
-    skip: (page - 1) * 100,
-    take: 100,
+    skip: (currentPage - 1) * postsPerPage,
+    take: postsPerPage,
     where: whereClause,
   });
 
-  // TODO: add pagination
+  const totalPostsCount = await db.post.count({
+    where: whereClause,
+  });
+
   return (
-    <div className="flex max-w-screen-2xl flex-row flex-wrap justify-center">
-      {posts.map((post) => (
-        <ImageCard
-          key={post.sourceUrl}
-          sourceUrl={post.sourceUrl}
-          thumbnailUrl={post.thumbnailUrl}
-          description={post.description ?? "No description"}
-          createdAt={post.createdAt}
-          username={post.user?.name ?? "deleted"}
-          userId={post.userId ?? "deleted"}
-          tags={post.tags}
-        />
-      ))}
-    </div>
+    <>
+      <PostList posts={posts} />
+      <PaginationSection
+        postsPerPage={postsPerPage}
+        totalPostsCount={totalPostsCount}
+        currentPage={currentPage}
+      />
+    </>
   );
 }
