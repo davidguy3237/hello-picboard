@@ -1,8 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { Maximize, X } from "lucide-react";
-import { Button } from "./ui/button";
-import { FocusOn } from "react-focus-on";
-import { createPortal } from "react-dom";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Maximize, X } from "lucide-react";
+import { createPortal } from "react-dom";
+import { FocusOn } from "react-focus-on";
 
 interface ImageModalProps {
   imageUrl: string;

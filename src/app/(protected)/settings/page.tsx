@@ -1,27 +1,20 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useState, useTransition } from "react";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { settingsSchema } from "@/schemas";
 import { settings } from "@/actions/settings";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Form,
-  FormField,
   FormControl,
+  FormDescription,
+  FormField,
   FormItem,
   FormLabel,
-  FormDescription,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import useCurrentUser from "@/hooks/use-current-user";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
 import {
   Select,
   SelectContent,
@@ -29,10 +22,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRole } from "@prisma/client";
 import { Switch } from "@/components/ui/switch";
+import useCurrentUser from "@/hooks/use-current-user";
+import { settingsSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserRole } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 export default function SettingsPage() {
+  // TODO: see if I can get user info from server instead of client. Making too many calls to middleware
   const user = useCurrentUser();
   const { update } = useSession();
   const [error, setError] = useState<string | undefined>();

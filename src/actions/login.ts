@@ -1,20 +1,20 @@
 "use server";
 
-import * as z from "zod";
-import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
-import { LoginSchema } from "@/schemas";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { getUserByEmail } from "@/data/user";
-import {
-  generateVerificationToken,
-  generateTwoFactorToken,
-} from "@/lib/tokens";
-import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/email";
-import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import db from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
+import { getUserByEmail } from "@/data/user";
+import db from "@/lib/db";
+import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/lib/email";
 import { comparePasswords } from "@/lib/passwords";
+import {
+  generateTwoFactorToken,
+  generateVerificationToken,
+} from "@/lib/tokens";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { LoginSchema } from "@/schemas";
+import { AuthError } from "next-auth";
+import * as z from "zod";
 
 export async function login(
   loginData: z.infer<typeof LoginSchema>,

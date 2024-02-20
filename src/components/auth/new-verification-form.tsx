@@ -1,11 +1,11 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { CardWrapper } from "@/components/auth/card-wrapper";
 import { newVerification } from "@/actions/new-verification";
+import { CardWrapper } from "@/components/auth/card-wrapper";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
+import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 export function NewVerificationForm() {
   const [error, setError] = useState<string | undefined>();
@@ -36,6 +36,7 @@ export function NewVerificationForm() {
 
   return (
     <CardWrapper
+      headerTitle="Verification"
       headerLabel="Confirming your verification"
       backButtonHref="/login"
       backButtonLabel="Back to login"

@@ -68,9 +68,9 @@ export function UploadForm({ file }: UploadFormProps) {
 
   const onSubmit = async (uploadData: z.infer<typeof UploadSchema>) => {
     startTransition(async () => {
-      const formdata = new FormData();
-      formdata.append("file", file);
-      const uploadImageResult = await uploadImage(formdata);
+      const imageToUpload = new FormData();
+      imageToUpload.append("file", file);
+      const uploadImageResult = await uploadImage(imageToUpload);
 
       if (uploadImageResult.error) {
         console.error(uploadImageResult.error);

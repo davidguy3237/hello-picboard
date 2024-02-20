@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema } from "@/schemas";
+import { login } from "@/actions/login";
+import { CardWrapper } from "@/components/auth/card-wrapper";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,15 +13,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { LoginSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { login } from "@/actions/login";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 export function LoginForm() {
   const [isPending, startTransition] = useTransition();
@@ -30,7 +30,7 @@ export function LoginForm() {
   const [showTwoFactor, setShowTwoFactor] = useState(false);
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || undefined;
+  const callbackUrl = searchParams.get("cbu") || undefined;
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Another account already exists with the same e-mail address."
@@ -75,9 +75,10 @@ export function LoginForm() {
   return (
     // TODO: check if password is correct for unverified emails before resending confirmation email
     <CardWrapper
+      headerTitle="Login"
       headerLabel="Welcome back"
       backButtonLabel="Don't have an account?"
-      backButtonHref="/register"
+      backButtonHref="/auth/register"
       showSocial={!isPending}
     >
       <Form {...form}>

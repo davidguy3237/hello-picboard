@@ -1,13 +1,13 @@
 "use server";
 
-import * as z from "zod";
-import { NewPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
 import db from "@/lib/db";
+import { sendPasswordChangedEmail } from "@/lib/email";
 import { hashPassword } from "@/lib/passwords";
 import { generatePasswordResetToken } from "@/lib/tokens";
-import { sendPasswordChangedEmail } from "@/lib/email";
+import { NewPasswordSchema } from "@/schemas";
+import * as z from "zod";
 
 export async function newPassword(
   newPasswordObj: z.infer<typeof NewPasswordSchema>,

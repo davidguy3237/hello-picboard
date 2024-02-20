@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ResetPasswordSchema } from "@/schemas";
+import { resetPassword } from "@/actions/reset-password";
+import { CardWrapper } from "@/components/auth/card-wrapper";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,13 +13,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { ResetPasswordSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { resetPassword } from "@/actions/reset-password";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 export function ResetPasswordForm() {
   const [isPending, startTransition] = useTransition();
@@ -49,6 +49,7 @@ export function ResetPasswordForm() {
 
   return (
     <CardWrapper
+      headerTitle="Reset Password"
       headerLabel="Forgot your password?"
       backButtonLabel="Back to login"
       backButtonHref="/login"

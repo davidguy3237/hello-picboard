@@ -39,10 +39,10 @@ export function Search() {
   const debouncedHandleChange = useDebounceFunction(handleChange, 500);
 
   const handleClick = (suggestion: string) => {
-    const searchbar = document.getElementById("search") as HTMLInputElement;
+    const searchBar = document.getElementById("search") as HTMLInputElement;
 
-    if (searchbar) {
-      const inputValueArray = searchbar.value
+    if (searchBar) {
+      const inputValueArray = searchBar.value
         .trim()
         .split(",")
         .map((word: string) => word.trim());
@@ -51,7 +51,7 @@ export function Search() {
 
       const newInputValue = inputValueArray.join(", ");
 
-      searchbar.value = newInputValue;
+      searchBar.value = newInputValue;
 
       setSearchSuggestions([]);
       setShowDropdown(false);

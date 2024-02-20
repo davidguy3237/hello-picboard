@@ -2,11 +2,11 @@
 
 "use server";
 
-import * as crypto from "crypto";
-import sharp from "sharp";
 import { currentUser } from "@/lib/auth";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import * as crypto from "crypto";
 import { customAlphabet } from "nanoid";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import sharp from "sharp";
 
 const acceptedTypes = ["image/jpeg", "image/png"];
 const maxFileSize = 1024 * 1024 * 4; // 4MB
@@ -20,9 +20,9 @@ const s3 = new S3Client({
   },
 });
 
-export async function uploadImage(formdata: FormData) {
+export async function uploadImage(ImageFormData: FormData) {
   console.log("INSIDE UPLOAD IMAGE FUNCTION");
-  if (!formdata) {
+  if (!ImageFormData) {
     return { error: "No FormData" };
   }
 
@@ -32,7 +32,7 @@ export async function uploadImage(formdata: FormData) {
     return { error: "Unauthorized" };
   }
 
-  const file = formdata.get("file") as File;
+  const file = ImageFormData.get("file") as File;
 
   if (!file) {
     return { error: "No file provided" };

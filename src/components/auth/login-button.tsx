@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { LoginForm } from "@/components/auth/login-form";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 interface LoginButtonProps {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export default function LoginButton({
   const router = useRouter();
 
   const onClick = () => {
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   if (mode === "modal") {

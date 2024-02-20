@@ -1,13 +1,12 @@
-// "use client";
 "use client";
 
-import { useCurrentRole } from "@/hooks/use-current-role";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { admin } from "@/actions/admin";
 import { RoleGate } from "@/components/auth/role-gate";
 import { FormSuccess } from "@/components/form-success";
-import { UserRole } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import { admin } from "@/actions/admin";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useCurrentRole } from "@/hooks/use-current-role";
+import { UserRole } from "@prisma/client";
 import { toast } from "sonner";
 
 export default function AdminPage() {

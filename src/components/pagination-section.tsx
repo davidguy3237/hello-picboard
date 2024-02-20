@@ -1,7 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { usePathname, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
@@ -10,7 +8,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "./ui/pagination";
+} from "@/components/ui/pagination";
+import { cn } from "@/lib/utils";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface PaginationSectionProps {
   postsPerPage: number;

@@ -1,12 +1,12 @@
 "use server";
 
-import * as z from "zod";
-import { RegisterSchema } from "@/schemas";
-import db from "@/lib/db";
 import { getUserByEmail, getUserByUsername } from "@/data/user";
-import { generateVerificationToken } from "@/lib/tokens";
+import db from "@/lib/db";
 import { sendVerificationEmail } from "@/lib/email";
 import { hashPassword } from "@/lib/passwords";
+import { generateVerificationToken } from "@/lib/tokens";
+import { RegisterSchema } from "@/schemas";
+import * as z from "zod";
 
 export async function register(registerData: z.infer<typeof RegisterSchema>) {
   const validatedFields = RegisterSchema.safeParse(registerData);

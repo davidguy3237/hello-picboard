@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { NewPasswordSchema } from "@/schemas";
+import { newPassword } from "@/actions/new-password";
+import { CardWrapper } from "@/components/auth/card-wrapper";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,14 +13,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { NewPasswordSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { newPassword } from "@/actions/new-password";
 import { useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 export function NewPasswordForm() {
   const [isPending, startTransition] = useTransition();
@@ -54,6 +54,7 @@ export function NewPasswordForm() {
 
   return (
     <CardWrapper
+      headerTitle="New Password"
       headerLabel="Enter a new password"
       backButtonLabel="Back to login"
       backButtonHref="/login"

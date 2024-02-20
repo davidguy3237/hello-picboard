@@ -4,6 +4,7 @@ import { BsExclamationTriangle } from "react-icons/bs";
 export function ErrorCard() {
   return (
     <CardWrapper
+      headerTitle="Error"
       headerLabel="Oops! Something went wrong!"
       backButtonHref="/login"
       backButtonLabel="Back to login"

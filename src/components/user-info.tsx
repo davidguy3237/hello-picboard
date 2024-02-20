@@ -1,7 +1,7 @@
-import { UserRole } from "@prisma/client";
-import { DefaultSession } from "next-auth";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ExtendedUser } from "@/next-auth";
+import { UserRole } from "@prisma/client";
+import { DefaultSession } from "next-auth";
 
 interface UserInfoProps {
   user?: ExtendedUser;

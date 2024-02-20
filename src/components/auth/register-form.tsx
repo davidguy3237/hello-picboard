@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterSchema } from "@/schemas";
+import { register } from "@/actions/register";
+import { CardWrapper } from "@/components/auth/card-wrapper";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,13 +13,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { RegisterSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { register } from "@/actions/register";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 export function RegisterForm() {
   const [isPending, startTransition] = useTransition();
@@ -50,9 +50,10 @@ export function RegisterForm() {
 
   return (
     <CardWrapper
+      headerTitle="Sign Up"
       headerLabel="Create an account"
       backButtonLabel="Already have an account?"
-      backButtonHref="/login"
+      backButtonHref="/auth/login"
       showSocial={!isPending}
     >
       <Form {...form}>

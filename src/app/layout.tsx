@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/theme-provider";
+import type { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,17 +19,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // TODO: see if I can get user info from server instead of client. Making too many calls to middleware
   const session = await auth();
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
         <body className={cn(inter.className, "bg-background")}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ThemeProvider attribute="class" disableTransitionOnChange>
             <Toaster closeButton richColors position="top-center" />
             {children}
           </ThemeProvider>

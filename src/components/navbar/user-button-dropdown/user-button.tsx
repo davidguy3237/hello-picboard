@@ -1,32 +1,38 @@
 "use client";
 
+import { LogoutButton } from "@/components/auth/logout-button";
+import { DarkModeToggle } from "@/components/navbar/user-button-dropdown/dark-mode-toggle";
+import { SettingsButton } from "@/components/navbar/user-button-dropdown/settings-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { User, LogOut } from "lucide-react";
-import useCurrentUser from "@/hooks/use-current-user";
-import { LogoutButton } from "@/components/auth/logout-button";
-import { SettingsButton } from "@/components/navbar/user-button-dropdown/settings-button";
+import { ExtendedUser } from "@/next-auth";
+import { LogOut, User } from "lucide-react";
 
-export function UserButton() {
-  const user = useCurrentUser();
+interface UserButtonProps {
+  user?: ExtendedUser | undefined;
+}
 
+export function UserButton({ user }: UserButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Profile">
         <Avatar className="mx-2" aria-label="Profile">
           <AvatarImage src={user?.image || ""} />
-          <AvatarFallback className="bg-sky-500">
-            <User className="text-white" />
+          <AvatarFallback className="bg-foreground">
+            <User className="text-background" />
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40" align="end">
+      <DropdownMenuContent className="w-48" align="end">
         <SettingsButton />
+        <DarkModeToggle />
+        <DropdownMenuSeparator />
         <LogoutButton>
           <DropdownMenuItem>
             <LogOut className="mr-2 h-4 w-4" />

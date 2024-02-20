@@ -1,8 +1,8 @@
-import { randomInt, randomUUID } from "crypto";
-import db from "@/lib/db";
-import { getVerificationTokenByEmail } from "@/data/verification-token";
 import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
+import { getVerificationTokenByEmail } from "@/data/verification-token";
+import db from "@/lib/db";
+import { randomInt, randomUUID } from "crypto";
 
 export async function generateVerificationToken(email: string) {
   const token = randomUUID();

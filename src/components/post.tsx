@@ -38,7 +38,7 @@ export function Post({
     e.currentTarget.onerror = null;
     e.currentTarget.src = "/image.svg";
   };
-  // TODO: maybe wrap thumbnail in link so that it shows full image on hover
+
   return (
     <div className="relative m-2 flex h-fit w-full items-center justify-center overflow-hidden rounded-sm bg-secondary md:h-96 md:w-80">
       <div className="group h-full w-full">

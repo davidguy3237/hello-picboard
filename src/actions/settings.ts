@@ -1,14 +1,14 @@
 "use server";
 
-import * as z from "zod";
-import db from "@/lib/db";
-import { settingsSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
-import { generateVerificationToken } from "@/lib/tokens";
+import db from "@/lib/db";
 import { sendVerificationEmail } from "@/lib/email";
-import { hashPassword, comparePasswords } from "@/lib/passwords";
+import { comparePasswords, hashPassword } from "@/lib/passwords";
+import { generateVerificationToken } from "@/lib/tokens";
+import { settingsSchema } from "@/schemas";
 import { revalidatePath } from "next/cache";
+import * as z from "zod";
 
 export async function settings(values: z.infer<typeof settingsSchema>) {
   const user = await currentUser();

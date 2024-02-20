@@ -7,8 +7,8 @@
 // https://www.suprsend.com/post/how-to-implement-email-sending-in-next-js-with-aws-ses
 // https://medium.com/nerd-for-tech/sending-emails-with-nextjs-and-amazon-simple-email-services-ses-8e4e10d1d397
 
+import { generateTwoFactorToken } from "@/lib/tokens";
 import { Resend } from "resend";
-import { generateTwoFactorToken } from "./tokens";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const domain = process.env.NEXT_PUBLIC_APP_URL;

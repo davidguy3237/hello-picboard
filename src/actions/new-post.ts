@@ -1,9 +1,9 @@
 "use server";
 
-import * as z from "zod";
 import { currentUser } from "@/lib/auth";
-import { NewPostSchema } from "@/schemas";
 import db from "@/lib/db";
+import { NewPostSchema } from "@/schemas";
+import * as z from "zod";
 
 export async function newPost(newPostData: z.infer<typeof NewPostSchema>) {
   const user = await currentUser();

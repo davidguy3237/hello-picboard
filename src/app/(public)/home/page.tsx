@@ -1,5 +1,4 @@
 import { PaginationSection } from "@/components/pagination-section";
-import { Post } from "@/components/post";
 import { PostList } from "@/components/post-list";
 import db from "@/lib/db";
 
