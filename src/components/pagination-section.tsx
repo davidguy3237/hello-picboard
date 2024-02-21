@@ -36,13 +36,13 @@ export function PaginationSection({
   const previousLinkParams = new URLSearchParams(searchParams);
   const nextLinkParams = new URLSearchParams(searchParams);
 
-  previousLinkParams.set("p", (currentPage - 1).toString());
-  nextLinkParams.set("p", (currentPage + 1).toString());
+  previousLinkParams.set("page", (currentPage - 1).toString());
+  nextLinkParams.set("page", (currentPage + 1).toString());
 
   if (currentPage <= 1) {
-    previousLinkParams.delete("p");
+    previousLinkParams.delete("page");
   } else if (currentPage >= totalPages) {
-    nextLinkParams.set("p", currentPage.toString());
+    nextLinkParams.set("page", currentPage.toString());
   }
 
   const previousLink = pathname + "?" + previousLinkParams.toString();
@@ -68,7 +68,7 @@ export function PaginationSection({
         {totalPages > 1 &&
           pagesArray.map((page) => {
             const pageLinkParams = new URLSearchParams(searchParams);
-            pageLinkParams.set("p", page.toString());
+            pageLinkParams.set("page", page.toString());
             const pageLink = pathname + "?" + pageLinkParams.toString();
             return (
               page >= currentPage - 2 &&

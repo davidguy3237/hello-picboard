@@ -160,3 +160,15 @@ export const NewPostSchema = z
     message: "Tags must be 50 characters or fewer",
     path: ["tags"],
   });
+
+export const SearchSchema = z.object({
+  query: z.string().min(3),
+  isStrictSearch: z.optional(z.boolean()),
+  sortBy: z.optional(z.enum(["asc", "desc"])),
+  dateRange: z.optional(
+    z.object({
+      from: z.date().min(new Date(2024, 1, 1)),
+      to: z.optional(z.date().max(new Date())),
+    }),
+  ),
+});

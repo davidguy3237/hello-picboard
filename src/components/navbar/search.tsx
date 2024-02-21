@@ -1,19 +1,24 @@
 "use client";
 
 import { searchTags } from "@/actions/search-tags";
+import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDebounceFunction } from "@/hooks/use-debounce";
+import { SearchSchema } from "@/schemas";
 import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { SearchFilter } from "./search-filter";
 import { DateRange } from "react-day-picker";
+import { SearchFilter } from "./search-filter";
 
 export function Search() {
   // TODO: Search input should probably be set in state, but currently can't get it to work properly
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [isStrictSearch, setIsStrictSearch] = useState<boolean | undefined>();
+  const [sortBy, setSortBy] = useState<"asc" | "desc" | undefined>();
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -68,21 +73,53 @@ export function Search() {
     const target = e.target as typeof e.target & { search: { value: string } };
     const searchValue = target.search.value;
 
-    const params = new URLSearchParams(searchParams);
+    const searchObj = {
+      query: searchValue,
+      isStrictSearch,
+      sortBy,
+      dateRange,
+    };
 
-    if (searchValue.length >= 3) {
-      params.set("q", searchValue);
+    const validatedFields = SearchSchema.safeParse(searchObj);
+    if (validatedFields.success) {
+      console.log(validatedFields);
+
+      const { query, isStrictSearch, sortBy, dateRange } = validatedFields.data;
+      const params = new URLSearchParams();
+      params.set("query", query);
+      if (isStrictSearch) {
+        params.set("strict", isStrictSearch.toString());
+      }
+      if (sortBy) {
+        params.set("sort", sortBy);
+      }
+      if (dateRange) {
+        params.set("from", dateRange.from.toISOString());
+        dateRange.to && params.set("to", dateRange.to.toISOString());
+      }
+
       replace(`${pathname}?${params.toString()}`);
+    } else if (validatedFields.error) {
+      console.error(validatedFields.error);
     }
   };
 
-  const handleStrictSearch = () => {};
+  const handleStrictSearch = (value: boolean) => {
+    setIsStrictSearch(value);
+  };
+  const handleSortBy = (value: string) => {
+    if (value === "asc" || value === "desc" || value === undefined) {
+      setSortBy(value);
+    } else {
+      setSortBy(undefined);
+    }
+  };
 
   // TODO: Maybe add search submit button so you don't have to hit enter
 
   return (
-    <div className="relative mx-auto flex w-full max-w-screen-sm">
-      <form onSubmit={handleSubmit} className="relative flex flex-1 gap-x-2">
+    <div className="relative mx-auto flex w-full max-w-screen-sm gap-x-2">
+      <form onSubmit={handleSubmit} className="relative flex-1">
         <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search for posts..."
@@ -91,7 +128,7 @@ export function Search() {
           className="peer flex-grow pl-8 placeholder:italic"
           name="search"
           onChange={debouncedHandleChange}
-          defaultValue={searchParams.get("q")?.toString()}
+          defaultValue={searchParams.get("query")?.toString()}
           onFocus={() => setShowDropdown(true)}
           onBlur={() => setShowDropdown(false)}
           id="search"
@@ -126,8 +163,19 @@ export function Search() {
             </ScrollArea>
           </div>
         )}
-        <SearchFilter />
       </form>
+      <SearchFilter
+        isStrictSearch={isStrictSearch}
+        handleStrictSearch={handleStrictSearch}
+        sortBy={sortBy}
+        handleSortBy={handleSortBy}
+      >
+        <DatePickerWithRange
+          className="w-full"
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+        />
+      </SearchFilter>
     </div>
   );
 }

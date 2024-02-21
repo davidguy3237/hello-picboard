@@ -14,10 +14,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+interface DatePickerWithRangeProps {
+  className?: string;
+  dateRange: DateRange | undefined;
+  setDateRange: (value: DateRange | undefined) => void;
+}
+
 export function DatePickerWithRange({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>();
+  dateRange,
+  setDateRange,
+}: DatePickerWithRangeProps) {
+  // const [date, setDate] = React.useState<DateRange | undefined>();
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -28,14 +36,14 @@ export function DatePickerWithRange({
             variant={"outline"}
             className={cn("flex justify-between text-left font-normal")}
           >
-            {date?.from ? (
-              date.to ? (
+            {dateRange?.from ? (
+              dateRange.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {format(dateRange.from, "LLL dd, y")} -{" "}
+                  {format(dateRange.to, "LLL dd, y")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(dateRange.from, "LLL dd, y")
               )
             ) : (
               <span>Filter by upload date</span>
@@ -47,12 +55,13 @@ export function DatePickerWithRange({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
+            defaultMonth={dateRange?.from}
+            selected={dateRange}
+            onSelect={setDateRange}
             numberOfMonths={2}
             fromYear={2024}
             fromMonth={new Date(2024, 1)}
+            toDate={new Date()}
             // TODO: limit date to start of launch to prevent users from searching for dates before there were any uploads
           />
         </PopoverContent>
