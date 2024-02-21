@@ -34,6 +34,7 @@ import * as z from "zod";
 
 export default function SettingsPage() {
   // TODO: see if I can get user info from server instead of client. Making too many calls to middleware
+  return <div>Settings</div>;
   const user = useCurrentUser();
   const { update } = useSession();
   const [error, setError] = useState<string | undefined>();

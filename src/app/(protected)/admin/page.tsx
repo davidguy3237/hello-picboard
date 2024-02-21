@@ -10,6 +10,7 @@ import { UserRole } from "@prisma/client";
 import { toast } from "sonner";
 
 export default function AdminPage() {
+  return <div>Admin</div>;
   const onServerActionClick = () => {
     admin().then((data) => {
       if (data.error) {

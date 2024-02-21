@@ -17,6 +17,7 @@ export default auth((req) => {
   console.log("MIDDLEWARE IS BEING CALLED");
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
+  console.log({ url: nextUrl.href });
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
