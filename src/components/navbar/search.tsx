@@ -6,8 +6,12 @@ import { useDebounceFunction } from "@/hooks/use-debounce";
 import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { SearchFilter } from "./search-filter";
+import { DateRange } from "react-day-picker";
 
 export function Search() {
+  // TODO: Search input should probably be set in state, but currently can't get it to work properly
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -72,11 +76,13 @@ export function Search() {
     }
   };
 
+  const handleStrictSearch = () => {};
+
   // TODO: Maybe add search submit button so you don't have to hit enter
 
   return (
-    <div className="relative w-full">
-      <form onSubmit={handleSubmit} className="relative">
+    <div className="relative mx-auto flex w-full max-w-screen-sm">
+      <form onSubmit={handleSubmit} className="relative flex flex-1 gap-x-2">
         <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search for posts..."
@@ -91,20 +97,36 @@ export function Search() {
           id="search"
         />
         {searchSuggestions.length > 0 && showDropdown && (
-          <ul className="absolute z-10 mt-2 max-h-40 w-full overflow-scroll rounded-md border">
-            {searchSuggestions.map((suggestion) => (
-              <li key={suggestion}>
-                <div
-                  className="flex h-8 items-center bg-background pl-2 hover:cursor-pointer hover:bg-secondary"
-                  // onClick={handleClick} // element disappears when input loses focus so this doesn't work
-                  onMouseDown={() => handleClick(suggestion)} // apparently this triggers before input loses focus
-                >
-                  {suggestion}
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div className="absolute z-10 mt-2 h-fit w-full">
+            <ScrollArea className="rounded-md border bg-background">
+              <ul className="max-h-40 w-full">
+                {searchSuggestions.map((suggestion) => {
+                  const searchBar = document.getElementById(
+                    "search",
+                  ) as HTMLInputElement;
+                  if (searchBar) {
+                    const inputValueArray = searchBar.value
+                      .trim()
+                      .split(",")
+                      .map((word: string) => word.trim());
+                    if (!inputValueArray.includes(suggestion)) {
+                      return (
+                        <li
+                          key={suggestion}
+                          onMouseDown={() => handleClick(suggestion)}
+                          className="flex h-8 items-center pl-2 hover:cursor-pointer hover:bg-secondary"
+                        >
+                          {suggestion}
+                        </li>
+                      );
+                    }
+                  }
+                })}
+              </ul>
+            </ScrollArea>
+          </div>
         )}
+        <SearchFilter />
       </form>
     </div>
   );

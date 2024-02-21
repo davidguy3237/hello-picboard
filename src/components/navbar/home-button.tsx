@@ -5,8 +5,8 @@ import Link from "next/link";
 
 export function HomeButton() {
   return (
-    <Link href="/home" className="flex items-center">
-      <Aperture className=" mr-2 h-8 w-8" />
+    <Link href="/home" className="flex items-center gap-x-2" prefetch={false}>
+      <Aperture className="h-8 w-8" />
       <span className="hidden text-xl sm:inline-block">Home</span>
     </Link>
   );

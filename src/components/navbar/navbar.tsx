@@ -1,6 +1,3 @@
-// "use client";
-
-import { FilterButton } from "@/components/navbar/filter-button";
 import { HomeButton } from "@/components/navbar/home-button";
 import { Search } from "@/components/navbar/search";
 import { ThemeToggleButton } from "@/components/navbar/theme-toggle-button";
@@ -14,22 +11,17 @@ import Link from "next/link";
 interface NavbarProps {
   showSearch?: boolean;
 }
-
+// TODO: MOVE FILTER BUTTON INTO SEARCH COMPONENT
 export async function Navbar({ showSearch = true }: NavbarProps) {
   const user = await currentUser();
   return (
-    <nav className=" flex w-full items-center justify-between p-2">
-      <div className="flex">
+    <nav className="flex w-full items-center p-2">
+      <div className="flex flex-1 gap-x-4">
         <HomeButton />
+        {user && <UploadButton />}
       </div>
-      {showSearch && (
-        <div className="mx-4 flex w-full max-w-screen-sm items-center gap-x-2">
-          {user && <UploadButton />}
-          <Search />
-          <FilterButton />
-        </div>
-      )}
-      <div className="flex gap-x-2">
+      {showSearch && <Search />}
+      <div className="flex flex-1 justify-end gap-x-2">
         {user ? (
           <UserButton user={user} />
         ) : (

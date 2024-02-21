@@ -21,15 +21,8 @@ export function DarkModeToggle() {
     }
   };
 
-  const handleDropDownClick = (e: MouseEvent) => {
-    e.preventDefault();
-  };
-
   return (
-    <DropdownMenuItem
-      onClick={handleDropDownClick}
-      className="flex justify-between"
-    >
+    <DropdownMenuItem onClick={handleClick} className="flex justify-between">
       <label
         className="flex items-center justify-center"
         htmlFor="dark-mode-toggle"
@@ -40,7 +33,6 @@ export function DarkModeToggle() {
       <Switch
         checked={localStorage.getItem("theme") === "dark"}
         id="dark-mode-toggle"
-        onClick={handleClick}
       />
     </DropdownMenuItem>
   );

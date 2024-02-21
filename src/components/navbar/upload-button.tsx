@@ -6,14 +6,15 @@ import Link from "next/link";
 
 export function UploadButton() {
   return (
-    <Link href="/upload">
+    <Link href="/upload" prefetch={false}>
       <Button
         variant="outline"
-        size="icon"
+        // size="lg"
         aria-label="Upload"
-        className="shrink-0"
+        className="flex shrink-0 items-center justify-center gap-x-2"
       >
-        <Upload />
+        <Upload size={18} />
+        <span>Upload</span>
       </Button>
     </Link>
   );
