@@ -1,14 +1,14 @@
-import { PaginationSection } from "@/components/pagination-section";
-import { PostList } from "@/components/post-list";
-import db from "@/lib/db";
-import { SearchSchema } from "@/schemas";
-import { DateRange } from "react-day-picker";
 import {
   DateFilterConditional,
   HomePageProps,
   StrictSearchConditional,
   WhereClause,
 } from "@/app/(public)/home/types";
+import { PaginationSection } from "@/components/pagination-section";
+import { PostCardList } from "@/components/post-card-list";
+import db from "@/lib/db";
+import { SearchSchema } from "@/schemas";
+import * as z from "zod";
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const query = searchParams?.query;
@@ -19,6 +19,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const currentPage = Number(searchParams?.page) || 1;
   const postsPerPage = Number(searchParams?.count) || 40;
 
+  // TODO: Do more zod validation here
   const params = {
     query,
     sortBy,
@@ -39,6 +40,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   let validatedToDate: Date | undefined;
 
   const validatedParams = SearchSchema.safeParse(params);
+
   if (validatedParams.success) {
     const validatedQuery = validatedParams.data.query;
     validatedSortBy = validatedParams.data.sortBy || "desc";
@@ -96,14 +98,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     orderBy: {
       createdAt: validatedSortBy,
     },
-    include: {
-      user: {
-        select: {
-          name: true,
-        },
-      },
-      tags: true,
-    },
     skip: (currentPage - 1) * postsPerPage,
     take: postsPerPage,
     where: whereClause,
@@ -115,7 +109,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <>
-      <PostList posts={posts} />
+      <PostCardList posts={posts} />
       <PaginationSection
         postsPerPage={postsPerPage}
         totalPostsCount={totalPostsCount}

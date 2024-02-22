@@ -6,13 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const writeReadableFileSize = (fileSize: number) => {
-  // <1KB
-  if (fileSize / 1024 < 1) {
+  if (fileSize < 1024) {
     return `${fileSize} Bytes`;
   }
 
-  // <1MB
-  if (fileSize / 1024 / 1024 < 1) {
+  if (fileSize < 1024 * 1024) {
     const sizeInKB = (fileSize / 1024).toFixed(2);
     return sizeInKB + " KB";
   }

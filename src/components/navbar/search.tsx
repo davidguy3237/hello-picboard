@@ -82,8 +82,6 @@ export function Search() {
 
     const validatedFields = SearchSchema.safeParse(searchObj);
     if (validatedFields.success) {
-      console.log(validatedFields);
-
       const { query, isStrictSearch, sortBy, dateRange } = validatedFields.data;
       const params = new URLSearchParams();
       params.set("query", query);

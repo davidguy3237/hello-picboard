@@ -7,7 +7,7 @@ export function HomeButton() {
   return (
     <Link href="/home" className="flex items-center gap-x-2" prefetch={false}>
       <Aperture className="h-8 w-8" />
-      <span className="hidden text-xl sm:inline-block">Home</span>
+      <span className="hidden text-xl lg:block">Home</span>
     </Link>
   );
 }

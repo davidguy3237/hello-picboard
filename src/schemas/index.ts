@@ -134,8 +134,8 @@ export const UploadSchema = z
     message: "Tags must be at least 3 characters",
     path: ["tags"],
   })
-  .refine((data) => data.tags.every((el) => el.length <= 50), {
-    message: "Tags must be 50 characters or fewer",
+  .refine((data) => data.tags.every((el) => el.length <= 40), {
+    message: "Tags must be 40 characters or fewer",
     path: ["tags"],
   });
 

@@ -2,13 +2,15 @@ import { Navbar } from "@/components/navbar/navbar";
 
 interface PublicLayoutProps {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }
 
-export default function PublicLayout({ children }: PublicLayoutProps) {
+export default function PublicLayout({ children, modal }: PublicLayoutProps) {
   return (
-    <div className=" flex h-full w-full flex-col items-center">
+    <div className="relative flex h-full w-full flex-col items-center">
       <Navbar />
       {children}
+      {modal}
     </div>
   );
 }

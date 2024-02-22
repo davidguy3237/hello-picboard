@@ -51,7 +51,7 @@ export function UploadForm({ file }: UploadFormProps) {
     inputValue: string,
     callback: (options: TagOption[]) => void,
   ) => {
-    if (inputValue.length >= 3) {
+    if (inputValue.length >= 3 && inputValue.length <= 40) {
       searchTags(inputValue).then((data) => {
         if (data.error) {
           callback([]);
