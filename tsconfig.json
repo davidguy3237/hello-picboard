@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
+    "lib": ["dom", "dom.iterable", "esnext"], // If your code runs in the DOM, tells TypeScript what built-in types to include.
+    "allowJs": true, // Allows you to import .js files
+    "skipLibCheck": true, // Skips checking the types of .d.ts files. This is important for performance, because otherwise all node_modules will be checked.
+    "strict": true, // Enables all strict type checking features
+    "esModuleInterop": true, // Helps mend a few of the fences between CommonJS and ES Modules.
+    "moduleResolution": "bundler", // Bundler is the best option for if the code you're writing is meant to be bundled with a tool like Webpack, Rollup, Babel, SWC, or ESBuild.
+    "module": "esnext", // ESNext is the best option because it most closely mimics how bundlers treat modules.
+    "noEmit": true, // Include if you're not transpiling your code with tsc, i.e. using TypeScript as more of a linter
+    "resolveJsonModule": true, // Allows you to import .json files
+    "isolatedModules": true, // This option prevents a few TS features which are unsafe when treating modules as isolated files.
+    "jsx": "preserve", // The preserve mode will keep the JSX as part of the output to be further consumed by another transform step (e.g. Babel).
+    "incremental": true, // Tells TypeScript to save information about the project graph from the last compilation to files stored on disk.
     "plugins": [
       {
         "name": "next",
@@ -24,3 +24,5 @@
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"],
 }
+
+// https://www.totaltypescript.com/tsconfig-cheat-sheet

@@ -3,39 +3,12 @@ import { PostList } from "@/components/post-list";
 import db from "@/lib/db";
 import { SearchSchema } from "@/schemas";
 import { DateRange } from "react-day-picker";
-
-interface HomePageProps {
-  searchParams?: {
-    query?: string;
-    page?: string;
-    sort?: "asc" | "desc";
-    count?: string;
-    strict?: string;
-    from?: string;
-    to?: string;
-  };
-}
-
-interface TagsQuery {
-  tags: {
-    some: {
-      name: {
-        search: string;
-      };
-    };
-  };
-}
-
-interface DateFilter {
-  createdAt?: {
-    gte?: Date;
-    lte?: Date;
-  };
-}
-
-interface WhereClause {
-  AND: (TagsQuery | DateFilter)[] | undefined;
-}
+import {
+  DateFilterConditional,
+  HomePageProps,
+  StrictSearchConditional,
+  WhereClause,
+} from "@/app/(public)/home/types";
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const query = searchParams?.query;
@@ -76,6 +49,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     tagsToSearch = validatedQuery
       ?.trim()
       .split(",")
+      .filter((tag) => tag) // filter out empty strings
       .map((tag) => tag.trim());
   }
 
@@ -91,12 +65,32 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     })),
   };
 
-  whereClause.AND?.push({
-    createdAt: validatedFromDate && {
-      gte: validatedFromDate ? new Date(validatedFromDate) : undefined,
-      lte: validatedToDate ? new Date(validatedToDate) : undefined,
-    },
-  });
+  if (whereClause.AND) {
+    const dateFilter: DateFilterConditional = {
+      createdAt: validatedFromDate && {
+        gte: validatedFromDate ? new Date(validatedFromDate) : undefined,
+        lte: validatedToDate ? new Date(validatedToDate) : undefined,
+      },
+    };
+
+    whereClause.AND.push(dateFilter);
+  }
+
+  if (whereClause.AND && validatedIsStrictSearch) {
+    const strictSearch: StrictSearchConditional = {
+      tags: {
+        some: {
+          NOT: {
+            name: {
+              in: tagsToSearch,
+            },
+          },
+        },
+      },
+    };
+
+    whereClause.NOT = strictSearch;
+  }
 
   const posts = await db.post.findMany({
     orderBy: {
@@ -115,20 +109,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     where: whereClause,
   });
 
-  // console.log(posts);
-
-  // This is kinda jank
-  const filteredPosts = posts.filter((post) =>
-    tagsToSearch ? post.tags.length === tagsToSearch.length : true,
-  );
-
   const totalPostsCount = await db.post.count({
     where: whereClause,
   });
 
   return (
     <>
-      <PostList posts={isStrictSearch ? filteredPosts : posts} />
+      <PostList posts={posts} />
       <PaginationSection
         postsPerPage={postsPerPage}
         totalPostsCount={totalPostsCount}
