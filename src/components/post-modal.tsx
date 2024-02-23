@@ -1,10 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 import { Dialog, InterceptedDialogContent } from "./ui/dialog";
 
-interface ModalProps {
+interface PostModalProps {
   children: React.ReactNode;
 }
-export function Modal({ children }: ModalProps) {
+export function PostModal({ children }: PostModalProps) {
   return (
     <Dialog open>
       <InterceptedDialogContent>{children}</InterceptedDialogContent>

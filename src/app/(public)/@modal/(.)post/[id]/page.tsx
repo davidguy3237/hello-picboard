@@ -1,5 +1,5 @@
 import PostPage from "@/app/(public)/post/[id]/page";
-import { Modal } from "@/components/image-modal";
+import { PostModal } from "@/components/post-modal";
 
 interface PostModal {
   params: {
@@ -9,8 +9,8 @@ interface PostModal {
 
 export default function InterceptedPostPageAsModal({ params }: PostModal) {
   return (
-    <Modal>
+    <PostModal>
       <PostPage params={params} />
-    </Modal>
+    </PostModal>
   );
 }
