@@ -10,9 +10,10 @@ export function UploadButton() {
       <Button
         variant="outline"
         aria-label="Upload"
-        className="flex shrink-0 items-center justify-center gap-x-2 rounded-full active:bg-background"
+        className="flex h-10 w-10 shrink-0 items-center justify-center gap-x-2 rounded-full px-0 py-0 active:bg-background lg:w-auto lg:px-4 lg:py-2"
       >
         <Upload size={18} />
+        <span className="hidden lg:block">Upload</span>
       </Button>
     </Link>
   );
