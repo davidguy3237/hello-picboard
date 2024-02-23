@@ -1,6 +1,7 @@
 "use client";
 
 import { searchTags } from "@/actions/search-tags";
+import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -113,17 +114,22 @@ export function Search() {
     }
   };
 
-  // TODO: Maybe add search submit button so you don't have to hit enter
-
   return (
     <div className="relative mx-auto flex w-full max-w-screen-sm gap-x-2">
       <form onSubmit={handleSubmit} className="relative flex-1">
-        <SearchIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
+        <Button
+          size="icon"
+          variant="link"
+          type="submit"
+          aria-label="Search"
+          className="absolute right-2 top-0 hidden text-muted-foreground hover:text-foreground sm:block"
+        >
+          <SearchIcon strokeWidth={3} />
+        </Button>
         <Input
           placeholder="Search for posts..."
-          type="search"
           minLength={3}
-          className="peer flex-grow pl-8 placeholder:italic"
+          className="peer flex-grow rounded-full placeholder:italic"
           name="search"
           onChange={debouncedHandleChange}
           defaultValue={searchParams.get("query")?.toString()}
