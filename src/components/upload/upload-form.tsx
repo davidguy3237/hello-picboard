@@ -6,6 +6,13 @@ import { uploadImage } from "@/actions/upload-image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogClose,
+  DialogOverlay,
+  DialogPortal,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Form,
   FormControl,
   FormField,
@@ -18,6 +25,7 @@ import { useDebounceFunction } from "@/hooks/use-debounce";
 import { cn, writeReadableFileSize } from "@/lib/utils";
 import { UploadSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogContent } from "@radix-ui/react-dialog";
 import { CheckCircle, Loader2, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { FileWithPath } from "react-dropzone";
@@ -129,11 +137,31 @@ export function UploadForm({ file, removeFile }: UploadFormProps) {
             name="image"
             render={({ field }) => (
               <FormItem className=" flex h-full basis-1/4 flex-col items-center justify-center pr-4">
-                <img
-                  alt=""
-                  src={blobURL}
-                  className="h-full max-w-full object-contain"
-                />
+                <Dialog>
+                  <DialogTrigger>
+                    <img
+                      alt=""
+                      src={blobURL}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </DialogTrigger>
+                  <DialogPortal>
+                    <DialogOverlay />
+                    <DialogContent>
+                      <img
+                        alt=""
+                        src={blobURL}
+                        className="fixed left-[50%] top-[50%] z-50 h-fit max-h-screen w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
+                      />
+                      <DialogClose
+                        className="absolute right-4 top-4 z-50 text-white"
+                        aria-label="Close"
+                      >
+                        <X />
+                      </DialogClose>
+                    </DialogContent>
+                  </DialogPortal>
+                </Dialog>
                 <FormMessage />
               </FormItem>
             )}
