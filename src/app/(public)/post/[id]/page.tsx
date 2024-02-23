@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
 import { Clock, Download, Ruler, User } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 interface PostPageProps {
   params: {
@@ -38,7 +38,7 @@ export default async function PostPage({ params }: PostPageProps) {
   });
 
   if (!post) {
-    redirect("/");
+    notFound();
   }
 
   const distance = formatDistanceToNow(new Date(post.createdAt), {

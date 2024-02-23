@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDebounceFunction } from "@/hooks/use-debounce";
 import { SearchSchema } from "@/schemas";
-import { SearchIcon } from "lucide-react";
+import { Loader2, SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState, useTransition } from "react";
 import { DateRange } from "react-day-picker";
 import { SearchFilter } from "./search-filter";
 
@@ -20,6 +20,7 @@ export function Search() {
   const [isStrictSearch, setIsStrictSearch] = useState<boolean | undefined>();
   const [sortBy, setSortBy] = useState<"asc" | "desc" | undefined>();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -33,13 +34,15 @@ export function Search() {
       .map((word) => word.trim());
     const lastSearchValue = inputValueArray[inputValueArray.length - 1];
     if (lastSearchValue.length >= 3) {
-      searchTags(lastSearchValue).then((data) => {
-        if (data.error) {
-          setSearchSuggestions([]);
-        } else if (data.success) {
-          const results = data.success.map((tag) => tag.value);
-          setSearchSuggestions(results);
-        }
+      startTransition(() => {
+        searchTags(lastSearchValue).then((data) => {
+          if (data.error) {
+            setSearchSuggestions([]);
+          } else if (data.success) {
+            const results = data.success.map((tag) => tag.value);
+            setSearchSuggestions(results);
+          }
+        });
       });
     } else {
       setSearchSuggestions([]);
@@ -137,6 +140,11 @@ export function Search() {
           onBlur={() => setShowDropdown(false)}
           id="search"
         />
+        {isPending && (
+          <div className="absolute z-10 mt-2 flex h-8 w-full items-center justify-center rounded-md border bg-background">
+            <Loader2 className="animate-spin" />
+          </div>
+        )}
         {searchSuggestions.length > 0 && showDropdown && (
           <div className="absolute z-10 mt-2 h-fit w-full">
             <ScrollArea className="rounded-md border bg-background">
