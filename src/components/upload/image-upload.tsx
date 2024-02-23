@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UploadForm } from "@/components/upload/upload-form";
 import { cn } from "@/lib/utils";
 import { ImagePlus } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   DropEvent,
   ErrorCode,
@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 
 export function ImageUpload() {
+  const [files, setFiles] = useState<FileWithPath[]>([]);
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (rejectedFiles.length > 0) {
@@ -24,8 +25,9 @@ export function ImageUpload() {
           toast.error(file.errors[0].message);
         });
       }
+      setFiles([...files, ...acceptedFiles]);
     },
-    [],
+    [files],
   );
 
   const validateFile = (file: File) => {
@@ -57,11 +59,16 @@ export function ImageUpload() {
     validator: validateFile,
   });
 
-  const filesPreview = acceptedFiles.map((file: FileWithPath) => {
-    return <UploadForm key={file.path} file={file} />;
+  const removeFile = (file: FileWithPath) => {
+    const updatedFiles = files.filter((f) => f !== file);
+    setFiles(updatedFiles);
+  };
+
+  const filesPreview = files.map((file: FileWithPath) => {
+    return <UploadForm key={file.path} file={file} removeFile={removeFile} />;
   });
 
-  return acceptedFiles.length > 0 ? (
+  return files.length > 0 ? (
     <div className="my-4 flex w-full max-w-screen-md flex-col items-center justify-start gap-4">
       {filesPreview}
     </div>

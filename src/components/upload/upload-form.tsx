@@ -18,7 +18,7 @@ import { useDebounceFunction } from "@/hooks/use-debounce";
 import { cn, writeReadableFileSize } from "@/lib/utils";
 import { UploadSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { FileWithPath } from "react-dropzone";
 import { useForm } from "react-hook-form";
@@ -27,13 +27,14 @@ import * as z from "zod";
 
 interface UploadFormProps {
   file: FileWithPath;
+  removeFile: (file: FileWithPath) => void;
 }
 interface TagOption {
   value: string;
   label: string;
 }
 
-export function UploadForm({ file }: UploadFormProps) {
+export function UploadForm({ file, removeFile }: UploadFormProps) {
   const [isPending, startTransition] = useTransition();
   const [uploadCompleted, setUploadCompleted] = useState(false);
   const blobURL = URL.createObjectURL(file);
@@ -76,13 +77,16 @@ export function UploadForm({ file }: UploadFormProps) {
         console.error(uploadImageResult.error);
       }
       if (uploadImageResult.success) {
-        const { sourceUrl, thumbnailUrl } = uploadImageResult.success;
+        const { sourceUrl, thumbnailUrl, width, height } =
+          uploadImageResult.success;
 
         const newPostData = {
           tags: uploadData.tags,
           description: uploadData.description,
           sourceUrl,
           thumbnailUrl,
+          width,
+          height,
         };
 
         const newPostResult = await newPost(newPostData);
@@ -99,8 +103,6 @@ export function UploadForm({ file }: UploadFormProps) {
       }
     });
   };
-
-  // TODO: Add Option to delete upload form
 
   return (
     <Card className="flex h-full w-full items-center">
@@ -193,6 +195,14 @@ export function UploadForm({ file }: UploadFormProps) {
             </Button>
           </form>
         </Form>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-0 top-0 rounded-full"
+          onClick={() => removeFile(file)}
+        >
+          <X />
+        </Button>
       </CardContent>
     </Card>
   );
