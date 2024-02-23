@@ -77,7 +77,7 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
       <div className="flex w-full flex-shrink-0 flex-col gap-y-2 p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
         <div className="flex items-center gap-x-2">
-          <Avatar>
+          <Avatar className="h-8 w-8">
             <AvatarImage src={post.user?.image || ""} />
             <AvatarFallback className="bg-foreground">
               <User className="text-background" />

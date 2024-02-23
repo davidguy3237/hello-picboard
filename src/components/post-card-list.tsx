@@ -11,7 +11,7 @@ interface PostCardListProps {
 
 export function PostCardList({ posts }: PostCardListProps) {
   return (
-    <div className="flex max-w-screen-2xl flex-row flex-wrap justify-center">
+    <div className="flex max-w-screen-2xl flex-row flex-wrap justify-center gap-1 md:m-4">
       {posts.length > 0 ? (
         posts.map((post) => (
           <PostCard

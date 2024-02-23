@@ -32,7 +32,11 @@ export function SearchFilter({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className=" shrink-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          className=" shrink-0 rounded-full active:bg-background"
+        >
           <SlidersHorizontal />
         </Button>
       </PopoverTrigger>
