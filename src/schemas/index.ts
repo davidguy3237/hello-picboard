@@ -151,6 +151,8 @@ export const NewPostSchema = z
     ),
     sourceUrl: z.string().url(),
     thumbnailUrl: z.string().url(),
+    width: z.optional(z.number()),
+    height: z.optional(z.number()),
   })
   .refine((data) => data.tags.every((el) => el.length >= 3), {
     message: "Tags must be at least 3 characters",

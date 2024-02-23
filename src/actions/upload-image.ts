@@ -55,10 +55,10 @@ export async function uploadImage(ImageFormData: FormData) {
 
   const fileBuffer = Buffer.from(await file.arrayBuffer());
 
-  const width = 400;
+  const thumbnailWidth = 400;
   const thumbnailObject = await sharp(fileBuffer)
-    .resize(width)
-    .webp({ quality: 50 })
+    .resize(thumbnailWidth)
+    .webp()
     .toBuffer({ resolveWithObject: true });
 
   const { data: thumbnailBuffer, info: thumbnailInfo } = thumbnailObject;
@@ -87,10 +87,14 @@ export async function uploadImage(ImageFormData: FormData) {
     return { error: "Something went wrong" };
   }
 
+  const { width, height } = await sharp(fileBuffer).metadata();
+
   return {
     success: {
       sourceUrl: `${process.env.B2_FRIENDLY_URL}/file/${process.env.B2_BUCKET_NAME}/${fileName}${sourcefileExtension}`,
       thumbnailUrl: `${process.env.B2_FRIENDLY_URL}/file/${process.env.B2_BUCKET_NAME}/${folderName}/${thumbnailName}${thumbnailFileExtension}`,
+      width,
+      height,
     },
   };
 }

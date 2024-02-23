@@ -18,13 +18,16 @@ export async function newPost(newPostData: z.infer<typeof NewPostSchema>) {
     return { error: "Invalid form" };
   }
 
-  const { tags, sourceUrl, thumbnailUrl, description } = validatedFields.data;
+  const { tags, sourceUrl, thumbnailUrl, description, width, height } =
+    validatedFields.data;
 
   const post = await db.post.create({
     data: {
       sourceUrl,
       thumbnailUrl,
       description,
+      width,
+      height,
       userId: user.id,
       tags: {
         connectOrCreate: tags.map((tag) => {

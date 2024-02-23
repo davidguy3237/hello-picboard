@@ -92,13 +92,14 @@ model TwoFactorConfirmation {
   
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-
 model Post {
   id           String  @id @default(cuid())
   userId       String?
   sourceUrl    String  @unique
   thumbnailUrl String  @unique
-  description  String? @db.VarChar(500) 
+  description  String? @db.VarChar(500)
+  width        Int?
+  height       Int?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   tags         Tag[]

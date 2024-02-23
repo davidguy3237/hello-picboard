@@ -1,10 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 import Tag from "@/components/tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
-import { User } from "lucide-react";
+import { Clock, Download, Ruler, User } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 interface PostPageProps {
@@ -36,25 +44,38 @@ export default async function PostPage({ params }: PostPageProps) {
   const distance = formatDistanceToNow(new Date(post.createdAt), {
     addSuffix: true,
   });
-  const formattedDate =
+
+  const fullDate = format(new Date(post.createdAt), "h:mm a · MMMM d, yyyy");
+
+  const dateToShow =
     distance.includes("months") || distance.includes("years")
-      ? format(new Date(post.createdAt), "h:mm a · MMMM d, yyyy")
+      ? fullDate
       : distance;
 
   return (
     <div
       className={
-        "lg:max-w-screen flex flex-col divide-y px-2 pt-0 lg:h-[calc(100vh-58px)] lg:flex-row lg:divide-y-0"
+        "flex h-[calc(100vh-58px)] w-full flex-col divide-y lg:flex-row lg:divide-y-0"
       }
     >
-      <div className="flex justify-center pb-2 lg:h-full lg:w-full lg:pr-2 lg:pt-2">
+      <div className="relative flex h-full max-h-[calc(100vh-58px-167px)] w-full justify-center lg:max-h-full">
         <img
           alt=""
           src={post.sourceUrl}
           className="h-full w-full object-contain"
         />
+        <Link href={post.sourceUrl} download>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute right-0 top-0 flex rounded-full"
+          >
+            <Download />
+            <span className="sr-only">Download Image</span>
+          </Button>
+        </Link>
       </div>
-      <div className="flex flex-shrink-0 flex-col gap-y-2 pt-2 lg:w-80 lg:border-l lg:pl-2">
+      <div className="flex w-full flex-shrink-0 flex-col gap-y-2 p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
         <div className="flex items-center gap-x-2">
           <Avatar>
             <AvatarImage src={post.user?.image || ""} />
@@ -66,7 +87,25 @@ export default async function PostPage({ params }: PostPageProps) {
             {post.user?.name || "deleted"}
           </span>
         </div>
-        <div>{formattedDate}</div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Clock className="h-4 w-4" />
+                <span>{dateToShow}</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{fullDate}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        {post.width && post.height && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Ruler className="h-4 w-4" />
+            <span>{`${post.width} x ${post.height}`}</span>
+          </div>
+        )}
         <p
           className={cn(
             "whitespace-pre-wrap",
