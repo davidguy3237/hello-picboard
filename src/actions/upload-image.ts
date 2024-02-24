@@ -2,6 +2,7 @@
 
 "use server";
 
+import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import * as crypto from "crypto";
@@ -26,9 +27,16 @@ export async function uploadImage(ImageFormData: FormData) {
     return { error: "No FormData" };
   }
 
-  const user = currentUser();
+  const user = await currentUser();
+  console.log("Upload image", { user, ImageFormData });
 
   if (!user) {
+    return { error: "Unauthorized" };
+  }
+
+  const dbUser = await getUserById(user.id);
+
+  if (!dbUser) {
     return { error: "Unauthorized" };
   }
 

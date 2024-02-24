@@ -54,7 +54,6 @@ export function PaginationSection({
         <PaginationItem>
           <PaginationPrevious
             href={previousLink}
-            prefetch={false}
             aria-disabled={currentPage <= 1}
             tabIndex={currentPage <= 1 ? -1 : undefined}
             className={cn(currentPage <= 1 && "pointer-events-none opacity-50")}
@@ -77,7 +76,6 @@ export function PaginationSection({
                   <PaginationLink
                     isActive={page === currentPage}
                     href={pageLink}
-                    prefetch={false}
                   >
                     {page}
                   </PaginationLink>
@@ -93,7 +91,6 @@ export function PaginationSection({
         <PaginationItem>
           <PaginationNext
             href={nextLink}
-            prefetch={false}
             aria-disabled={currentPage >= totalPages}
             tabIndex={currentPage >= totalPages ? -1 : undefined}
             className={cn(

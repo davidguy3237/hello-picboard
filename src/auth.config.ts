@@ -4,7 +4,7 @@ import { LoginSchema } from "@/schemas";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
+import Google, { GoogleProfile } from "next-auth/providers/google";
 import Twitter from "next-auth/providers/twitter";
 
 export default {
@@ -14,6 +14,7 @@ export default {
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
+    // TODO: probably remove Google too
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -24,8 +25,6 @@ export default {
     // }),
     Credentials({
       async authorize(credentials, request) {
-        // Gives full control over how you handle the credentials received from the user.
-        // The existence/correctness of a field cannot be guaranteed at compile time, so you should always validate the input before using it
         const validatedFields = LoginSchema.safeParse(credentials);
 
         if (validatedFields.success) {
@@ -48,6 +47,3 @@ export default {
     }),
   ],
 } satisfies NextAuthConfig;
-
-// For more info:
-// https://authjs.dev/guides/upgrade-to-v5?authentication-method=middleware#edge-compatibility

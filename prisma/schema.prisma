@@ -26,9 +26,10 @@ model User {
   image                 String?
   password              String?
   isTwoFactorEnabled    Boolean      @default(false)
-  role                  UserRole     @default(USER)
   createdAt             DateTime     @default(now())
+  role                  UserRole     @default(USER)
   twoFactorConfirmation TwoFactorConfirmation?
+  banDate               DateTime?
   accounts              Account[]
   posts                 Post[]
   albums                Album[]

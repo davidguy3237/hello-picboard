@@ -21,7 +21,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-export function ResetPasswordForm() {
+export default function ResetPasswordPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -50,7 +50,7 @@ export function ResetPasswordForm() {
   return (
     <CardWrapper
       headerTitle="Reset Password"
-      headerLabel="Forgot your password?"
+      headerLabel="Enter your email address to reset your password"
       backButtonLabel="Back to login"
       backButtonHref="/login"
     >

@@ -19,10 +19,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // TODO: see if I can get user info from server instead of client. Making too many calls to middleware
-  // const session = await auth();
   return (
-    // <SessionProvider session={session}>
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.className, "bg-background")}>
         <ThemeProvider attribute="class" disableTransitionOnChange>
@@ -31,6 +28,5 @@ export default async function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-    // </SessionProvider>
   );
 }

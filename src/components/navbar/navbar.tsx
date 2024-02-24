@@ -6,12 +6,10 @@ import { UserButton } from "@/components/navbar/user-button-dropdown/user-button
 import { Button } from "@/components/ui/button";
 import { currentUser } from "@/lib/auth";
 import Link from "next/link";
-// TODO: change how the navbar is rendered depending on screen size
 
 interface NavbarProps {
   showSearch?: boolean;
 }
-// TODO: MOVE FILTER BUTTON INTO SEARCH COMPONENT
 export async function Navbar({ showSearch = true }: NavbarProps) {
   const user = await currentUser();
   return (
@@ -27,7 +25,7 @@ export async function Navbar({ showSearch = true }: NavbarProps) {
         ) : (
           <>
             <ThemeToggleButton />
-            <Link href="/auth/register">
+            <Link href="/register">
               <Button variant="outline">Sign Up</Button>
             </Link>
           </>

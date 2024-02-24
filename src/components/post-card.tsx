@@ -42,7 +42,7 @@ export function PostCard({ id, sourceUrl, thumbnailUrl }: ImageProps) {
     <div className="relative flex h-fit w-full flex-auto items-center justify-center overflow-hidden rounded-sm bg-secondary md:h-96 md:w-72">
       <div className="group h-full w-full">
         {isWindowSmall ? (
-          <Link href={`/post/${id}`} prefetch={false} scroll={false}>
+          <Link href={`/post/${id}`} scroll={false}>
             <img
               decoding="async"
               loading="lazy"
@@ -55,7 +55,7 @@ export function PostCard({ id, sourceUrl, thumbnailUrl }: ImageProps) {
             />
           </Link>
         ) : (
-          <Link href={`/post/${id}`} prefetch={false} scroll={false}>
+          <Link href={`/post/${id}`} scroll={false}>
             <img
               decoding="async"
               loading="lazy"

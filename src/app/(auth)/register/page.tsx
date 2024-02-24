@@ -21,7 +21,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-export function RegisterForm() {
+export default function RegisterPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -53,7 +53,7 @@ export function RegisterForm() {
       headerTitle="Sign Up"
       headerLabel="Create an account"
       backButtonLabel="Already have an account?"
-      backButtonHref="/auth/login"
+      backButtonHref="/login"
       showSocial={!isPending}
     >
       <Form {...form}>

@@ -11,7 +11,7 @@ import * as z from "zod";
 
 export async function newPassword(
   newPasswordObj: z.infer<typeof NewPasswordSchema>,
-  token?: string | null,
+  token: string,
 ) {
   if (!token) {
     return { error: "Missing token!" };

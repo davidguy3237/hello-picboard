@@ -1,5 +1,5 @@
-"use client";
 /* eslint-disable @next/next/no-img-element */
+"use client";
 import { newPost } from "@/actions/new-post";
 import { searchTags } from "@/actions/search-tags";
 import { uploadImage } from "@/actions/upload-image";
@@ -82,6 +82,7 @@ export function UploadForm({ file, removeFile }: UploadFormProps) {
       const uploadImageResult = await uploadImage(imageToUpload);
 
       if (uploadImageResult.error) {
+        // TODO: Disable all inputs and show error
         console.error(uploadImageResult.error);
       }
       if (uploadImageResult.success) {

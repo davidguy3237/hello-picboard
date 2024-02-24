@@ -55,7 +55,7 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <div
       className={
-        "flex h-[calc(100vh-58px)] w-full flex-col divide-y lg:flex-row lg:divide-y-0"
+        "flex h-[calc(100vh-57px)] w-full flex-col divide-y lg:flex-row lg:divide-y-0"
       }
     >
       <div className="relative flex h-full max-h-[calc(100vh-58px-167px)] w-full justify-center lg:max-h-full">

@@ -7,6 +7,7 @@ import * as z from "zod";
 
 export async function newPost(newPostData: z.infer<typeof NewPostSchema>) {
   const user = await currentUser();
+  console.log("NEW POST", { user, newPostData });
 
   if (!user || !user.id) {
     return { error: "Unauthorized" };

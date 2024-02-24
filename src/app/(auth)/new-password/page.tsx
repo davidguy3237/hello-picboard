@@ -22,7 +22,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-export function NewPasswordForm() {
+export default function NewPasswordPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -43,6 +43,11 @@ export function NewPasswordForm() {
   ) => {
     setError("");
     setSuccess("");
+
+    if (!token) {
+      setError("Missing token!");
+      return;
+    }
 
     startTransition(() => {
       newPassword(newPasswordObj, token).then((data) => {

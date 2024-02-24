@@ -23,7 +23,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-export function LoginForm() {
+export default function LoginPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
@@ -73,12 +73,11 @@ export function LoginForm() {
   };
 
   return (
-    // TODO: check if password is correct for unverified emails before resending confirmation email
     <CardWrapper
       headerTitle="Login"
       headerLabel="Welcome back"
       backButtonLabel="Don't have an account?"
-      backButtonHref="/auth/register"
+      backButtonHref="/register"
       showSocial={!isPending}
     >
       <Form {...form}>
@@ -141,9 +140,7 @@ export function LoginForm() {
                         asChild
                         className="px-0 font-normal"
                       >
-                        <Link href="/auth/reset-password">
-                          Forgot password?
-                        </Link>
+                        <Link href="/reset-password">Forgot password?</Link>
                       </Button>
                     </FormItem>
                   )}

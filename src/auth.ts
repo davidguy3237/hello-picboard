@@ -4,8 +4,8 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 import { getUserById } from "@/data/user";
 import db from "@/lib/db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { UserRole } from "@prisma/client";
 import NextAuth, { Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 export const {
   handlers: { GET, POST },
@@ -15,7 +15,7 @@ export const {
 } = NextAuth({
   pages: {
     signIn: "/login",
-    error: "/auth/error",
+    error: "/auth-error",
   },
   events: {
     async linkAccount({ user }) {
@@ -57,15 +57,18 @@ export const {
       return true;
     },
     async jwt({ token, user, account, profile, trigger, session }) {
+      // If no id, then user is logged out, so don't do anything to token
       if (!token.sub) {
         return token;
       }
-      // If user exists, pass relevant info into the JWT token, which then gets passed into the session to be used
       const existingUser = await getUserById(token.sub);
+
       if (!existingUser) {
         return token;
       }
+
       const existingAccount = await getAccountByUserId(existingUser.id);
+
       token.isOAuth = !!existingAccount;
       token.name = existingUser.name;
       token.email = existingUser.email;
@@ -75,9 +78,10 @@ export const {
       if (trigger === "update" && session) {
         token = { ...token, ...session };
       }
+
       return token;
     },
-    async session({ session, token }: { session: Session; token?: any }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
         if (token.sub) {
           session.user.id = token.sub;
@@ -86,11 +90,21 @@ export const {
         if (token.role) {
           session.user.role = token.role;
         }
-        // pass user info from token into session to be accessed by client
+
         session.user.name = token.name;
         session.user.email = token.email;
-        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
-        session.user.isOAuth = token.isOAuth;
+
+        if (typeof token.isTwoFactorEnabled === "boolean") {
+          session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
+        } else {
+          session.user.isTwoFactorEnabled = false;
+        }
+
+        if (typeof token.isOAuth === "boolean") {
+          session.user.isOAuth = token.isOAuth;
+        } else {
+          session.user.isOAuth = false;
+        }
       }
       return session;
     },

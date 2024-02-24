@@ -3,14 +3,14 @@
  * These routes do not require authentication.
  * @type {string[]}
  */
-export const publicRoutes = ["/", "/auth/new-verification"];
+export const publicRoutes = ["/", "/new-verification"];
 
 /**
  * An array of routes that are accessible to authenticated users.
  * These routes must be checked to see if the user is authenticated.
  * @type {string[]}
  */
-export const protectedRoutes = ["/settings", "/upload"];
+export const protectedRoutes = ["/settings", "/upload", "/admin", "/server"];
 
 /**
  * An array of routes that are used for authentication.
@@ -18,11 +18,12 @@ export const protectedRoutes = ["/settings", "/upload"];
  * @type {string[]}
  */
 export const authRoutes = [
-  "/auth/login",
-  "/auth/register",
-  "/auth/error",
-  "/auth/reset-password",
-  "/auth/new-password",
+  "/login",
+  "/register",
+  "/error",
+  "/reset-password",
+  "/new-password",
+  "/new-verification",
 ];
 
 /**
@@ -37,9 +38,3 @@ export const apiAuthPrefix = "/api/auth";
  * @type {string}
  */
 export const DEFAULT_LOGIN_REDIRECT = "/home";
-
-/**
- * The default redirect path when trying to access a protected route.
- * @type {string}
- */
-export const DEFAULT_PROTECTED_REDIRECT = "/auth/login";

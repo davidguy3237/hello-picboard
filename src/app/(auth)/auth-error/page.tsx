@@ -1,7 +1,7 @@
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { BsExclamationTriangle } from "react-icons/bs";
 
-export function ErrorCard() {
+export default async function AuthErrorPage() {
   return (
     <CardWrapper
       headerTitle="Error"

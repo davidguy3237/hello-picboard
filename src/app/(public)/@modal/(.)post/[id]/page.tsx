@@ -1,16 +1,18 @@
 import PostPage from "@/app/(public)/post/[id]/page";
-import { PostModal } from "@/components/post-modal";
+import { InterceptModal } from "@/components/intercept-modal";
 
-interface PostModal {
+interface InterceptedPostPageProps {
   params: {
     id: string;
   };
 }
 
-export default function InterceptedPostPageAsModal({ params }: PostModal) {
+export default function InterceptedPostPage({
+  params,
+}: InterceptedPostPageProps) {
   return (
-    <PostModal>
+    <InterceptModal>
       <PostPage params={params} />
-    </PostModal>
+    </InterceptModal>
   );
 }

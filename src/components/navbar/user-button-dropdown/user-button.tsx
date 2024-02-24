@@ -1,6 +1,5 @@
 "use client";
 
-import { LogoutButton } from "@/components/auth/logout-button";
 import { DarkModeToggle } from "@/components/navbar/user-button-dropdown/dark-mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -12,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ExtendedUser } from "@/next-auth";
 import { Album, Images, LogOut, Settings, User } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 interface UserButtonProps {
@@ -30,13 +30,13 @@ export function UserButton({ user }: UserButtonProps) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="end">
-        <Link href="/test" prefetch={false}>
+        <Link href="/test">
           <DropdownMenuItem>
             <Images className="mr-2 h-4 w-4" />
             My Posts
           </DropdownMenuItem>
         </Link>
-        <Link href="/test" prefetch={false}>
+        <Link href="/test">
           <DropdownMenuItem>
             <Album className="mr-2 h-4 w-4" />
             My Albums
@@ -50,12 +50,10 @@ export function UserButton({ user }: UserButtonProps) {
         </Link>
         <DarkModeToggle />
         <DropdownMenuSeparator />
-        <LogoutButton>
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </DropdownMenuItem>
-        </LogoutButton>
+        <DropdownMenuItem onClick={() => signOut()}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
