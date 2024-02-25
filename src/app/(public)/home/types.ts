@@ -1,13 +1,15 @@
+export interface searchParams {
+  query?: string;
+  page?: string;
+  sort?: "asc" | "desc";
+  count?: string;
+  strict?: string;
+  from?: string;
+  to?: string;
+}
+
 export interface HomePageProps {
-  searchParams?: {
-    query?: string;
-    page?: string;
-    sort?: "asc" | "desc";
-    count?: string;
-    strict?: string;
-    from?: string;
-    to?: string;
-  };
+  searchParams?: searchParams;
 }
 
 export interface TagsQuery {

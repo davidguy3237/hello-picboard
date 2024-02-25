@@ -1,6 +1,7 @@
 "use client";
 
 import { searchTags } from "@/actions/search-tags";
+import { SearchFilter } from "@/components/navbar/search-filter";
 import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,6 @@ import { Loader2, SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useState, useTransition } from "react";
 import { DateRange } from "react-day-picker";
-import { SearchFilter } from "./search-filter";
 
 export function Search() {
   // TODO: Search input should probably be set in state, but currently can't get it to work properly
@@ -125,7 +125,7 @@ export function Search() {
           variant="link"
           type="submit"
           aria-label="Search"
-          className="absolute right-2 top-0 hidden text-muted-foreground hover:text-foreground sm:block"
+          className="absolute right-0 top-0 hidden text-muted-foreground hover:text-foreground sm:block"
         >
           <SearchIcon strokeWidth={3} />
         </Button>
