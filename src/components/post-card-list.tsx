@@ -6,12 +6,12 @@ import { Loader2Icon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 
-export function PostCardList() {
+export function PostCardList({ queryString }: { queryString: string }) {
   const [cursor, setCursor] = useState("");
-  const query = useSearchParams().toString();
+  // const query = useSearchParams().toString();
 
   const { isLoading, error, posts, hasMore } = usePostsSearch({
-    query,
+    query: queryString,
     cursor,
   });
 
