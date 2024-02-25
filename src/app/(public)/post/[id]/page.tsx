@@ -3,6 +3,11 @@ import Tag from "@/components/tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -11,7 +16,7 @@ import {
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
-import { Clock, Download, Ruler, User } from "lucide-react";
+import { Clock, Download, MoreHorizontal, Ruler, User } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -21,6 +26,7 @@ interface PostPageProps {
   };
 }
 export default async function PostPage({ params }: PostPageProps) {
+  console.log("POST PAGE");
   const postId = params.id;
   const post = await db.post.findUnique({
     where: {
@@ -58,22 +64,32 @@ export default async function PostPage({ params }: PostPageProps) {
         "flex h-[calc(100vh-57px)] w-full flex-col divide-y lg:flex-row lg:divide-y-0"
       }
     >
-      <div className="relative flex h-full max-h-[calc(100vh-58px-167px)] w-full justify-center lg:max-h-full">
+      <div className="relative flex h-full max-h-[calc(100vh-57px-180px)] w-full justify-center lg:max-h-full">
         <img
           alt=""
           src={post.sourceUrl}
           className="h-full w-full object-contain"
         />
-        <Link href={post.sourceUrl} download>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="absolute right-0 top-0 flex rounded-full"
+        <Popover>
+          <PopoverTrigger className="absolute right-0 top-0 flex h-8 w-8 items-center justify-center rounded-full hover:bg-accent hover:text-accent-foreground">
+            <MoreHorizontal />
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-fit border bg-popover p-0 text-popover-foreground sm:rounded-sm"
+            align="end"
           >
-            <Download />
-            <span className="sr-only">Download Image</span>
-          </Button>
-        </Link>
+            <Link href={post.sourceUrl} download>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex justify-between active:bg-background"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download
+              </Button>
+            </Link>
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="flex w-full flex-shrink-0 flex-col gap-y-2 p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
         <div className="flex items-center gap-x-2">
