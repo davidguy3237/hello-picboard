@@ -1,13 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
+import { OptionsPopover } from "@/components/options-popover";
 import { PostInterceptModal } from "@/components/post-intercept-modal";
 import Tag from "@/components/tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
@@ -17,8 +12,7 @@ import {
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
-import { Clock, Download, MoreHorizontal, Ruler, User } from "lucide-react";
-import Link from "next/link";
+import { Clock, Ruler, User } from "lucide-react";
 import { notFound } from "next/navigation";
 interface InterceptedPostPageProps {
   params: {
@@ -69,26 +63,7 @@ export default async function InterceptedPostPage({
           className="h-fit max-h-screen w-auto max-w-full object-contain lg:max-w-[calc(100%-20rem)]"
         />
         <div className="relative flex w-full flex-shrink-0 flex-col gap-y-2 bg-background p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
-          <Popover>
-            <PopoverTrigger className="absolute right-1 top-0 flex h-8 w-8 items-center justify-center rounded-full hover:bg-accent hover:text-accent-foreground">
-              <MoreHorizontal />
-            </PopoverTrigger>
-            <PopoverContent
-              className="w-fit border bg-popover p-0 text-popover-foreground sm:rounded-sm"
-              align="end"
-            >
-              <Link href={post.sourceUrl} download>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="flex justify-between active:bg-background"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Download
-                </Button>
-              </Link>
-            </PopoverContent>
-          </Popover>
+          <OptionsPopover sourceUrl={post.sourceUrl} id={post.id} />
           <div className="flex items-center gap-x-2">
             <Avatar className="h-8 w-8">
               <AvatarImage src={post.user?.image || ""} />
