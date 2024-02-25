@@ -3,12 +3,11 @@ import { PostCard } from "@/components/post-card";
 import { Button } from "@/components/ui/button";
 import usePostsSearch from "@/hooks/use-posts-search";
 import { Loader2Icon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
+import { PostCardListSkeleton } from "./skeletons/skeleton-post-card-list";
 
 export function PostCardList({ queryString }: { queryString: string }) {
   const [cursor, setCursor] = useState("");
-  // const query = useSearchParams().toString();
 
   const { isLoading, error, posts, hasMore } = usePostsSearch({
     query: queryString,
@@ -46,9 +45,9 @@ export function PostCardList({ queryString }: { queryString: string }) {
     return <div>Error: {error.message}</div>;
   }
 
-  return (
-    <div className="flex max-w-screen-2xl flex-col items-center justify-center gap-1 md:m-4">
-      <div className="flex w-full flex-row flex-wrap justify-center gap-1">
+  return posts.length ? (
+    <div className="flex w-full max-w-screen-2xl flex-col items-center justify-center md:m-4">
+      <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-1">
         {posts.map((post, i) => {
           if (i === posts.length - 1) {
             return (
@@ -82,5 +81,7 @@ export function PostCardList({ queryString }: { queryString: string }) {
         </Button>
       </div>
     </div>
+  ) : (
+    <PostCardListSkeleton />
   );
 }

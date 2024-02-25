@@ -23,7 +23,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
     return ref ? (
       <div
         ref={ref}
-        className="relative flex h-fit w-full flex-auto items-center justify-center overflow-hidden bg-secondary sm:rounded-sm md:h-96 md:w-72"
+        className="relative h-fit w-auto overflow-hidden bg-muted sm:h-96 sm:rounded-sm"
       >
         <div className="group h-full w-full">
           {isWindowSmall ? (
@@ -38,7 +38,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               onError={handleOnError}
             />
           ) : (
-            <Link href={`/post/${id}`} scroll={false}>
+            <Link href={`/post/${id}`} scroll={false} aria-label="Open Image">
               <img
                 decoding="async"
                 loading="lazy"
@@ -51,11 +51,11 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               />
             </Link>
           )}
-          <OptionsPopover sourceUrl={sourceUrl} id={id} />
+          <OptionsPopover sourceUrl={sourceUrl} id={id} isInvisible={true} />
         </div>
       </div>
     ) : (
-      <div className="relative flex h-fit w-full flex-auto items-center justify-center overflow-hidden bg-secondary sm:rounded-sm md:h-96 md:w-72">
+      <div className="relative h-fit w-auto overflow-hidden bg-muted sm:h-96 sm:rounded-sm">
         <div className="group h-full w-full">
           {isWindowSmall ? (
             <img
@@ -69,7 +69,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               onError={handleOnError}
             />
           ) : (
-            <Link href={`/post/${id}`} scroll={false}>
+            <Link href={`/post/${id}`} scroll={false} aria-label="Open Image">
               <img
                 decoding="async"
                 loading="lazy"
@@ -82,7 +82,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               />
             </Link>
           )}
-          <OptionsPopover sourceUrl={sourceUrl} id={id} />
+          <OptionsPopover sourceUrl={sourceUrl} id={id} isInvisible={true} />
         </div>
       </div>
     );

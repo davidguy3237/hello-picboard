@@ -35,7 +35,8 @@ export function SearchFilter({
         <Button
           variant="ghost"
           size="icon"
-          className=" shrink-0 rounded-full active:bg-background"
+          className=" shrink-0 active:bg-background"
+          aria-label="Filter"
         >
           <SlidersHorizontal />
         </Button>

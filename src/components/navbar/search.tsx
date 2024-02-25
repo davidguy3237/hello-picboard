@@ -132,7 +132,7 @@ export function Search() {
         <Input
           placeholder="Search for posts..."
           minLength={3}
-          className="peer flex-grow rounded-full placeholder:italic"
+          className="peer flex-grow placeholder:italic"
           name="search"
           onChange={debouncedHandleChange}
           defaultValue={searchParams.get("query")?.toString()}

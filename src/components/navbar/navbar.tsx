@@ -25,7 +25,7 @@ export async function Navbar({ showSearch = true }: NavbarProps) {
         ) : (
           <>
             <ThemeToggleButton />
-            <Link href="/register">
+            <Link href="/register" prefetch={false}>
               <Button variant="outline">Sign Up</Button>
             </Link>
           </>
