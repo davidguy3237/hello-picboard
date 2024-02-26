@@ -1,5 +1,4 @@
 import { isValidImageFile } from "@/lib/validate-magic-number";
-import { UserRole } from "@prisma/client";
 import * as z from "zod";
 
 export const settingsSchema = z
@@ -14,7 +13,6 @@ export const settingsSchema = z
         .max(20, { message: "Username must be 20 characters or fewer" }),
     ),
     isTwoFactorEnabled: z.optional(z.boolean()),
-    role: z.enum([UserRole.ADMIN, UserRole.USER]),
     email: z.optional(z.string().email()),
     password: z.optional(
       z

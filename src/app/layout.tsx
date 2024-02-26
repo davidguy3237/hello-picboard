@@ -19,14 +19,17 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, "bg-background")}>
-        <ThemeProvider attribute="class" disableTransitionOnChange>
-          <Toaster closeButton richColors position="top-center" />
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+    <SessionProvider session={session}>
+      <html lang="en" suppressHydrationWarning>
+        <body className={cn(inter.className, "bg-background")}>
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <Toaster closeButton richColors position="top-center" />
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
+    </SessionProvider>
   );
 }

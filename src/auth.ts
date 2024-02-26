@@ -73,6 +73,7 @@ export const {
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.role = existingUser.role;
+      token.picture = existingUser.image;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
       if (trigger === "update" && session) {
@@ -93,6 +94,7 @@ export const {
 
         session.user.name = token.name;
         session.user.email = token.email;
+        session.user.image = token.picture;
 
         if (typeof token.isTwoFactorEnabled === "boolean") {
           session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
