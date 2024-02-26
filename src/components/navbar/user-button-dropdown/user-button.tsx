@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ExtendedUser } from "@/next-auth";
-import { Album, Images, LogOut, Settings, User } from "lucide-react";
+import { Album, Heart, Images, LogOut, Settings, User } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -30,16 +30,22 @@ export function UserButton({ user }: UserButtonProps) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="end">
-        <Link href="/test">
+        <Link href="/my-posts">
           <DropdownMenuItem>
             <Images className="mr-2 h-4 w-4" />
             My Posts
           </DropdownMenuItem>
         </Link>
-        <Link href="/test">
+        <Link href="/my-albums">
           <DropdownMenuItem>
             <Album className="mr-2 h-4 w-4" />
             My Albums
+          </DropdownMenuItem>
+        </Link>
+        <Link href="/favorites">
+          <DropdownMenuItem>
+            <Heart className="mr-2 h-4 w-4" />
+            My Favorites
           </DropdownMenuItem>
         </Link>
         <Link href="/settings" prefetch={false}>

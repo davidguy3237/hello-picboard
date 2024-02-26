@@ -141,6 +141,7 @@ export const UploadSchema = z
 
 export const NewPostSchema = z
   .object({
+    publicId: z.string(),
     tags: z
       .array(z.string())
       .min(1, { message: "Must include at least 1 tag" }),

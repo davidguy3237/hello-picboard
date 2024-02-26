@@ -6,13 +6,13 @@ import Link from "next/link";
 import React, { SyntheticEvent } from "react";
 
 interface ImageProps {
-  id: string;
+  publicId: string;
   sourceUrl: string;
   thumbnailUrl: string;
 }
 
 export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
-  function PostCard({ id, sourceUrl, thumbnailUrl }, ref) {
+  function PostCard({ publicId, sourceUrl, thumbnailUrl }, ref) {
     const isWindowSmall = useIsWindowSmall();
 
     const handleOnError = (e: SyntheticEvent<HTMLImageElement>) => {
@@ -38,7 +38,11 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               onError={handleOnError}
             />
           ) : (
-            <Link href={`/post/${id}`} scroll={false} aria-label="Open Image">
+            <Link
+              href={`/post/${publicId}`}
+              scroll={false}
+              aria-label="Open Image"
+            >
               <img
                 decoding="async"
                 loading="lazy"
@@ -51,7 +55,11 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               />
             </Link>
           )}
-          <OptionsPopover sourceUrl={sourceUrl} id={id} isInvisible={true} />
+          <OptionsPopover
+            sourceUrl={sourceUrl}
+            publicId={publicId}
+            isInvisible={true}
+          />
         </div>
       </div>
     ) : (
@@ -69,7 +77,11 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               onError={handleOnError}
             />
           ) : (
-            <Link href={`/post/${id}`} scroll={false} aria-label="Open Image">
+            <Link
+              href={`/post/${publicId}`}
+              scroll={false}
+              aria-label="Open Image"
+            >
               <img
                 decoding="async"
                 loading="lazy"
@@ -82,7 +94,11 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               />
             </Link>
           )}
-          <OptionsPopover sourceUrl={sourceUrl} id={id} isInvisible={true} />
+          <OptionsPopover
+            sourceUrl={sourceUrl}
+            publicId={publicId}
+            isInvisible={true}
+          />
         </div>
       </div>
     );

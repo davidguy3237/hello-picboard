@@ -2,7 +2,6 @@
 "use client";
 import { newPost } from "@/actions/new-post";
 import { searchTags } from "@/actions/search-tags";
-import { uploadImage } from "@/actions/upload-image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -27,24 +26,34 @@ import { UploadSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogContent } from "@radix-ui/react-dialog";
 import { CheckCircle, Loader2, X } from "lucide-react";
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { FileWithPath } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import AsyncCreatableSelect from "react-select/async-creatable";
+import { toast } from "sonner";
 import * as z from "zod";
 
 interface UploadFormProps {
   file: FileWithPath;
   removeFile: (file: FileWithPath) => void;
+  uploadedFiles: FileWithPath[];
+  setUploadedFiles: (file: FileWithPath[]) => void;
 }
 interface TagOption {
   value: string;
   label: string;
 }
 
-export function UploadForm({ file, removeFile }: UploadFormProps) {
+export function UploadForm({
+  file,
+  removeFile,
+  uploadedFiles,
+  setUploadedFiles,
+}: UploadFormProps) {
   const [isPending, startTransition] = useTransition();
-  const [uploadCompleted, setUploadCompleted] = useState(false);
+  const [postUrl, setPostUrl] = useState<string>("");
+  const [uploadFailed, setUploadFailed] = useState<boolean>(false);
   const blobURL = URL.createObjectURL(file);
 
   const form = useForm<z.infer<typeof UploadSchema>>({
@@ -77,59 +86,50 @@ export function UploadForm({ file, removeFile }: UploadFormProps) {
 
   const onSubmit = async (uploadData: z.infer<typeof UploadSchema>) => {
     startTransition(async () => {
-      const imageToUpload = new FormData();
-      imageToUpload.append("file", file);
-      const uploadImageResult = await uploadImage(imageToUpload);
-
-      if (uploadImageResult.error) {
-        // TODO: Disable all inputs and show error
-        console.error(uploadImageResult.error);
+      const newPostData = new FormData();
+      newPostData.append("image", file);
+      newPostData.append("description", uploadData.description as string);
+      for (let i = 0; i < uploadData.tags.length; i++) {
+        newPostData.append("tags[]", uploadData.tags[i]);
       }
-      if (uploadImageResult.success) {
-        const { sourceUrl, thumbnailUrl, width, height } =
-          uploadImageResult.success;
-
-        const newPostData = {
-          tags: uploadData.tags,
-          description: uploadData.description,
-          sourceUrl,
-          thumbnailUrl,
-          width,
-          height,
-        };
-
-        const newPostResult = await newPost(newPostData);
-
-        if (newPostResult.error) {
-          console.error("Creating new post failed: ", newPostResult.error);
-        }
-
-        if (newPostResult.success) {
-          console.log("Successfully created new post: ", newPostResult.success);
-        }
-
-        setUploadCompleted(true);
+      const newPostResult = await newPost(newPostData);
+      if (newPostResult.error) {
+        setUploadFailed(true);
+        console.error(newPostResult);
+        toast.error("Error: " + newPostResult.error);
+      } else if (newPostResult.success) {
+        setUploadedFiles([...uploadedFiles, file]);
+        setPostUrl(newPostResult.success.postUrl);
       }
     });
   };
 
   return (
     <Card className="flex h-full w-full items-center">
-      <CardContent className="relative flex h-full w-full pt-6">
-        {(isPending || uploadCompleted) && (
+      <CardContent className="relative flex h-full w-full p-2">
+        {(isPending || !!postUrl) && (
           <div
             className={cn(
-              "absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-lg bg-muted/50",
+              "absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-lg bg-muted/50 backdrop-blur-sm",
             )}
           >
             {isPending ? (
               <Loader2 size={48} className="animate-spin" />
-            ) : (
-              <CheckCircle
-                size={48}
-                className=" text-green-500 duration-500 animate-in fade-in zoom-in"
-              />
-            )}
+            ) : !!postUrl ? (
+              <div className="flex flex-col items-center justify-center">
+                <CheckCircle
+                  size={48}
+                  className=" text-green-500 duration-500 animate-in fade-in zoom-in"
+                />
+                <Link
+                  target="_blank"
+                  href={postUrl}
+                  className="hover:underline"
+                >
+                  Click here to visit your new post
+                </Link>
+              </div>
+            ) : null}
           </div>
         )}
         <Form {...form}>
@@ -137,7 +137,7 @@ export function UploadForm({ file, removeFile }: UploadFormProps) {
             control={form.control}
             name="image"
             render={({ field }) => (
-              <FormItem className=" flex h-full basis-1/4 flex-col items-center justify-center pr-4">
+              <FormItem className=" flex h-full basis-1/4 flex-col items-center justify-center pr-2">
                 <Dialog>
                   <DialogTrigger>
                     <img
@@ -169,13 +169,13 @@ export function UploadForm({ file, removeFile }: UploadFormProps) {
           />
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex w-full basis-3/4 flex-col gap-y-2 border-l pl-4"
+            className="flex w-full basis-3/4 flex-col gap-y-1 border-l pl-2"
           >
             <div>
               {file.path} - {writeReadableFileSize(file.size)}
             </div>
             <FormField
-              disabled={isPending || uploadCompleted}
+              disabled={isPending || !!postUrl || uploadFailed}
               control={form.control}
               name="tags"
               render={({ field: { onChange } }) => (
@@ -183,17 +183,47 @@ export function UploadForm({ file, removeFile }: UploadFormProps) {
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
                     <AsyncCreatableSelect<TagOption, true>
-                      isDisabled={isPending || uploadCompleted}
                       isMulti
                       isClearable
                       placeholder="Add tags"
                       loadOptions={debouncedFetchOptions}
-                      onChange={(option) => {
-                        if (option === null) {
+                      onChange={(options) => {
+                        if (options === null) {
                           onChange(null);
-                          return;
+                        } else {
+                          onChange(options.map((tag) => tag.value));
                         }
-                        onChange(option.map((el) => el.value));
+                      }}
+                      unstyled
+                      classNames={{
+                        control: ({ isFocused }) =>
+                          cn(
+                            "border rounded-sm px-1",
+                            isFocused && "ring-ring ring-2",
+                          ),
+                        container: () => "bg-background",
+                        placeholder: () =>
+                          "text-muted-foreground text-sm italic",
+                        dropdownIndicator: ({ isFocused }) =>
+                          cn(
+                            "pl-1 text-muted-foreground hover:text-foreground border-l",
+                            isFocused && "text-foreground",
+                          ),
+                        option: ({ isFocused }) =>
+                          cn(
+                            "bg-background p-1 rounded-sm",
+                            isFocused && "bg-accent",
+                          ),
+                        noOptionsMessage: () => "p-1",
+                        multiValue: () =>
+                          "rounded-sm bg-accent overflow-hidden m-0.5",
+                        multiValueLabel: () => "px-1",
+                        multiValueRemove: () =>
+                          "hover:bg-destructive/80 px-0.5",
+                        clearIndicator: () =>
+                          "text-muted-foreground hover:text-foreground px-1",
+                        menuList: () =>
+                          "bg-background border p-1 mt-2 rounded-sm shadow-lg",
                       }}
                     />
                   </FormControl>
@@ -202,7 +232,7 @@ export function UploadForm({ file, removeFile }: UploadFormProps) {
               )}
             />
             <FormField
-              disabled={isPending || uploadCompleted}
+              disabled={isPending || !!postUrl || uploadFailed}
               control={form.control}
               name="description"
               render={({ field }) => (
@@ -212,14 +242,17 @@ export function UploadForm({ file, removeFile }: UploadFormProps) {
                     <Textarea
                       {...field}
                       maxLength={500}
-                      disabled={isPending || uploadCompleted}
+                      disabled={isPending || !!postUrl || uploadFailed}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending || uploadCompleted}>
+            <Button
+              type="submit"
+              disabled={isPending || !!postUrl || uploadFailed}
+            >
               Submit
             </Button>
           </form>

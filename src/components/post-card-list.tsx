@@ -1,10 +1,10 @@
 "use client";
 import { PostCard } from "@/components/post-card";
+import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-list";
 import { Button } from "@/components/ui/button";
 import usePostsSearch from "@/hooks/use-posts-search";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
-import { PostCardListSkeleton } from "./skeletons/skeleton-post-card-list";
 
 export function PostCardList({ queryString }: { queryString: string }) {
   const [cursor, setCursor] = useState("");
@@ -26,7 +26,7 @@ export function PostCardList({ queryString }: { queryString: string }) {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setCursor(posts[posts.length - 1].id);
+          setCursor(posts[posts.length - 1].publicId);
         }
       });
 
@@ -54,7 +54,7 @@ export function PostCardList({ queryString }: { queryString: string }) {
               <PostCard
                 ref={lastPostRef}
                 key={post.sourceUrl}
-                id={post.id}
+                publicId={post.publicId}
                 sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
               />
@@ -63,7 +63,7 @@ export function PostCardList({ queryString }: { queryString: string }) {
           return (
             <PostCard
               key={post.sourceUrl}
-              id={post.id}
+              publicId={post.publicId}
               sourceUrl={post.sourceUrl}
               thumbnailUrl={post.thumbnailUrl}
             />

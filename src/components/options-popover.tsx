@@ -1,36 +1,40 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { Copy, Download, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { cn } from "@/lib/utils";
 
 interface OptionsPopoverProps {
   sourceUrl: string;
-  id: string;
+  publicId: string;
   isInvisible?: boolean;
 }
 
 export function OptionsPopover({
   sourceUrl,
-  id,
+  publicId,
   isInvisible,
 }: OptionsPopoverProps) {
   const writeURLToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(
-        `${process.env.NEXT_PUBLIC_APP_URL}/post/${id}`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/post/${publicId}`,
       );
+      toast.success("Copied Post URL to clipboard!");
+      return;
     } catch (error) {
       let message = "Unknown Error";
       if (error instanceof Error) message = error.message;
       toast.error(message);
       return;
     }
-
-    toast.success("Copied URL to clipboard");
   };
 
   return (
@@ -48,7 +52,7 @@ export function OptionsPopover({
           variant="ghost"
           size="sm"
           onClick={writeURLToClipboard}
-          className="flex justify-between active:bg-background"
+          className="flex w-full justify-between active:bg-background"
         >
           <Copy className="mr-2 h-4 w-4" />
           Copy URL
@@ -57,7 +61,7 @@ export function OptionsPopover({
           <Button
             variant="ghost"
             size="sm"
-            className="flex justify-between active:bg-background"
+            className="flex w-full justify-between active:bg-background"
           >
             <Download className="mr-2 h-4 w-4" />
             Download

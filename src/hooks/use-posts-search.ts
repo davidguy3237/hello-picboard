@@ -7,8 +7,14 @@ interface usePostSearchProps {
 
 type Posts = {
   id: string;
+  publicId: string;
   sourceUrl: string;
   thumbnailUrl: string;
+  description: string;
+  width: number;
+  height: number;
+  createdAt: Date;
+  updatedAt: Date;
 }[];
 
 export default function usePostsSearch({

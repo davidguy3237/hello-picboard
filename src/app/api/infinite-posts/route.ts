@@ -101,7 +101,7 @@ export async function GET(req: NextRequest) {
     ],
     cursor: cursor
       ? {
-          id: cursor,
+          publicId: cursor,
         }
       : undefined,
     take: 25,

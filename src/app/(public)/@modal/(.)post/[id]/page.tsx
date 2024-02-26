@@ -23,10 +23,9 @@ interface InterceptedPostPageProps {
 export default async function InterceptedPostPage({
   params,
 }: InterceptedPostPageProps) {
-  const postId = params.id;
   const post = await db.post.findUnique({
     where: {
-      id: postId,
+      publicId: params.id,
     },
     include: {
       user: {
@@ -63,7 +62,7 @@ export default async function InterceptedPostPage({
           className="h-fit max-h-screen w-auto max-w-full object-contain lg:max-w-[calc(100%-20rem)]"
         />
         <div className="relative flex w-full flex-shrink-0 flex-col gap-y-2 bg-background p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
-          <OptionsPopover sourceUrl={post.sourceUrl} id={post.id} />
+          <OptionsPopover sourceUrl={post.sourceUrl} publicId={post.publicId} />
           <div className="flex items-center gap-x-2">
             <Avatar className="h-8 w-8">
               <AvatarImage src={post.user?.image || ""} />
@@ -88,15 +87,19 @@ export default async function InterceptedPostPage({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          {post.width && post.height && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Ruler className="h-4 w-4" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Ruler className="h-4 w-4" />
+            {post.width && post.height ? (
               <span>{`${post.width} x ${post.height}`}</span>
-            </div>
-          )}
+            ) : (
+              <span className="italic text-muted-foreground">
+                No dimensions provided
+              </span>
+            )}
+          </div>
           <p
             className={cn(
-              "whitespace-pre-wrap",
+              "whitespace-pre-wrap text-wrap break-words",
               !post.description && "italic text-muted-foreground",
             )}
           >
