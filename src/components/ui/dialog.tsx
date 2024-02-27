@@ -167,7 +167,7 @@ const InterceptedDialogContentForPost = React.forwardRef<
         {children}
         <DialogClose
           onClick={onDismiss}
-          className="absolute right-4 top-4 z-50 rounded-full text-white opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+          className="absolute left-4 top-4 z-50 rounded-full bg-black/40 text-white ring-offset-background backdrop-blur transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
           aria-label="Close"
         >
           <X className="h-8 w-8" />

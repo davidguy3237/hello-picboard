@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import ImageDisplay from "@/components/image-display";
 import { OptionsPopover } from "@/components/options-popover";
 import { PostInterceptModal } from "@/components/post-intercept-modal";
 import Tag from "@/components/tag";
@@ -56,10 +57,10 @@ export default async function InterceptedPostPage({
   return (
     <PostInterceptModal>
       <div className="fixed left-[50%] top-[50%] z-50 flex h-max max-h-screen w-max max-w-full translate-x-[-50%] translate-y-[-50%] flex-col divide-y lg:flex-row lg:divide-y-0">
-        <img
-          alt=""
-          src={post.sourceUrl}
-          className="h-fit max-h-screen w-auto max-w-full object-contain lg:max-w-[calc(100%-20rem)]"
+        <ImageDisplay
+          url={post.sourceUrl}
+          width={post.width}
+          height={post.height}
         />
         <div className="relative flex w-full flex-shrink-0 flex-col gap-y-2 bg-background p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
           <OptionsPopover sourceUrl={post.sourceUrl} publicId={post.publicId} />
