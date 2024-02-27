@@ -103,6 +103,23 @@ export const NewPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+export const ChangePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, { message: "Password is required" }),
+    newPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .max(191, { message: "Password must be 191 characters or fewer" }),
+    confirmNewPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .max(191, { message: "Password must be 191 characters or fewer" }),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 export const UploadSchema = z
   .object({
     tags: z
@@ -172,4 +189,14 @@ export const SearchSchema = z.object({
       to: z.optional(z.date().max(new Date())),
     }),
   ),
+});
+
+export const ChangeUsernameSchema = z.object({
+  username: z
+    .string()
+    .regex(new RegExp("^[a-zA-Z0-9_]*$"), {
+      message: "Invalid characters used",
+    })
+    .min(3, { message: "Username must be at least 3 characters" })
+    .max(20, { message: "Username must be 20 characters or fewer" }),
 });

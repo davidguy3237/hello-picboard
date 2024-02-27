@@ -89,7 +89,7 @@ export async function uploadAvatar(uploadAvatarData: FormData) {
 
   console.log("REVALIDATING PATH");
 
-  revalidatePath("/");
+  revalidatePath("/settings");
   return {
     success: {
       avatarUrl,

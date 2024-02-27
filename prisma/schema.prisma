@@ -27,6 +27,7 @@ model User {
   role                  UserRole     @default(USER)
   twoFactorConfirmation TwoFactorConfirmation?
   banDate               DateTime?
+  lastUpdateName        DateTime?
   accounts              Account[]
   posts                 Post[]
   albums                Album[]
