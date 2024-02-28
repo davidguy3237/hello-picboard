@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import ImageDisplay from "@/components/image-display";
-import { OptionsPopover } from "@/components/options-popover";
-import { PostInterceptModal } from "@/components/post-intercept-modal";
+import ImageDisplay from "@/components/posts/image-display";
+import { OptionsPopover } from "@/components/posts/options-popover";
+import { PostInterceptModal } from "@/components/posts/post-intercept-modal";
 import Tag from "@/components/tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {

@@ -2,8 +2,8 @@
 
 import { register } from "@/actions/register";
 import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/auth/form-error";
+import { FormSuccess } from "@/components/auth/form-success";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -79,7 +79,7 @@ export default function RegisterPage() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input {...field} disabled={isPending} maxLength={30} />
+                    <Input {...field} disabled={isPending} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

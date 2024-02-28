@@ -1,5 +1,17 @@
-import { HomePageProps } from "@/app/(public)/home/types";
-import { PostCardList } from "@/components/post-card-list";
+// import { HomePageProps } from "@/app/(public)/home/types";
+import { PostCardList } from "@/components/posts/post-card-list";
+
+interface HomePageProps {
+  searchParams?: {
+    query?: string;
+    page?: string;
+    sort?: "asc" | "desc";
+    count?: string;
+    strict?: string;
+    from?: string;
+    to?: string;
+  };
+}
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const query = searchParams?.query || "";

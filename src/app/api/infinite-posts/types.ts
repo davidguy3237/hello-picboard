@@ -1,17 +1,3 @@
-export interface searchParams {
-  query?: string;
-  page?: string;
-  sort?: "asc" | "desc";
-  count?: string;
-  strict?: string;
-  from?: string;
-  to?: string;
-}
-
-export interface HomePageProps {
-  searchParams?: searchParams;
-}
-
 export interface TagsQuery {
   tags: {
     some: {

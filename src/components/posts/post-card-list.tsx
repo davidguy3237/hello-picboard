@@ -1,5 +1,5 @@
 "use client";
-import { PostCard } from "@/components/post-card";
+import { PostCard } from "@/components/posts/post-card";
 import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-list";
 import { Button } from "@/components/ui/button";
 import usePostsSearch from "@/hooks/use-posts-search";

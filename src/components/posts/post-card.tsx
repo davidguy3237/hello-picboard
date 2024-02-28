@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { OptionsPopover } from "@/components/options-popover";
+import { OptionsPopover } from "@/components/posts/options-popover";
 import useIsWindowSmall from "@/hooks/use-is-window-small";
 import Link from "next/link";
 import React, { SyntheticEvent } from "react";

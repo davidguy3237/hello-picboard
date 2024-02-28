@@ -2,8 +2,8 @@
 
 import { login } from "@/actions/login";
 import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/auth/form-error";
+import { FormSuccess } from "@/components/auth/form-success";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -129,7 +129,6 @@ export default function LoginPage() {
                           {...field}
                           disabled={isPending}
                           type="password"
-                          maxLength={255}
                           required
                         />
                       </FormControl>

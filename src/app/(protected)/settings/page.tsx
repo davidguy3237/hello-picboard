@@ -1,4 +1,4 @@
-import { SettingsForm } from "@/components/settings-form";
+import { SettingsForm } from "@/app/(protected)/settings/components/settings-form";
 import { currentUser } from "@/lib/auth";
 import { notFound } from "next/navigation";
 

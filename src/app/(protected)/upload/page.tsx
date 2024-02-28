@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { UploadForm } from "@/components/upload/upload-form";
+import { UploadForm } from "@/app/(protected)/upload/components/upload-form";
 import { cn } from "@/lib/utils";
 import { ImagePlus } from "lucide-react";
 import { useCallback, useState } from "react";

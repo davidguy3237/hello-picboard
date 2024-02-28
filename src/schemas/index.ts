@@ -18,13 +18,13 @@ export const settingsSchema = z
       z
         .string()
         .min(8, { message: "Password must be at least 8 characters" })
-        .max(191, { message: "Password must be 191 characters or fewer" }),
+        .max(256, { message: "Password is too long" }),
     ),
     newPassword: z.optional(
       z
         .string()
         .min(8, { message: "Password must be at least 8 characters" })
-        .max(191, { message: "Password must be 191 characters or fewer" }),
+        .max(256, { message: "Password is too long" }),
     ),
   })
   .refine(
@@ -55,7 +55,7 @@ export const settingsSchema = z
 
 export const LoginSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
-  password: z.string().min(1, { message: "Password is required" }).max(191),
+  password: z.string().min(1, { message: "Password is required" }).max(257),
   code: z.optional(z.string()),
 });
 
@@ -72,11 +72,11 @@ export const RegisterSchema = z
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })
-      .max(191, { message: "Password must be 191 characters or fewer" }),
+      .max(256, { message: "Password is too long" }),
     confirmPassword: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })
-      .max(191, { message: "Password must be 191 characters or fewer" }),
+      .max(256, { message: "Password is too long" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -92,11 +92,11 @@ export const NewPasswordSchema = z
     password: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })
-      .max(191, { message: "Password must be 191 characters or fewer" }),
+      .max(256, { message: "Password is too long" }),
     confirmPassword: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })
-      .max(191, { message: "Password must be 191 characters or fewer" }),
+      .max(256, { message: "Password is too long" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -109,11 +109,11 @@ export const ChangePasswordSchema = z
     newPassword: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })
-      .max(191, { message: "Password must be 191 characters or fewer" }),
+      .max(256, { message: "Password is too long" }),
     confirmNewPassword: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })
-      .max(191, { message: "Password must be 191 characters or fewer" }),
+      .max(256, { message: "Password is too long" }),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: "Passwords do not match",
