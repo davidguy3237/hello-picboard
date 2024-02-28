@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
+  DialogTitle,
   DialogContent,
   DialogHeader,
   DialogTrigger,
@@ -29,7 +30,6 @@ import { cn } from "@/lib/utils";
 import { ExtendedUser } from "@/next-auth";
 import { ChangePasswordSchema, ChangeUsernameSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { Loader2, User } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, useState, useTransition } from "react";
@@ -129,6 +129,8 @@ export function SettingsForm({ user }: SettingsFormProps) {
     }
   };
 
+  // TODO: I might need to refactor the forms into smaller components
+
   return (
     <Card className="mt-4 w-full min-w-9 max-w-screen-md p-4 shadow-lg">
       <CardContent>
@@ -174,9 +176,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold">
-                    Change Your Username
-                  </DialogTitle>
+                  <DialogTitle>Change Your Username</DialogTitle>
                 </DialogHeader>
                 <Form {...usernameForm}>
                   <form
@@ -197,7 +197,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
                             />
                           </FormControl>
                           <FormDescription>
-                            You may only change your username every 30 days
+                            You may only change your username once every 30 days
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -229,9 +229,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle className="text-2xl font-bold">
-                        Change Your Password
-                      </DialogTitle>
+                      <DialogTitle>Change Your Password</DialogTitle>
                     </DialogHeader>
                     <Form {...passwordForm}>
                       <form
@@ -303,24 +301,30 @@ export function SettingsForm({ user }: SettingsFormProps) {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="grid grid-cols-3 items-center p-2">
-                <span className="py-2 text-muted-foreground">
-                  Two Factor Authentication
-                </span>
-                <span
-                  className={cn(
-                    user.isTwoFactorEnabled
-                      ? "font-medium"
-                      : "italic text-muted-foreground",
-                  )}
-                >
-                  {user.isTwoFactorEnabled ? "Enabled" : "Disabled"}
-                </span>
-                <Switch
-                  className="justify-self-end"
-                  defaultChecked={user.isTwoFactorEnabled}
-                  onCheckedChange={update2FA}
-                />
+              <div className="px-2 py-4">
+                <div className="grid grid-cols-3 items-center">
+                  <span className="text-muted-foreground">
+                    Two Factor Authentication
+                  </span>
+                  <span
+                    className={cn(
+                      user.isTwoFactorEnabled
+                        ? "font-medium"
+                        : "italic text-muted-foreground",
+                    )}
+                  >
+                    {user.isTwoFactorEnabled ? "Enabled" : "Disabled"}
+                  </span>
+                  <Switch
+                    className="justify-self-end"
+                    defaultChecked={user.isTwoFactorEnabled}
+                    onCheckedChange={update2FA}
+                  />
+                </div>
+                <div className="text-sm italic text-muted-foreground">
+                  A verification code will be sent to your email whenever you
+                  sign in.
+                </div>
               </div>
             </>
           )}
