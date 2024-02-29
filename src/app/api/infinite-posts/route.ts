@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
   const isStrictSearch = searchParams.get("strict") === "true";
   const fromDate = searchParams.get("from");
   const toDate = searchParams.get("to");
+  const username = searchParams.get("username");
 
   const paramsObj = {
     query,
@@ -88,6 +89,14 @@ export async function GET(req: NextRequest) {
 
       whereClause.NOT = strictSearch;
     }
+  } else if (username && !whereClause.AND) {
+    whereClause.AND = [
+      {
+        user: {
+          name: username,
+        },
+      },
+    ];
   }
 
   const posts = await db.post.findMany({

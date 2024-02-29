@@ -30,19 +30,19 @@ export function UserButton({ user }: UserButtonProps) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="end">
-        <Link href="/my-posts">
+        <Link href={`/user/${user?.name}/posts`}>
           <DropdownMenuItem>
             <Images className="mr-2 h-4 w-4" />
             My Posts
           </DropdownMenuItem>
         </Link>
-        <Link href="/my-albums">
+        <Link href={`/user/${user?.name}/albums`}>
           <DropdownMenuItem>
             <Album className="mr-2 h-4 w-4" />
             My Albums
           </DropdownMenuItem>
         </Link>
-        <Link href="/favorites">
+        <Link href={`/user/${user?.name}/favorites`}>
           <DropdownMenuItem>
             <Heart className="mr-2 h-4 w-4" />
             My Favorites

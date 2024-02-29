@@ -27,7 +27,7 @@ export function OptionsPopover({
       await navigator.clipboard.writeText(
         `${process.env.NEXT_PUBLIC_APP_URL}/post/${publicId}`,
       );
-      toast.success("Copied Post URL to clipboard!");
+      toast.success("Copied URL to clipboard!");
       return;
     } catch (error) {
       let message = "Unknown Error";

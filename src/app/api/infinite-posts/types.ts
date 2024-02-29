@@ -27,7 +27,13 @@ export interface StrictSearchConditional {
   };
 }
 
+export interface UserSpecificQuery {
+  user: {
+    name: string;
+  };
+}
+
 export interface WhereClause {
-  AND: (TagsQuery | DateFilterConditional)[] | undefined;
+  AND: (TagsQuery | DateFilterConditional | UserSpecificQuery)[] | undefined;
   NOT?: StrictSearchConditional | undefined;
 }

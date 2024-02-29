@@ -37,10 +37,6 @@ export function PostCardList({ queryString }: { queryString: string }) {
     [isLoading, hasMore, posts],
   );
 
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }
@@ -75,11 +71,6 @@ export function PostCardList({ queryString }: { queryString: string }) {
           <Loader2Icon className="animate-spin" />
         </div>
       )}
-      <div>
-        <Button variant="link" onClick={handleScrollToTop}>
-          Scroll To Top
-        </Button>
-      </div>
     </div>
   ) : (
     <PostCardListSkeleton />
