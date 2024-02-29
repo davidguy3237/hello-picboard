@@ -24,7 +24,7 @@ export default function usePostsSearch({
   const [posts, setPosts] = useState<Posts>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();

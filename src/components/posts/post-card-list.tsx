@@ -72,6 +72,10 @@ export function PostCardList({ queryString }: { queryString: string }) {
         </div>
       )}
     </div>
+  ) : posts.length === 0 && !hasMore ? (
+    <div className="flex h-full w-full items-center justify-center">
+      No posts found...
+    </div>
   ) : (
     <PostCardListSkeleton />
   );
