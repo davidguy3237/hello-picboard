@@ -1,5 +1,4 @@
 import { PostCardList } from "@/components/posts/post-card-list";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PostTabsProps {
   params: {
