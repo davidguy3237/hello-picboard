@@ -18,10 +18,6 @@ export default auth((req) => {
     return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
-  if (nextUrl.pathname === "/") {
-    return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-  }
-
   if (isProtectedRoute && !isLoggedIn) {
     let callbackUrl = nextUrl.pathname + (nextUrl.search || "");
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
@@ -36,7 +32,6 @@ export const config = {
   // matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"], // Provided by NextAuth
   // matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/(api|trpc)(.*)"], // Better one provided by Clerk Auth
   matcher: [
-    "/", // going to base url will redirect to /home
     "/login",
     "/register",
     "/error",
