@@ -179,6 +179,21 @@ export const NewPostSchema = z
     path: ["tags"],
   });
 
+export const EditPostSchema = z.object({
+  publicId: z.string(),
+  originalTags: z
+    .array(z.string())
+    .min(1, { message: "Must include at least 1 tag" }),
+  updatedTags: z
+    .array(z.string())
+    .min(1, { message: "Must include at least 1 tag" }),
+  description: z.optional(
+    z
+      .string()
+      .max(500, { message: "Description must be 500 characters or fewer" }),
+  ),
+});
+
 export const SearchSchema = z.object({
   query: z.string().min(3),
   isStrictSearch: z.optional(z.boolean()),

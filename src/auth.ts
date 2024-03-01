@@ -57,6 +57,7 @@ export const {
       return true;
     },
     async jwt({ token, user, account, profile, trigger, session }) {
+      console.log("JWT CALLBACK");
       // If no id, then user is logged out, so don't do anything to token
       if (!token.sub) {
         return token;
@@ -73,7 +74,7 @@ export const {
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.role = existingUser.role;
-      token.picture = existingUser.image;
+      token.picture = existingUser.image || token.picture;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
       if (trigger === "update" && session) {
@@ -83,6 +84,7 @@ export const {
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
+      console.log("SESSION CALLBACK");
       if (session.user) {
         if (token.sub) {
           session.user.id = token.sub;
@@ -94,6 +96,7 @@ export const {
 
         session.user.name = token.name;
         session.user.email = token.email;
+
         session.user.image = token.picture;
 
         if (typeof token.isTwoFactorEnabled === "boolean") {

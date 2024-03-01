@@ -64,7 +64,11 @@ export default async function PostPage({ params }: PostPageProps) {
         />
       </div>
       <div className="relative flex w-full flex-shrink-0 flex-col gap-y-2 p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
-        <OptionsPopover sourceUrl={post.sourceUrl} publicId={post.publicId} />
+        <OptionsPopover
+          userId={post.userId || ""}
+          sourceUrl={post.sourceUrl}
+          publicId={post.publicId}
+        />
         <div className="flex items-center gap-x-2">
           <Avatar className="h-8 w-8">
             <AvatarImage src={post.user?.image || ""} />

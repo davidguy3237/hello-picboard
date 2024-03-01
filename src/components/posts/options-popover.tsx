@@ -6,22 +6,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import useCurrentUser from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
-import { Copy, Download, MoreHorizontal } from "lucide-react";
+import { Copy, Download, MoreHorizontal, Pencil } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
 interface OptionsPopoverProps {
+  userId: string;
   sourceUrl: string;
   publicId: string;
   isInvisible?: boolean;
 }
 
 export function OptionsPopover({
+  userId,
   sourceUrl,
   publicId,
   isInvisible,
 }: OptionsPopoverProps) {
+  const currentUser = useCurrentUser();
   const writeURLToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(
@@ -67,6 +71,18 @@ export function OptionsPopover({
             Download
           </Button>
         </Link>
+        {userId === currentUser?.id && (
+          <Link href={`/edit/${publicId}`} prefetch={false}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex w-full justify-between active:bg-background"
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit
+            </Button>
+          </Link>
+        )}
       </PopoverContent>
     </Popover>
   );

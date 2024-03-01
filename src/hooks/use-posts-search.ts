@@ -1,3 +1,4 @@
+import { Post } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 interface usePostSearchProps {
@@ -5,23 +6,11 @@ interface usePostSearchProps {
   cursor: string;
 }
 
-type Posts = {
-  id: string;
-  publicId: string;
-  sourceUrl: string;
-  thumbnailUrl: string;
-  description: string;
-  width: number;
-  height: number;
-  createdAt: Date;
-  updatedAt: Date;
-}[];
-
 export default function usePostsSearch({
   query,
   cursor = "",
 }: usePostSearchProps) {
-  const [posts, setPosts] = useState<Posts>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [hasMore, setHasMore] = useState(true);

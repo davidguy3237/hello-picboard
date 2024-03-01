@@ -9,8 +9,7 @@ import NextAuth from "next-auth";
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  console.log("MIDDLEWARE IS BEING CALLED");
-  console.log("NEXT URL", nextUrl.href);
+  console.log("MIDDLEWARE IS BEING CALLED FROM: ", nextUrl.href);
 
   const isProtectedRoute = protectedRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
@@ -46,5 +45,6 @@ export const config = {
     "/new-verification",
     "/settings",
     "/upload",
+    "/edit:path*",
   ],
 };

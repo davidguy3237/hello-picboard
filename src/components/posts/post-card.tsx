@@ -6,13 +6,14 @@ import Link from "next/link";
 import React, { SyntheticEvent } from "react";
 
 interface ImageProps {
+  userId: string;
   publicId: string;
   sourceUrl: string;
   thumbnailUrl: string;
 }
 
 export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
-  function PostCard({ publicId, sourceUrl, thumbnailUrl }, ref) {
+  function PostCard({ userId, publicId, sourceUrl, thumbnailUrl }, ref) {
     const isWindowSmall = useIsWindowSmall();
 
     const handleOnError = (e: SyntheticEvent<HTMLImageElement>) => {
@@ -56,6 +57,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
             </Link>
           )}
           <OptionsPopover
+            userId={userId}
             sourceUrl={sourceUrl}
             publicId={publicId}
             isInvisible={true}
@@ -95,6 +97,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
             </Link>
           )}
           <OptionsPopover
+            userId={userId}
             sourceUrl={sourceUrl}
             publicId={publicId}
             isInvisible={true}

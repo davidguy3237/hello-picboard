@@ -23,14 +23,12 @@ const maxFileSize = 1024 * 1024 * 4; // 4MB
 export async function uploadAvatar(uploadAvatarData: FormData) {
   const user = await currentUser();
 
-  console.log("USER", user);
   if (!user || !user.id) {
     return { error: "Unauthorized" };
   }
 
   const dbUser = await getUserById(user.id);
 
-  console.log("DB USER", dbUser);
   if (!dbUser) {
     return { error: "Unauthorized" };
   }
@@ -67,10 +65,9 @@ export async function uploadAvatar(uploadAvatarData: FormData) {
   });
 
   try {
-    console.log("UPLOADING AVATAR TO BUCKET");
     await s3.send(putAvatar);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       error: "Failed to upload image",
     };
@@ -78,16 +75,12 @@ export async function uploadAvatar(uploadAvatarData: FormData) {
 
   const avatarUrl = `${process.env.B2_FRIENDLY_URL}/file/${process.env.B2_BUCKET_NAME}/avatars/${publicId}${fileExtension}`;
 
-  console.log("HERE IS THE URL", avatarUrl);
-  console.log("ADDING URL TO PROFILE", dbUser.id);
   await db.user.update({
     where: { id: dbUser.id },
     data: {
       image: avatarUrl,
     },
   });
-
-  console.log("REVALIDATING PATH");
 
   revalidatePath("/settings");
   return {

@@ -42,7 +42,7 @@ export function PostCardList({ queryString }: { queryString: string }) {
   }
 
   return posts.length ? (
-    <div className="flex w-full max-w-screen-2xl flex-col items-center justify-center md:m-4">
+    <div className="flex w-full max-w-screen-2xl flex-col items-center justify-center pb-4 md:m-4">
       <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-1">
         {posts.map((post, i) => {
           if (i === posts.length - 1) {
@@ -50,6 +50,7 @@ export function PostCardList({ queryString }: { queryString: string }) {
               <PostCard
                 ref={lastPostRef}
                 key={post.sourceUrl}
+                userId={post.userId || ""}
                 publicId={post.publicId}
                 sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
@@ -59,6 +60,7 @@ export function PostCardList({ queryString }: { queryString: string }) {
           return (
             <PostCard
               key={post.sourceUrl}
+              userId={post.userId || ""}
               publicId={post.publicId}
               sourceUrl={post.sourceUrl}
               thumbnailUrl={post.thumbnailUrl}

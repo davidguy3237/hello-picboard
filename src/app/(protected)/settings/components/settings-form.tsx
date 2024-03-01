@@ -130,7 +130,6 @@ export function SettingsForm({ user }: SettingsFormProps) {
   };
 
   // TODO: I might need to refactor the forms into smaller components
-
   return (
     <Card className="mt-4 w-full min-w-9 max-w-screen-md p-4 shadow-lg">
       <CardContent>
@@ -148,7 +147,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
                 isPending && "cursor-not-allowed text-muted-foreground",
               )}
             >
-              Upload new avatar
+              Change avatar
             </span>
             <Input
               onChange={handleUploadAvatar}

@@ -3,7 +3,7 @@ import SidebarNav from "./components/tabs-nav";
 
 interface UserLayoutProps {
   children: React.ReactNode;
-  tabs: React.ReactNode;
+  // tabs: React.ReactNode;
   params: {
     username: string;
   };
@@ -11,14 +11,14 @@ interface UserLayoutProps {
 
 export default async function UsernameLayout({
   children,
-  tabs,
+  // tabs,
   params,
 }: UserLayoutProps) {
   return (
     <div className="flex h-[calc(100vh-57px)] w-full items-center justify-center">
-      {/* {children} */}
       <SidebarNav username={params.username} />
-      {tabs}
+      {children}
+      {/* {tabs} */}
     </div>
   );
 }
