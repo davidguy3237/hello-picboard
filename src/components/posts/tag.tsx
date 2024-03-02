@@ -1,10 +1,9 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { badgeVariants } from "./ui/badge";
-import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+import { badgeVariants } from "../ui/badge";
 
 interface TagProps {
   name: string;

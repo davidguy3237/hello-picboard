@@ -3,11 +3,15 @@ import {
   StrictSearchConditional,
   WhereClause,
 } from "@/app/api/infinite-posts/types";
+import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { SearchSchema } from "@/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  console.log("RUNNING ROUTE FOR INFINITE POSTS");
+  const user = await currentUser();
+
   const searchParams = new URL(req.url).searchParams;
   const cursor = searchParams.get("cursor");
 
@@ -17,6 +21,7 @@ export async function GET(req: NextRequest) {
   const fromDate = searchParams.get("from");
   const toDate = searchParams.get("to");
   const username = searchParams.get("username");
+  const showFavorites = searchParams.get("favorites") === "true";
 
   const paramsObj = {
     query,
@@ -97,6 +102,18 @@ export async function GET(req: NextRequest) {
         },
       },
     ];
+  } else if (showFavorites && user && user.id && !whereClause.AND) {
+    // TODO: Do I want to show only the user's own favorites or the favorites of other users as well?
+    // applies to posts and albums too
+    whereClause.AND = [
+      {
+        favorites: {
+          some: {
+            userId: user.id,
+          },
+        },
+      },
+    ];
   }
 
   const posts = await db.post.findMany({
@@ -113,6 +130,13 @@ export async function GET(req: NextRequest) {
           publicId: cursor,
         }
       : undefined,
+    include: {
+      favorites: {
+        where: {
+          userId: user?.id,
+        },
+      },
+    },
     take: 25,
     skip: cursor ? 1 : 0,
     where: whereClause,

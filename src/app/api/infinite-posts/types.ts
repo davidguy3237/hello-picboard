@@ -33,7 +33,17 @@ export interface UserSpecificQuery {
   };
 }
 
+export interface FavoritesQuery {
+  favorites: {
+    some: {
+      userId: string;
+    };
+  };
+}
+
 export interface WhereClause {
-  AND: (TagsQuery | DateFilterConditional | UserSpecificQuery)[] | undefined;
+  AND:
+    | (TagsQuery | DateFilterConditional | UserSpecificQuery | FavoritesQuery)[]
+    | undefined;
   NOT?: StrictSearchConditional | undefined;
 }

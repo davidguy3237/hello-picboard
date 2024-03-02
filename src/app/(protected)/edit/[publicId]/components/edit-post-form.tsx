@@ -148,13 +148,9 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
                   size={48}
                   className=" text-green-500 duration-500 animate-in fade-in zoom-in"
                 />
-                <Link
-                  target="_blank"
-                  href={postUrl}
-                  className="hover:underline"
-                >
+                <a href={postUrl} className="hover:underline">
                   Click here to visit your updated post
-                </Link>
+                </a>
               </div>
             ) : null}
           </div>

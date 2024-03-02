@@ -1,13 +1,15 @@
 "use client";
 import { PostCard } from "@/components/posts/post-card";
 import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-list";
-import { Button } from "@/components/ui/button";
+import useCurrentUser from "@/hooks/use-current-user";
 import usePostsSearch from "@/hooks/use-posts-search";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
 export function PostCardList({ queryString }: { queryString: string }) {
   const [cursor, setCursor] = useState("");
+
+  const user = useCurrentUser();
 
   const { isLoading, error, posts, hasMore } = usePostsSearch({
     query: queryString,
@@ -50,20 +52,24 @@ export function PostCardList({ queryString }: { queryString: string }) {
               <PostCard
                 ref={lastPostRef}
                 key={post.sourceUrl}
+                id={post.id}
                 userId={post.userId || ""}
                 publicId={post.publicId}
                 sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
+                isFavorited={post.favorites[0]?.userId === user?.id}
               />
             );
           }
           return (
             <PostCard
               key={post.sourceUrl}
+              id={post.id}
               userId={post.userId || ""}
               publicId={post.publicId}
               sourceUrl={post.sourceUrl}
               thumbnailUrl={post.thumbnailUrl}
+              isFavorited={post.favorites[0]?.userId === user?.id}
             />
           );
         })}

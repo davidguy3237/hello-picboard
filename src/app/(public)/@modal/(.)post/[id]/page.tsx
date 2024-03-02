@@ -2,7 +2,7 @@
 import ImageDisplay from "@/components/posts/image-display";
 import { OptionsPopover } from "@/components/posts/options-popover";
 import { PostInterceptModal } from "@/components/posts/post-intercept-modal";
-import Tag from "@/components/tag";
+import Tag from "@/components/posts/tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,

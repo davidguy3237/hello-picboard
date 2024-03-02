@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { OptionsPopover } from "@/components/posts/options-popover";
-import Tag from "@/components/tag";
+import Tag from "@/components/posts/tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,

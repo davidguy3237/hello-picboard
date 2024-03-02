@@ -31,6 +31,7 @@ model User {
   accounts              Account[]
   posts                 Post[]
   albums                Album[]
+  favorites             PostFavorites[]
 
   @@unique([name, email])
 }
@@ -101,6 +102,7 @@ model Post {
   updatedAt    DateTime @updatedAt
   tags         Tag[]
   albums       Album[]
+  favorites    PostFavorites[]
 
   user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
@@ -127,3 +129,13 @@ model Album {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model PostFavorites {
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+}

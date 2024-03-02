@@ -1,4 +1,4 @@
-import { Post } from "@prisma/client";
+import { Post, PostFavorites } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 interface usePostSearchProps {
@@ -6,11 +6,15 @@ interface usePostSearchProps {
   cursor: string;
 }
 
+type PostWithFavorite = Post & {
+  favorites: PostFavorites[];
+};
+
 export default function usePostsSearch({
   query,
   cursor = "",
 }: usePostSearchProps) {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostWithFavorite[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [hasMore, setHasMore] = useState(true);

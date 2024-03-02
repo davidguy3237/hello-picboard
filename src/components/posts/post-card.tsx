@@ -4,16 +4,22 @@ import { OptionsPopover } from "@/components/posts/options-popover";
 import useIsWindowSmall from "@/hooks/use-is-window-small";
 import Link from "next/link";
 import React, { SyntheticEvent } from "react";
+import { FavoriteButton } from "./favorite-button";
 
-interface ImageProps {
+interface PostProps {
+  id: string;
   userId: string;
   publicId: string;
   sourceUrl: string;
   thumbnailUrl: string;
+  isFavorited?: boolean;
 }
 
-export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
-  function PostCard({ userId, publicId, sourceUrl, thumbnailUrl }, ref) {
+export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
+  function PostCard(
+    { id, userId, publicId, sourceUrl, thumbnailUrl, isFavorited },
+    ref,
+  ) {
     const isWindowSmall = useIsWindowSmall();
 
     const handleOnError = (e: SyntheticEvent<HTMLImageElement>) => {
@@ -56,6 +62,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               />
             </Link>
           )}
+          <FavoriteButton postId={id} isFavorited={!!isFavorited} />
           <OptionsPopover
             userId={userId}
             sourceUrl={sourceUrl}
@@ -96,6 +103,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, ImageProps>(
               />
             </Link>
           )}
+          <FavoriteButton postId={id} isFavorited={!!isFavorited} />
           <OptionsPopover
             userId={userId}
             sourceUrl={sourceUrl}
