@@ -8,9 +8,36 @@ import {
 } from "@/components/ui/popover";
 import useCurrentUser from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
-import { Copy, Download, MoreHorizontal, Pencil } from "lucide-react";
+import {
+  Album,
+  Copy,
+  Download,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { NewAlbumSchema } from "@/schemas";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "../ui/input";
+import { SaveToAlbumModal } from "./save-to-album-modal";
 
 interface OptionsPopoverProps {
   userId: string;
@@ -71,6 +98,7 @@ export function OptionsPopover({
             Download
           </Button>
         </Link>
+        <SaveToAlbumModal postId={publicId} />
         {userId === currentUser?.id && (
           <Link href={`/edit/${publicId}`} prefetch={false}>
             <Button

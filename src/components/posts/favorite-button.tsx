@@ -35,10 +35,7 @@ export function FavoriteButton({ postId, isFavorited }: FavoriteButtonProps) {
   return (
     <Button
       size="icon"
-      className={cn(
-        "invisible absolute left-0 top-0 bg-transparent text-muted-foreground hover:bg-transparent hover:text-red-500 active:scale-90 group-hover:visible",
-        favorited && "visible",
-      )}
+      className="invisible absolute left-0 top-0 bg-transparent text-muted-foreground hover:bg-transparent hover:text-red-500 active:scale-90 group-hover:visible"
       onClick={handleClick}
     >
       {favorited ? (

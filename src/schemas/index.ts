@@ -215,3 +215,10 @@ export const ChangeUsernameSchema = z.object({
     .min(3, { message: "Username must be at least 3 characters" })
     .max(20, { message: "Username must be 20 characters or fewer" }),
 });
+
+export const NewAlbumSchema = z.object({
+  albumName: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" })
+    .max(100, { message: "Name must be 100 characters or fewer" }),
+});

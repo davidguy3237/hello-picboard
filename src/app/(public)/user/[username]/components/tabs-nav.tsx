@@ -12,7 +12,7 @@ export default function SidebarNav({ username }: SidebarNavProps) {
   const pathname = usePathname();
   const currentTab = pathname.split("/").pop();
   return (
-    <div className="flex h-full w-60 flex-col border-r">
+    <div className="flex h-full min-w-40 flex-col border-r">
       <Link
         href={`/user/${username}/posts`}
         className={cn(
