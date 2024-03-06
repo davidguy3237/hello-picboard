@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   }
 
   const searchParams = new URL(req.url).searchParams;
-  const publicId = searchParams.get("post");
+  const postId = searchParams.get("postId");
 
   const albums = await db.album.findMany({
     orderBy: [
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     },
     include: {
       posts: {
-        where: publicId ? { publicId } : undefined,
+        where: postId ? { postId } : undefined,
       },
     },
   });

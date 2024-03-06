@@ -1,18 +1,51 @@
-import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
-import Link from "next/link";
+import { notFound } from "next/navigation";
 import { AlbumCard } from "./components/album-card";
 
-export default async function UserAlbumsPage() {
-  const user = await currentUser();
-  const albums = await db.album.findMany({
+export default async function UserAlbumsPage({
+  params,
+}: {
+  params: { username: string };
+}) {
+  const dbUser = await db.user.findUnique({
     where: {
-      userId: user?.id,
+      name: params.username,
+    },
+  });
+
+  if (!dbUser) {
+    notFound();
+  }
+
+  const albums = await db.album.findMany({
+    orderBy: [
+      {
+        createdAt: "desc",
+      },
+      {
+        id: "desc",
+      },
+    ],
+    where: {
+      userId: dbUser.id,
     },
     include: {
       _count: {
         select: {
           posts: true,
+        },
+      },
+      posts: {
+        include: {
+          post: {
+            select: {
+              thumbnailUrl: true,
+            },
+          },
+        },
+        take: 1,
+        orderBy: {
+          createdAt: "desc",
         },
       },
     },
@@ -21,7 +54,12 @@ export default async function UserAlbumsPage() {
   return (
     <div className="flex h-full w-full gap-4 p-4">
       {albums.map((album) => (
-        <AlbumCard key={album.id} album={album} />
+        <AlbumCard
+          key={album.id}
+          album={album}
+          username={params.username}
+          userId={dbUser.id}
+        />
       ))}
     </div>
   );

@@ -1,8 +1,14 @@
+import { cn } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton";
 
-export function PostCardListSkeleton() {
+export function PostCardListSkeleton({ classNames }: { classNames?: string }) {
   return (
-    <div className="flex max-w-screen-2xl flex-col items-center justify-center gap-1 md:m-4">
+    <div
+      className={cn(
+        "flex max-w-screen-2xl flex-col items-center justify-center gap-1 md:m-4",
+        classNames,
+      )}
+    >
       <div className="flex w-full flex-row flex-wrap justify-center gap-1">
         {[...Array(20)].map((x, i) => (
           <div

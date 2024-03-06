@@ -14,17 +14,21 @@ import { toast } from "sonner";
 import { SaveToAlbumModal } from "./save-to-album-modal";
 
 interface OptionsPopoverProps {
+  postId: string;
   userId: string;
   sourceUrl: string;
   publicId: string;
   isInvisible?: boolean;
+  classNames?: string;
 }
 
 export function OptionsPopover({
+  postId,
   userId,
   sourceUrl,
   publicId,
   isInvisible,
+  classNames,
 }: OptionsPopoverProps) {
   const currentUser = useCurrentUser();
   const writeURLToClipboard = async () => {
@@ -46,8 +50,9 @@ export function OptionsPopover({
     <Popover>
       <PopoverTrigger
         className={cn(
-          "absolute right-0 top-0 flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+          "absolute right-0 top-0 flex h-8 w-8 items-center justify-center rounded-full text-foreground hover:bg-accent hover:text-accent-foreground",
           isInvisible && "invisible group-hover:visible",
+          classNames,
         )}
       >
         <MoreHorizontal />
@@ -72,7 +77,7 @@ export function OptionsPopover({
             Download
           </Button>
         </Link>
-        <SaveToAlbumModal postId={publicId} />
+        <SaveToAlbumModal postId={postId} />
         {userId === currentUser?.id && (
           <Link href={`/edit/${publicId}`} prefetch={false}>
             <Button

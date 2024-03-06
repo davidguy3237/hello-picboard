@@ -4,17 +4,22 @@
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { FavoriteButton } from "./favorite-button";
 
 interface ImageDisplayProps {
+  postId: string;
   url: string;
   width: number | null;
   height: number | null;
+  isFavorited: boolean;
 }
 
 export default function ImageDisplay({
+  postId,
   url,
   width,
   height,
+  isFavorited,
 }: ImageDisplayProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [useWidth, setUseWidth] = useState<boolean>(false);
@@ -50,6 +55,11 @@ export default function ImageDisplay({
         alt=""
         className="h-fit max-h-screen w-auto max-w-full object-contain"
         onLoad={() => setIsLoading(false)}
+      />
+      <FavoriteButton
+        postId={postId}
+        isFavorited={!!isFavorited}
+        classNames="text-white absolute right-0 left-auto"
       />
     </div>
   );

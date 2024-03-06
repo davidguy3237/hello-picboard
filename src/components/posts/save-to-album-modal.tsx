@@ -1,6 +1,6 @@
 "use client";
-import { createNewAlbum } from "@/actions/create-new-album";
-import { addPostToAlbum, removePostToAlbum } from "@/actions/post-to-album";
+import { createNewAlbum } from "@/actions/albums";
+import { addPostToAlbum, removePostToAlbum } from "@/actions/albums";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useCurrentUser from "@/hooks/use-current-user";
 import { NewAlbumSchema } from "@/schemas";
-import { Album, Post } from "@prisma/client";
+import { Album, PostAlbums } from "@prisma/client";
 import { AlbumIcon, Loader2, Plus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -34,7 +34,7 @@ interface SaveToAlbumModalProps {
 }
 
 type AlbumWithPost = Album & {
-  posts: Post[];
+  posts: PostAlbums[];
 };
 
 export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
@@ -47,7 +47,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
 
   useEffect(() => {
     if (showModal) {
-      fetch(`/api/albums/personal?user=${user?.id}&post=${postId}`)
+      fetch(`/api/albums/personal?user=${user?.id}&postId=${postId}`)
         .then((res) => res.json())
         .then((data) => {
           setFetchCompleted(true);
@@ -58,6 +58,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
 
   const form = useForm<z.infer<typeof NewAlbumSchema>>({
     defaultValues: {
+      postId: postId,
       albumName: "",
     },
   });
@@ -115,7 +116,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
                 <Checkbox
                   id={album.id}
                   defaultChecked={album.posts.some(
-                    (post) => post.publicId === postId,
+                    (post) => post.postId === postId,
                   )}
                   onCheckedChange={(checked) =>
                     handleChecked(album.id, checked)

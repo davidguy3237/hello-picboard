@@ -6,7 +6,13 @@ import usePostsSearchMultiCursor from "@/hooks/use-posts-search-multi-cursor";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
+export function AlbumsPostCardList({
+  endpoint,
+  queryString,
+}: {
+  endpoint: string;
+  queryString: string;
+}) {
   const [cursor, setCursor] = useState<{
     id: string;
     date: Date | string;
@@ -15,6 +21,7 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
   const user = useCurrentUser();
 
   const { isLoading, error, posts, hasMore } = usePostsSearchMultiCursor({
+    query: queryString,
     cursor,
     endpoint,
   });
@@ -33,7 +40,7 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
         if (entries[0].isIntersecting && hasMore) {
           setCursor({
             id: posts[posts.length - 1].id,
-            date: posts[posts.length - 1].favorites[0].createdAt,
+            date: posts[posts.length - 1].album!.postAddedToAlbumDate,
           });
         }
       });
@@ -50,7 +57,7 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
   }
 
   return posts.length ? (
-    <div className="flex w-full max-w-screen-2xl flex-col items-center justify-center pb-4 md:m-4">
+    <div className=" flex w-full max-w-screen-2xl flex-col items-center justify-start pb-4 md:m-4">
       <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-1">
         {posts.map((post, i) => {
           if (i === posts.length - 1) {
@@ -91,6 +98,6 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
       No posts found...
     </div>
   ) : (
-    <PostCardListSkeleton />
+    <PostCardListSkeleton classNames="justify-start" />
   );
 }

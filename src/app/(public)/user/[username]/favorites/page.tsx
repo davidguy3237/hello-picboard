@@ -15,12 +15,10 @@ export default async function UserFavoritesPage({
   if (!user || user.name !== params.username) {
     redirect("/");
   }
-  const queryString = "favorites=true";
   return (
     <div className="flex h-full w-full flex-col items-center overflow-y-auto ">
       <FavoritesPostCardList
         key={Math.random()}
-        queryString={queryString}
         endpoint="/api/posts/infinite/favorites"
       />
     </div>

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { newPost } from "@/actions/new-post";
+import { newPost } from "@/actions/posts";
 import { searchTags } from "@/actions/search-tags";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

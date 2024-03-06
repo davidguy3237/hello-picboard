@@ -2,7 +2,7 @@ import { Post, PostFavorites } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 interface usePostSearchProps {
-  query: string;
+  query?: string;
   cursor?: {
     id?: string;
     date?: Date | string;
@@ -12,10 +12,14 @@ interface usePostSearchProps {
 
 type PostWithFavorite = Post & {
   favorites: PostFavorites[];
+} & {
+  album?: {
+    postAddedToAlbumDate: Date | string;
+  };
 };
 
 export default function usePostsSearchMultiCursor({
-  query,
+  query = "",
   cursor = {
     id: "",
     date: "",

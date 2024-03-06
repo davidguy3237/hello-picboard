@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { deletePost } from "@/actions/delete-post";
-import { editPost } from "@/actions/edit-post";
+import { deletePost, editPost } from "@/actions/posts";
 import { searchTags } from "@/actions/search-tags";
 import {
   AlertDialog,
@@ -40,7 +39,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Post } from "@prisma/client";
 import { DialogContent } from "@radix-ui/react-dialog";
 import { CheckCircle, Loader2, Trash2, X } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -281,7 +279,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                You are about to delete this post
+                You are about to delete this post!
               </AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot be undone.
@@ -290,6 +288,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
+                disabled={isPending}
                 onClick={handleDeletePost}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
               >

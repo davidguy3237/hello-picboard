@@ -7,7 +7,6 @@ interface PostTabsProps {
 }
 
 export default function UserPostsTab({ params }: PostTabsProps) {
-  console.log("RENDERING POSTS TAB");
   const queryString = `username=${params.username}`;
 
   return (

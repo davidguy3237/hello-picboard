@@ -62,12 +62,19 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
               />
             </Link>
           )}
-          <FavoriteButton postId={id} isFavorited={!!isFavorited} />
+          <FavoriteButton
+            postId={id}
+            isFavorited={!!isFavorited}
+            isInvisible={true}
+            classNames="text-white"
+          />
           <OptionsPopover
+            postId={id}
             userId={userId}
             sourceUrl={sourceUrl}
             publicId={publicId}
             isInvisible={true}
+            classNames="text-white"
           />
         </div>
       </div>
@@ -103,12 +110,19 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
               />
             </Link>
           )}
-          <FavoriteButton postId={id} isFavorited={!!isFavorited} />
+          <FavoriteButton
+            postId={id}
+            isFavorited={!!isFavorited}
+            isInvisible={true}
+            classNames="text-white"
+          />
           <OptionsPopover
+            postId={id}
             userId={userId}
             sourceUrl={sourceUrl}
             publicId={publicId}
             isInvisible={true}
+            classNames="text-white"
           />
         </div>
       </div>

@@ -9,7 +9,6 @@ import { SearchSchema } from "@/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  console.log("RUNNING ROUTE FOR INFINITE POSTS");
   const user = await currentUser();
 
   const searchParams = new URL(req.url).searchParams;
@@ -103,8 +102,6 @@ export async function GET(req: NextRequest) {
       },
     ];
   } else if (showFavorites && user && user.id && !whereClause.AND) {
-    // TODO: Do I want to show only the user's own favorites or the favorites of other users as well?
-    // applies to posts and albums too
     whereClause.AND = [
       {
         favorites: {

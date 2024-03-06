@@ -217,6 +217,7 @@ export const ChangeUsernameSchema = z.object({
 });
 
 export const NewAlbumSchema = z.object({
+  postId: z.string().min(1),
   albumName: z
     .string()
     .min(3, { message: "Name must be at least 3 characters" })

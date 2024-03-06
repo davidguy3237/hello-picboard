@@ -139,7 +139,9 @@ export default function LoginPage() {
                         asChild
                         className="px-0 font-normal"
                       >
-                        <Link href="/reset-password">Forgot password?</Link>
+                        <Link href="/reset-password" prefetch={false}>
+                          Forgot password?
+                        </Link>
                       </Button>
                     </FormItem>
                   )}

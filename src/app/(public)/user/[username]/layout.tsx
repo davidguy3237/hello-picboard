@@ -46,7 +46,7 @@ export default async function UsernameLayout({
   return (
     <div className="flex h-[calc(100vh-57px)] w-full items-center justify-center">
       <aside className=" h-full w-[300px]">
-        <SidebarNav items={sidebarNavItems} />
+        <SidebarNav items={sidebarNavItems} dbUser={dbUser} />
       </aside>
       {children}
     </div>

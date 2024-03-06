@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { FavoriteButton } from "@/components/posts/favorite-button";
 import { OptionsPopover } from "@/components/posts/options-popover";
 import Tag from "@/components/posts/tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
@@ -20,6 +22,7 @@ interface PostPageProps {
   };
 }
 export default async function PostPage({ params }: PostPageProps) {
+  const user = await currentUser();
   const post = await db.post.findUnique({
     where: {
       publicId: params.id,
@@ -32,6 +35,13 @@ export default async function PostPage({ params }: PostPageProps) {
         },
       },
       tags: true,
+      favorites: user
+        ? {
+            where: {
+              userId: user.id,
+            },
+          }
+        : undefined,
     },
   });
 
@@ -62,9 +72,15 @@ export default async function PostPage({ params }: PostPageProps) {
           src={post.sourceUrl}
           className="h-full w-full object-contain"
         />
+        <FavoriteButton
+          postId={post.id}
+          isFavorited={post.favorites[0]?.userId === user?.id}
+          classNames="text-white absolute right-0 left-auto"
+        />
       </div>
       <div className="relative flex w-full flex-shrink-0 flex-col gap-y-2 p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
         <OptionsPopover
+          postId={post.id}
           userId={post.userId || ""}
           sourceUrl={post.sourceUrl}
           publicId={post.publicId}

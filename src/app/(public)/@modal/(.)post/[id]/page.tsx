@@ -10,10 +10,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
 import { Clock, Ruler, User } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 interface InterceptedPostPageProps {
   params: {
@@ -24,6 +26,9 @@ interface InterceptedPostPageProps {
 export default async function InterceptedPostPage({
   params,
 }: InterceptedPostPageProps) {
+  console.log("GETTING USER");
+  const user = await currentUser();
+  console.log("GETTING POST");
   const post = await db.post.findUnique({
     where: {
       publicId: params.id,
@@ -36,8 +41,16 @@ export default async function InterceptedPostPage({
         },
       },
       tags: true,
+      favorites: user
+        ? {
+            where: {
+              userId: user.id,
+            },
+          }
+        : undefined,
     },
   });
+  console.log("POST", post);
 
   if (!post) {
     notFound();
@@ -58,27 +71,47 @@ export default async function InterceptedPostPage({
     <PostInterceptModal>
       <div className="fixed left-[50%] top-[50%] z-50 flex h-max max-h-screen w-max max-w-full translate-x-[-50%] translate-y-[-50%] flex-col divide-y lg:flex-row lg:divide-y-0">
         <ImageDisplay
+          postId={post.id}
           url={post.sourceUrl}
           width={post.width}
           height={post.height}
+          isFavorited={post.favorites[0]?.userId === user?.id}
         />
         <div className="relative flex w-full flex-shrink-0 flex-col gap-y-2 bg-background p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
           <OptionsPopover
+            postId={post.id}
             userId={post.userId || ""}
             sourceUrl={post.sourceUrl}
             publicId={post.publicId}
           />
-          <div className="flex items-center gap-x-2">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={post.user?.image || ""} />
-              <AvatarFallback className="bg-foreground">
-                <User className="text-background" />
-              </AvatarFallback>
-            </Avatar>
-            <span className={cn(!post.user && "italic text-muted-foreground")}>
-              {post.user?.name || "deleted"}
-            </span>
-          </div>
+          {post.user ? (
+            <Link
+              href={`/user/${post.user.name}/posts`}
+              className="flex items-center gap-x-2"
+            >
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={post.user?.image || ""} />
+                <AvatarFallback className="bg-foreground">
+                  <User className="text-background" />
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium underline-offset-4 hover:underline">
+                {post.user?.name}
+              </span>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-x-2">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="" />
+                <AvatarFallback className="bg-foreground">
+                  <User className="text-background" />
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm italic text-muted-foreground">
+                deleted
+              </span>
+            </div>
+          )}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

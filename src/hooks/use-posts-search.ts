@@ -22,8 +22,6 @@ export default function usePostsSearch({
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    console.log("USE POST SEARCH");
-    console.log(`${endpoint}?cursor=${cursor}&${query}`);
     const controller = new AbortController();
     const { signal } = controller;
 
