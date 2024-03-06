@@ -3,7 +3,6 @@ import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  console.log("ALBUMS ROUTE HANDLER");
   const user = await currentUser();
 
   if (!user) {
@@ -29,8 +28,6 @@ export async function GET(req: NextRequest) {
       },
     },
   });
-
-  console.log("HERE ARE THE ALBUMS IN ROUTE HANDLER: ", albums);
 
   return NextResponse.json(
     { albums },

@@ -29,11 +29,15 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
+interface SaveToAlbumModalProps {
+  postId: string;
+}
+
 type AlbumWithPost = Album & {
   posts: Post[];
 };
 
-export function SaveToAlbumModal({ postId }: { postId: string }) {
+export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -41,13 +45,14 @@ export function SaveToAlbumModal({ postId }: { postId: string }) {
   const user = useCurrentUser();
 
   useEffect(() => {
-    console.log("INSIDE USE EFFECT FOR ALBUMS");
-    fetch(`/api/albums/personal?user=${user?.id}&post=${postId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setAlbums(data.albums);
-      });
-  }, [user?.id, postId]);
+    if (showModal) {
+      fetch(`/api/albums/personal?user=${user?.id}&post=${postId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setAlbums(data.albums);
+        });
+    }
+  }, [showModal, user?.id, postId]);
 
   const form = useForm<z.infer<typeof NewAlbumSchema>>({
     defaultValues: {

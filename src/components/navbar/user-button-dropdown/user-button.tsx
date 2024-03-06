@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -19,6 +20,10 @@ interface UserButtonProps {
 }
 
 export function UserButton({ user }: UserButtonProps) {
+  if (!user) {
+    return null;
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Profile">
@@ -30,6 +35,13 @@ export function UserButton({ user }: UserButtonProps) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="end">
+        <DropdownMenuLabel>
+          <div className="font-medium">{user.name}</div>
+          <div className="truncate text-sm text-muted-foreground">
+            {user.email}
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
         <Link href={`/user/${user?.name}/posts`}>
           <DropdownMenuItem>
             <Images className="mr-2 h-4 w-4" />
@@ -48,7 +60,7 @@ export function UserButton({ user }: UserButtonProps) {
             My Favorites
           </DropdownMenuItem>
         </Link>
-        <Link href="/settings" prefetch={false}>
+        <Link href="/settings">
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             Settings

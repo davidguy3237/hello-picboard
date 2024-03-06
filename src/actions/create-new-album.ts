@@ -4,6 +4,7 @@ import db from "@/lib/db";
 import { NewAlbumSchema } from "@/schemas";
 import * as z from "zod";
 import { customAlphabet } from "nanoid";
+import { revalidatePath } from "next/cache";
 
 export async function createNewAlbum(
   newAlbumData: z.infer<typeof NewAlbumSchema>,
@@ -29,6 +30,7 @@ export async function createNewAlbum(
 
   console.log("NEW ALBUM CREATED: ", newAlbum);
 
+  revalidatePath(`/user/${user.name}/albums`);
   return {
     success: "Album created!",
   };
