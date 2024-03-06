@@ -15,10 +15,17 @@ export async function GET(req: NextRequest) {
   }
 
   const searchParams = new URL(req.url).searchParams;
-  const userToSearch = searchParams.get("user");
   const publicId = searchParams.get("post");
 
   const albums = await db.album.findMany({
+    orderBy: [
+      {
+        createdAt: "desc",
+      },
+      {
+        id: "desc",
+      },
+    ],
     where: {
       userId: user.id,
     },

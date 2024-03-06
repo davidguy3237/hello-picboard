@@ -129,6 +129,17 @@ model Album {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// model PostAlbums {
+//   postId String
+//   albumId String
+//   createdAt DateTime @default(now())
+
+//   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+//   album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+//   @@id([postId, albumId])
+// }
+
 model PostFavorites {
   postId    String
   userId    String

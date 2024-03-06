@@ -26,6 +26,14 @@ export default auth((req) => {
       new URL(`/login?cbu=${encodedCallbackUrl}`, nextUrl),
     );
   }
+
+  if (
+    (nextUrl.pathname.includes("/edit") ||
+      nextUrl.pathname.includes("/favorites")) &&
+    !isLoggedIn
+  ) {
+    return Response.redirect(new URL("/", nextUrl));
+  }
 });
 
 export const config = {
@@ -40,6 +48,7 @@ export const config = {
     "/new-verification",
     "/settings",
     "/upload",
-    "/edit:path*",
+    "/edit/:id*",
+    "/user/:username/favorites",
   ],
 };

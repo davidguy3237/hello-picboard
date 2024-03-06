@@ -127,7 +127,7 @@ export async function GET(req: NextRequest) {
     ],
     cursor: cursor
       ? {
-          publicId: cursor,
+          id: cursor,
         }
       : undefined,
     include: {

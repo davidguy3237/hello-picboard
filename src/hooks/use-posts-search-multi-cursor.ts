@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 
 interface usePostSearchProps {
   query: string;
-  cursor: string;
+  cursor?: {
+    id?: string;
+    date?: Date | string;
+  };
   endpoint?: string;
 }
 
@@ -11,9 +14,12 @@ type PostWithFavorite = Post & {
   favorites: PostFavorites[];
 };
 
-export default function usePostsSearch({
+export default function usePostsSearchMultiCursor({
   query,
-  cursor = "",
+  cursor = {
+    id: "",
+    date: "",
+  },
   endpoint = "/api/posts/infinite",
 }: usePostSearchProps) {
   const [posts, setPosts] = useState<PostWithFavorite[]>([]);
@@ -22,8 +28,6 @@ export default function usePostsSearch({
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    console.log("USE POST SEARCH");
-    console.log(`${endpoint}?cursor=${cursor}&${query}`);
     const controller = new AbortController();
     const { signal } = controller;
 
@@ -31,9 +35,12 @@ export default function usePostsSearch({
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${endpoint}?cursor=${cursor}&${query}`, {
-          signal,
-        });
+        const response = await fetch(
+          `${endpoint}?cursorId=${cursor.id}&cursorDate=${cursor.date}&${query}`,
+          {
+            signal,
+          },
+        );
         const data = await response.json();
         setPosts((prevPosts) => [...prevPosts, ...data.posts]);
         setHasMore(data.posts.length === 25);

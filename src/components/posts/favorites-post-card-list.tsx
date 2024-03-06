@@ -2,22 +2,30 @@
 import { PostCard } from "@/components/posts/post-card";
 import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-list";
 import useCurrentUser from "@/hooks/use-current-user";
-import usePostsSearch from "@/hooks/use-posts-search";
+import usePostsSearchMultiCursor from "@/hooks/use-posts-search-multi-cursor";
 import { Loader2Icon } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export function PostCardList({
+export function FavoritesPostCardList({
   queryString,
   endpoint,
 }: {
   queryString: string;
   endpoint?: string;
 }) {
-  const [cursor, setCursor] = useState("");
+  const [cursor, setCursor] = useState<{
+    id: string;
+    date: Date | string;
+  }>({ id: "", date: "" });
+
+  useEffect(() => {
+    console.log("THE CURSOR");
+    console.log(cursor);
+  });
 
   const user = useCurrentUser();
 
-  const { isLoading, error, posts, hasMore } = usePostsSearch({
+  const { isLoading, error, posts, hasMore } = usePostsSearchMultiCursor({
     query: queryString,
     cursor,
     endpoint,
@@ -35,7 +43,10 @@ export function PostCardList({
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setCursor(posts[posts.length - 1].id);
+          setCursor({
+            id: posts[posts.length - 1].id,
+            date: posts[posts.length - 1].favorites[0].createdAt,
+          });
         }
       });
 

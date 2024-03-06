@@ -11,7 +11,6 @@ interface SidebarNavProps {
 
 export default function SidebarNav({ items }: SidebarNavProps) {
   const pathname = usePathname();
-  console.log("the pathname: ", pathname);
   return (
     <nav className="flex h-full min-w-40 flex-col space-y-2 border-r p-2">
       {items.map((item) => (

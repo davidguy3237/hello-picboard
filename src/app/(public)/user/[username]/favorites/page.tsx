@@ -1,11 +1,24 @@
-import { PostCardList } from "@/components/posts/post-card-list";
+import { FavoritesPostCardList } from "@/components/posts/favorites-post-card-list";
+import { currentUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default async function UserFavoritesPage() {
+interface UserFavoritesPageProps {
+  params: {
+    username: string;
+  };
+}
+
+export default async function UserFavoritesPage({
+  params,
+}: UserFavoritesPageProps) {
+  const user = await currentUser();
+  if (!user || user.name !== params.username) {
+    redirect("/");
+  }
   const queryString = "favorites=true";
-  // TODO: sort by most recent favorites instead of most recent posts?
   return (
     <div className="flex h-full w-full flex-col items-center overflow-y-auto ">
-      <PostCardList
+      <FavoritesPostCardList
         key={Math.random()}
         queryString={queryString}
         endpoint="/api/posts/infinite/favorites"

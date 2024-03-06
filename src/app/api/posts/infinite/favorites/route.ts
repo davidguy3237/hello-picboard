@@ -9,15 +9,16 @@ export async function GET(req: NextRequest) {
   }
 
   const searchParams = new URL(req.url).searchParams;
-  const cursor = searchParams.get("cursor");
+  const cursorId = searchParams.get("cursorId") || null;
+  const cursorDate = searchParams.get("cursorDate") || null;
 
-  // Have to do raw query because prisma can't sort by PostFavorites's createdAt
+  // Raw query because Prisma can't order by a relation's createdAt column
   const posts = await db.$queryRaw`
   SELECT Post.*, JSON_ARRAYAGG(JSON_OBJECT('postId', PostFavorites.postId, 'userId', PostFavorites.userId, 'createdAt', PostFavorites.createdAt)) AS favorites
   FROM Post
   JOIN PostFavorites ON Post.id = PostFavorites.postId
   WHERE PostFavorites.userId = ${user.id}
-  AND (${cursor} IS NULL OR Post.publicId > ${cursor})
+  AND (${cursorId} IS NULL OR (PostFavorites.createdAt < ${cursorDate} AND Post.id > ${cursorId}))
   GROUP BY Post.id
   ORDER BY PostFavorites.createdAt DESC, Post.id DESC
   LIMIT 25

@@ -42,6 +42,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
   const [isPending, startTransition] = useTransition();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [albums, setAlbums] = useState<AlbumWithPost[]>([]);
+  const [fetchCompleted, setFetchCompleted] = useState<boolean>(false);
   const user = useCurrentUser();
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
       fetch(`/api/albums/personal?user=${user?.id}&post=${postId}`)
         .then((res) => res.json())
         .then((data) => {
+          setFetchCompleted(true);
           setAlbums(data.albums);
         });
     }
@@ -107,20 +109,28 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
           <DialogTitle>Save To Album</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
-          {albums.map((album) => (
-            <div key={album.id} className="flex items-center space-x-2">
-              <Checkbox
-                id={album.id}
-                defaultChecked={album.posts.some(
-                  (post) => post.publicId === postId,
-                )}
-                onCheckedChange={(checked) => handleChecked(album.id, checked)}
-              />
-              <Label htmlFor={album.id} className="text-sm font-medium">
-                {album.name}
-              </Label>
+          {albums.length ? (
+            albums.map((album) => (
+              <div key={album.id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={album.id}
+                  defaultChecked={album.posts.some(
+                    (post) => post.publicId === postId,
+                  )}
+                  onCheckedChange={(checked) =>
+                    handleChecked(album.id, checked)
+                  }
+                />
+                <Label htmlFor={album.id} className="text-sm font-medium">
+                  {album.name}
+                </Label>
+              </div>
+            ))
+          ) : !albums.length && fetchCompleted ? null : (
+            <div className="flex w-full items-center justify-center">
+              <Loader2 className="h-4 w-4 animate-spin text-center" />
             </div>
-          ))}
+          )}
         </div>
         {showForm ? (
           <Form {...form}>

@@ -1,4 +1,5 @@
 import SidebarNav from "@/app/(public)/user/[username]/components/sidebar-nav";
+import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 
@@ -13,14 +14,14 @@ export default async function UsernameLayout({
   children,
   params,
 }: UserLayoutProps) {
-  console.log("USER LAYOUT");
-  const user = await db.user.findUnique({
+  const user = await currentUser();
+  const dbUser = await db.user.findUnique({
     where: {
       name: params.username,
     },
   });
 
-  if (!user) {
+  if (!dbUser) {
     notFound();
   }
 
@@ -33,11 +34,14 @@ export default async function UsernameLayout({
       title: "Albums",
       href: `/user/${params.username}/albums`,
     },
-    {
+  ];
+
+  if (user?.name === params.username) {
+    sidebarNavItems.push({
       title: "Favorites",
       href: `/user/${params.username}/favorites`,
-    },
-  ];
+    });
+  }
 
   return (
     <div className="flex h-[calc(100vh-57px)] w-full items-center justify-center">

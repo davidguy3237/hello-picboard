@@ -1,12 +1,11 @@
 "use client";
 
-import { Heart } from "lucide-react";
-import { Button } from "../ui/button";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { favoritePost } from "@/actions/favorite-post";
 import useCurrentUser from "@/hooks/use-current-user";
+import { Heart } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
 
 interface FavoriteButtonProps {
   postId: string;
