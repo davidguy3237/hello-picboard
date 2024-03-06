@@ -2,7 +2,7 @@ import {
   DateFilterConditional,
   StrictSearchConditional,
   WhereClause,
-} from "@/app/api/infinite-posts/types";
+} from "@/app/api/posts/types";
 import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { SearchSchema } from "@/schemas";

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 interface usePostSearchProps {
   query: string;
   cursor: string;
+  endpoint?: string;
 }
 
 type PostWithFavorite = Post & {
@@ -13,6 +14,7 @@ type PostWithFavorite = Post & {
 export default function usePostsSearch({
   query,
   cursor = "",
+  endpoint = `/api/posts/infinite?cursor=${cursor}&${query}`,
 }: usePostSearchProps) {
   const [posts, setPosts] = useState<PostWithFavorite[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,12 +29,7 @@ export default function usePostsSearch({
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(
-          `/api/infinite-posts?cursor=${cursor}&${query}`,
-          {
-            signal,
-          },
-        );
+        const response = await fetch(endpoint, { signal });
         const data = await response.json();
         setPosts((prevPosts) => [...prevPosts, ...data.posts]);
         setHasMore(data.posts.length === 25);
@@ -51,7 +48,7 @@ export default function usePostsSearch({
 
     getMorePosts();
     return () => controller.abort();
-  }, [query, cursor]);
+  }, [query, cursor, endpoint]);
 
   return {
     isLoading,

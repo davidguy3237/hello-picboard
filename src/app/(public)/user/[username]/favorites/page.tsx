@@ -5,7 +5,11 @@ export default async function UserFavoritesPage() {
   // TODO: sort by most recent favorites instead of most recent posts?
   return (
     <div className="flex h-full w-full flex-col items-center overflow-y-auto ">
-      <PostCardList key={Math.random()} queryString={queryString} />
+      <PostCardList
+        key={Math.random()}
+        queryString={queryString}
+        endpoint="/api/posts/infinite/favorites"
+      />
     </div>
   );
 }

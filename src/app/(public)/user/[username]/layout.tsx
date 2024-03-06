@@ -1,4 +1,4 @@
-import SidebarNav from "./components/tabs-nav";
+import SidebarNav from "@/app/(public)/user/[username]/components/sidebar-nav";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 
@@ -24,9 +24,26 @@ export default async function UsernameLayout({
     notFound();
   }
 
+  const sidebarNavItems = [
+    {
+      title: "Posts",
+      href: `/user/${params.username}/posts`,
+    },
+    {
+      title: "Albums",
+      href: `/user/${params.username}/albums`,
+    },
+    {
+      title: "Favorites",
+      href: `/user/${params.username}/favorites`,
+    },
+  ];
+
   return (
     <div className="flex h-[calc(100vh-57px)] w-full items-center justify-center">
-      <SidebarNav username={params.username} />
+      <aside className=" h-full w-[300px]">
+        <SidebarNav items={sidebarNavItems} />
+      </aside>
       {children}
     </div>
   );

@@ -6,7 +6,13 @@ import usePostsSearch from "@/hooks/use-posts-search";
 import { Loader2Icon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
-export function PostCardList({ queryString }: { queryString: string }) {
+export function PostCardList({
+  queryString,
+  endpoint,
+}: {
+  queryString: string;
+  endpoint?: string;
+}) {
   const [cursor, setCursor] = useState("");
 
   const user = useCurrentUser();
@@ -14,6 +20,7 @@ export function PostCardList({ queryString }: { queryString: string }) {
   const { isLoading, error, posts, hasMore } = usePostsSearch({
     query: queryString,
     cursor,
+    endpoint,
   });
 
   const observer = useRef<IntersectionObserver>();
