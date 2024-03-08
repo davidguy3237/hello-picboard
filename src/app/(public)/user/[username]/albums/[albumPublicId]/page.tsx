@@ -45,12 +45,11 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
         <ChevronLeft size={32} />
       </Link>
       <div className=" flex h-full w-full flex-col items-center overflow-y-auto">
-        <div className="w-full p-2 text-center text-lg font-medium">
-          {album.name}
-          <Separator />
+        <div className="flex w-full flex-col items-center p-2 text-center text-lg font-medium">
+          <p>{album.name}</p>
+          <Separator className="w-1/2" />
         </div>
         <AlbumsPostCardList
-          key={Math.random()}
           queryString={queryString}
           endpoint="/api/posts/infinite/albums"
         />

@@ -82,7 +82,7 @@ export function UploadForm({
     }
   };
 
-  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 500);
+  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 300);
 
   const onSubmit = async (uploadData: z.infer<typeof UploadSchema>) => {
     startTransition(async () => {

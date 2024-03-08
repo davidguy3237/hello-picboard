@@ -72,13 +72,15 @@ export default async function PostPage({ params }: PostPageProps) {
           src={post.sourceUrl}
           className="h-full w-full object-contain"
         />
-        <FavoriteButton
-          postId={post.id}
-          isFavorited={post.favorites[0]?.userId === user?.id}
-          classNames="text-white absolute right-0 left-auto"
-        />
       </div>
       <div className="relative flex w-full flex-shrink-0 flex-col gap-y-2 p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
+        {user && (
+          <FavoriteButton
+            postId={post.id}
+            isFavorited={post.favorites[0]?.userId === user?.id}
+            classNames="text-foreground right-8 left-auto"
+          />
+        )}
         <OptionsPopover
           postId={post.id}
           userId={post.userId || ""}

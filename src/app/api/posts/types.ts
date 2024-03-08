@@ -21,6 +21,7 @@ export interface StrictSearchConditional {
       NOT: {
         name: {
           in: string[] | undefined;
+          mode: "insensitive";
         };
       };
     };

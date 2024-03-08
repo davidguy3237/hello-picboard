@@ -16,7 +16,7 @@ export function PostCardListSkeleton({ classNames }: { classNames?: string }) {
             className="relative flex h-96 w-72 flex-auto items-center justify-center overflow-hidden bg-secondary sm:rounded-sm"
           >
             <div className="group h-full w-full">
-              <Skeleton className="h-full w-full" />
+              <Skeleton className="h-full w-full bg-primary/50" />
             </div>
           </div>
         ))}

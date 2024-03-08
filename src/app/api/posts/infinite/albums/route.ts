@@ -12,14 +12,25 @@ export async function GET(req: NextRequest) {
   }
 
   const posts = await db.$queryRaw`
-  SELECT Post.*, JSON_OBJECTAGG('postAddedToAlbumDate', PostAlbums.createdAt) as album, JSON_ARRAYAGG(JSON_OBJECT('postId', PostFavorites.postId, 'userId', PostFavorites.userId, 'createdAt', PostFavorites.createdAt)) AS favorites
-  FROM Post
-  LEFT JOIN PostFavorites ON Post.id = PostFavorites.postId
-  JOIN PostAlbums ON Post.id = PostAlbums.postId
-  WHERE PostAlbums.albumId = ${albumId}
-  AND (${cursorId} IS NULL OR (PostAlbums.createdAt < ${cursorDate} AND Post.id > ${cursorId}))
-  GROUP BY Post.id
-  ORDER BY PostAlbums.createdAt DESC, Post.id DESC
+  SELECT post.id, 
+  post.public_id AS "publicId", 
+  post.user_id AS "userId", 
+  post.source_url AS "sourceUrl", 
+  post.thumbnail_url AS "thumbnailUrl", 
+  post.description, 
+  post.width, 
+  post.height, 
+  post.created_at AS "createdAt", 
+  post.updated_at AS "updatedAt", 
+  json_object_agg('postAddedToAlbumDate', posts_albums.created_at) as album,
+  json_agg(json_build_object('postId', favorites.post_id, 'userId', favorites.user_id, 'createdAt', favorites.created_at)) AS favorites
+  FROM post
+  LEFT JOIN favorites ON post.id = favorites.post_id
+  JOIN posts_albums ON post.id = posts_albums.post_id
+  WHERE posts_albums.album_id = ${albumId}
+  AND (${cursorId}::text IS NULL OR (posts_albums.created_at < ${cursorDate} AND post.id > ${cursorId}))
+  GROUP BY post.id
+  ORDER BY MAX(posts_albums.created_at) DESC, post.id DESC
   LIMIT 25
   `;
 

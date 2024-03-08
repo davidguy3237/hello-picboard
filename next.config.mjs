@@ -3,6 +3,11 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   async redirects() {
     return [
       {

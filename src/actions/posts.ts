@@ -231,7 +231,7 @@ export async function favoritePost(
   }
 
   if (currentlyFavorited) {
-    const unfavorited = await db.postFavorites.delete({
+    const unfavorited = await db.favorites.delete({
       where: {
         postId_userId: {
           postId: postId,

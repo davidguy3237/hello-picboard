@@ -49,7 +49,7 @@ export function Search() {
     }
   };
 
-  const debouncedHandleChange = useDebounceFunction(handleChange, 500);
+  const debouncedHandleChange = useDebounceFunction(handleChange, 300);
 
   const handleClick = (suggestion: string) => {
     const searchBar = document.getElementById("search") as HTMLInputElement;

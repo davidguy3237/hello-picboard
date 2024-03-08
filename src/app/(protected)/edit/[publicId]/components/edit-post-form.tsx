@@ -96,7 +96,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
     }
   };
 
-  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 500);
+  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 300);
 
   const onSubmit = async (editData: z.infer<typeof EditPostSchema>) => {
     startTransition(async () => {

@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { FavoriteButton } from "@/components/posts/favorite-button";
 import ImageDisplay from "@/components/posts/image-display";
 import { OptionsPopover } from "@/components/posts/options-popover";
 import { PostInterceptModal } from "@/components/posts/post-intercept-modal";
@@ -26,9 +27,7 @@ interface InterceptedPostPageProps {
 export default async function InterceptedPostPage({
   params,
 }: InterceptedPostPageProps) {
-  console.log("GETTING USER");
   const user = await currentUser();
-  console.log("GETTING POST");
   const post = await db.post.findUnique({
     where: {
       publicId: params.id,
@@ -50,7 +49,6 @@ export default async function InterceptedPostPage({
         : undefined,
     },
   });
-  console.log("POST", post);
 
   if (!post) {
     notFound();
@@ -71,13 +69,18 @@ export default async function InterceptedPostPage({
     <PostInterceptModal>
       <div className="fixed left-[50%] top-[50%] z-50 flex h-max max-h-screen w-max max-w-full translate-x-[-50%] translate-y-[-50%] flex-col divide-y lg:flex-row lg:divide-y-0">
         <ImageDisplay
-          postId={post.id}
           url={post.sourceUrl}
           width={post.width}
           height={post.height}
-          isFavorited={post.favorites[0]?.userId === user?.id}
         />
         <div className="relative flex w-full flex-shrink-0 flex-col gap-y-2 bg-background p-2 lg:w-80 lg:border-l lg:pb-0 lg:pl-2 lg:pr-0 lg:pt-2">
+          {user && (
+            <FavoriteButton
+              postId={post.id}
+              isFavorited={post.favorites[0]?.userId === user?.id}
+              classNames="text-foreground right-8 left-auto"
+            />
+          )}
           <OptionsPopover
             postId={post.id}
             userId={post.userId || ""}

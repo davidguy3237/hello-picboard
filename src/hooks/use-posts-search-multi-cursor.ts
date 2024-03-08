@@ -1,4 +1,4 @@
-import { Post, PostFavorites } from "@prisma/client";
+import { Post, Favorites } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 interface usePostSearchProps {
@@ -11,7 +11,7 @@ interface usePostSearchProps {
 }
 
 type PostWithFavorite = Post & {
-  favorites: PostFavorites[];
+  favorites: Favorites[];
 } & {
   album?: {
     postAddedToAlbumDate: Date | string;

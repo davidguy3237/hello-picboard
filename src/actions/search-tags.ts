@@ -4,7 +4,7 @@ import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 
 export async function searchTags(inputValue: string) {
-  const user = currentUser();
+  const user = await currentUser();
 
   if (!user) {
     return { error: "Unauthorized" };
@@ -17,8 +17,8 @@ export async function searchTags(inputValue: string) {
   const fullTextSearchInput = inputValue
     .trim()
     .split(" ")
-    .map((word) => "+" + word + "*")
-    .join(" ");
+    .map((word) => word + ":*")
+    .join(" & ");
 
   const searchResults = await db.tag.findMany({
     where: {

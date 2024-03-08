@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useCurrentUser from "@/hooks/use-current-user";
 import { NewAlbumSchema } from "@/schemas";
-import { Album, PostAlbums } from "@prisma/client";
+import { Album, PostsAlbums } from "@prisma/client";
 import { AlbumIcon, Loader2, Plus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -34,7 +34,7 @@ interface SaveToAlbumModalProps {
 }
 
 type AlbumWithPost = Album & {
-  posts: PostAlbums[];
+  posts: PostsAlbums[];
 };
 
 export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
@@ -47,7 +47,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
 
   useEffect(() => {
     if (showModal) {
-      fetch(`/api/albums/personal?user=${user?.id}&postId=${postId}`)
+      fetch(`/api/albums/checkboxes?user=${user?.id}&postId=${postId}`)
         .then((res) => res.json())
         .then((data) => {
           setFetchCompleted(true);

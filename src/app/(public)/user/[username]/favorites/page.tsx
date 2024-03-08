@@ -17,10 +17,7 @@ export default async function UserFavoritesPage({
   }
   return (
     <div className="flex h-full w-full flex-col items-center overflow-y-auto ">
-      <FavoritesPostCardList
-        key={Math.random()}
-        endpoint="/api/posts/infinite/favorites"
-      />
+      <FavoritesPostCardList endpoint="/api/posts/infinite/favorites" />
     </div>
   );
 }

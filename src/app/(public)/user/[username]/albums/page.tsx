@@ -1,6 +1,9 @@
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 import { AlbumCard } from "./components/album-card";
+import { PlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { NewAlbumButton } from "./components/new-album-button";
 
 export default async function UserAlbumsPage({
   params,
@@ -53,14 +56,22 @@ export default async function UserAlbumsPage({
 
   return (
     <div className="flex h-full w-full gap-4 p-4">
-      {albums.map((album) => (
-        <AlbumCard
-          key={album.id}
-          album={album}
-          username={params.username}
-          userId={dbUser.id}
-        />
-      ))}
+      {albums.length ? (
+        albums.map((album) => (
+          <AlbumCard
+            key={album.id}
+            album={album}
+            username={params.username}
+            userId={dbUser.id}
+          />
+        ))
+      ) : (
+        <div className="flex h-full w-full flex-col items-center justify-center">
+          <p className="font-medium italic text-muted-foreground">
+            No albums found...
+          </p>
+        </div>
+      )}
     </div>
   );
 }

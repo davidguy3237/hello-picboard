@@ -64,31 +64,48 @@ export async function createNewAlbum(
     };
   }
 
+  const validatedFields = NewAlbumSchema.safeParse(newAlbumData);
+
+  if (!validatedFields.success) {
+    return {
+      error: "Invalid data",
+    };
+  }
+
+  const { postId, albumName } = validatedFields.data;
+
   const nanoid = customAlphabet(process.env.NANOID_ALPHABET!, 12);
   const publicId = nanoid();
 
   const newAlbum = await db.album.create({
     data: {
       publicId,
-      name: newAlbumData.albumName,
+      name: albumName,
       userId: user.id,
     },
   });
 
-  const result = await db.post.update({
-    where: {
-      id: newAlbumData.postId,
-    },
-    data: {
-      albums: {
-        create: {
-          albumId: newAlbum.id,
+  if (postId) {
+    const result = await db.post.update({
+      where: {
+        id: newAlbumData.postId,
+      },
+      data: {
+        albums: {
+          create: {
+            albumId: newAlbum.id,
+          },
         },
       },
-    },
-  });
+    });
 
-  revalidatePath(`/user/${user.name}/albums`);
+    if (!result) {
+      return {
+        error: "There was a problem adding post to new album",
+      };
+    }
+  }
+
   return {
     success: "Album created!",
   };
@@ -128,7 +145,7 @@ export async function removePostToAlbum(albumId: string, postId: string) {
     };
   }
 
-  const postAlbum = await db.postAlbums.delete({
+  const postsAlbum = await db.postsAlbums.delete({
     where: {
       postId_albumId: {
         postId,

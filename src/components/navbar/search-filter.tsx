@@ -60,8 +60,8 @@ export function SearchFilter({
             <SelectValue placeholder="Sort By" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="asc">Oldest</SelectItem>
             <SelectItem value="desc">Newest</SelectItem>
+            <SelectItem value="asc">Oldest</SelectItem>
           </SelectContent>
         </Select>
         {children}

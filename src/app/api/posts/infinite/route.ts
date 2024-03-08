@@ -20,7 +20,6 @@ export async function GET(req: NextRequest) {
   const fromDate = searchParams.get("from");
   const toDate = searchParams.get("to");
   const username = searchParams.get("username");
-  const showFavorites = searchParams.get("favorites") === "true";
 
   const paramsObj = {
     query,
@@ -35,6 +34,7 @@ export async function GET(req: NextRequest) {
         : undefined,
   };
 
+  let originalTagsToSearch: string[] | undefined;
   let tagsToSearch: string[] | undefined;
   let validatedSortBy: "asc" | "desc" = "desc";
   let validatedIsStrictSearch: boolean | undefined;
@@ -49,11 +49,23 @@ export async function GET(req: NextRequest) {
     validatedFromDate = validatedParams.data.dateRange?.from;
     validatedToDate = validatedParams.data.dateRange?.to;
 
+    originalTagsToSearch = validatedParams.data.query
+      ?.trim()
+      .split(",")
+      .filter((tag) => tag)
+      .map((tag) => tag.trim());
+
     tagsToSearch = validatedParams.data.query
       ?.trim()
       .split(",")
       .filter((tag) => tag) // filter out empty strings
-      .map((tag) => tag.trim());
+      .map((tag) =>
+        tag
+          .trim()
+          .split(" ")
+          .map((word) => word + ":*")
+          .join(" & "),
+      );
   }
 
   const whereClause: WhereClause = {
@@ -84,7 +96,8 @@ export async function GET(req: NextRequest) {
           some: {
             NOT: {
               name: {
-                in: tagsToSearch,
+                in: originalTagsToSearch,
+                mode: "insensitive",
               },
             },
           },
@@ -98,16 +111,6 @@ export async function GET(req: NextRequest) {
       {
         user: {
           name: username,
-        },
-      },
-    ];
-  } else if (showFavorites && user && user.id && !whereClause.AND) {
-    whereClause.AND = [
-      {
-        favorites: {
-          some: {
-            userId: user.id,
-          },
         },
       },
     ];

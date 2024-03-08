@@ -14,13 +14,23 @@ export async function GET(req: NextRequest) {
 
   // Raw query because Prisma can't order by a relation's createdAt column
   const posts = await db.$queryRaw`
-  SELECT Post.*, JSON_ARRAYAGG(JSON_OBJECT('postId', PostFavorites.postId, 'userId', PostFavorites.userId, 'createdAt', PostFavorites.createdAt)) AS favorites
-  FROM Post
-  JOIN PostFavorites ON Post.id = PostFavorites.postId
-  WHERE PostFavorites.userId = ${user.id}
-  AND (${cursorId} IS NULL OR (PostFavorites.createdAt < ${cursorDate} AND Post.id > ${cursorId}))
-  GROUP BY Post.id
-  ORDER BY PostFavorites.createdAt DESC, Post.id DESC
+  SELECT post.id, 
+  post.public_id AS "publicId", 
+  post.user_id AS "userId", 
+  post.source_url AS "sourceUrl", 
+  post.thumbnail_url AS "thumbnailUrl", 
+  post.description, 
+  post.width, 
+  post.height, 
+  post.created_at AS "createdAt", 
+  post.updated_at AS "updatedAt", 
+  json_agg(json_build_object('postId', favorites.post_id, 'userId', favorites.user_id, 'createdAt', favorites.created_at)) AS favorites
+  FROM post
+  JOIN favorites ON post.id = favorites.post_id
+  WHERE favorites.user_id = ${user.id}
+  AND (${cursorId}::text IS NULL OR (favorites.created_at < ${cursorDate} AND post.id > ${cursorId}))
+  GROUP BY post.id
+  ORDER BY MAX(favorites.created_at) DESC, post.id DESC
   LIMIT 25
   `;
 

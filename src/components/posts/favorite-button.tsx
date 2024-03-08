@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface FavoriteButtonProps {
   postId: string;
@@ -22,7 +23,6 @@ export function FavoriteButton({
   classNames,
 }: FavoriteButtonProps) {
   const [favorited, setFavorited] = useState<boolean>(isFavorited);
-
   const user = useCurrentUser();
 
   if (!user) return null;
@@ -43,7 +43,7 @@ export function FavoriteButton({
     <Button
       size="icon"
       className={cn(
-        "absolute left-0 top-0 bg-transparent text-foreground hover:bg-transparent hover:text-red-500 active:scale-90",
+        "absolute left-0 top-0 h-8 w-8 rounded-full bg-transparent text-foreground hover:bg-transparent hover:text-red-500 active:scale-90",
         isInvisible && "invisible group-hover:visible",
         classNames,
       )}

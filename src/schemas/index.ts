@@ -102,7 +102,7 @@ export const NewPasswordSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-
+// TODO: add validation so that new password isn't the same as the current password.
 export const ChangePasswordSchema = z
   .object({
     currentPassword: z.string().min(1, { message: "Password is required" }),
@@ -217,7 +217,7 @@ export const ChangeUsernameSchema = z.object({
 });
 
 export const NewAlbumSchema = z.object({
-  postId: z.string().min(1),
+  postId: z.optional(z.string().min(1)),
   albumName: z
     .string()
     .min(3, { message: "Name must be at least 3 characters" })

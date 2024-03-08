@@ -3,7 +3,6 @@
 import { deleteAlbum } from "@/actions/albums";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -15,9 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import { Skeleton } from "@/components/ui/skeleton";
 import useCurrentUser from "@/hooks/use-current-user";
-import { cn } from "@/lib/utils";
 import { Album } from "@prisma/client";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { format } from "date-fns";
