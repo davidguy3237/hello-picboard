@@ -93,8 +93,8 @@ export async function newPost(newPostData: FormData) {
     return { error: "Failed to upload image", details: error };
   }
 
-  const sourceUrl = `${process.env.B2_FRIENDLY_URL}/file/${process.env.B2_BUCKET_NAME}/${publicId}${sourcefileExtension}`;
-  const thumbnailUrl = `${process.env.B2_FRIENDLY_URL}/file/${process.env.B2_BUCKET_NAME}/${folderName}/${thumbnailName}${thumbnailFileExtension}`;
+  const sourceUrl = `${process.env.PHOTOS_DOMAIN}/${publicId}${sourcefileExtension}`;
+  const thumbnailUrl = `${process.env.PHOTOS_DOMAIN}/${folderName}/${thumbnailName}${thumbnailFileExtension}`;
 
   const validatedFields = NewPostSchema.safeParse({
     publicId,

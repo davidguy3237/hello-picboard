@@ -73,7 +73,7 @@ export async function uploadAvatar(uploadAvatarData: FormData) {
     };
   }
 
-  const avatarUrl = `${process.env.B2_FRIENDLY_URL}/file/${process.env.B2_BUCKET_NAME}/avatars/${publicId}${fileExtension}`;
+  const avatarUrl = `${process.env.PHOTOS_DOMAIN}/avatars/${publicId}${fileExtension}`;
 
   await db.user.update({
     where: { id: dbUser.id },
