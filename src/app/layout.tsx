@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth as nextAuth } from "@/auth";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
@@ -16,10 +16,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  auth,
 }: {
   children: React.ReactNode;
+  auth: React.ReactNode;
 }) {
-  const session = await auth();
+  const session = await nextAuth();
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
@@ -27,6 +29,7 @@ export default async function RootLayout({
           <ThemeProvider attribute="class" disableTransitionOnChange>
             <Toaster closeButton richColors position="top-center" />
             {children}
+            {auth}
           </ThemeProvider>
         </body>
       </html>
