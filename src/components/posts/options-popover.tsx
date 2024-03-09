@@ -67,7 +67,7 @@ export function OptionsPopover({
           <Copy className="mr-2 h-4 w-4" />
           Copy URL
         </Button>
-        <Link href={sourceUrl} prefetch={false} download>
+        <a href={sourceUrl} target="_blank" download>
           <Button
             variant="ghost"
             size="sm"
@@ -76,7 +76,7 @@ export function OptionsPopover({
             <Download className="mr-2 h-4 w-4" />
             Download
           </Button>
-        </Link>
+        </a>
         <SaveToAlbumModal postId={postId} />
         {userId === currentUser?.id && (
           <Link href={`/edit/${publicId}`} prefetch={false}>
