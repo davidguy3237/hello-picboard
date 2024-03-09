@@ -258,6 +258,7 @@ export function UploadForm({
           </form>
         </Form>
         <Button
+          disabled={isPending || !!postUrl || uploadFailed}
           variant="ghost"
           size="icon"
           className="absolute right-0 top-0 rounded-full"

@@ -14,7 +14,7 @@ export async function Navbar({ showSearch = true }: NavbarProps) {
   const user = await currentUser();
   return (
     <nav className="flex w-full items-center gap-x-2 border-b p-2">
-      <div className="flex flex-1 gap-x-2">
+      <div className="flex flex-1 gap-x-2 lg:min-w-fit">
         <HomeButton />
         {user && <UploadButton />}
       </div>

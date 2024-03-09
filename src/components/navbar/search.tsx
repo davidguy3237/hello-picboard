@@ -118,8 +118,8 @@ export function Search() {
   };
 
   return (
-    <div className="relative mx-auto flex w-full max-w-screen-sm gap-x-2">
-      <form onSubmit={handleSubmit} className="relative flex-1">
+    <div className="relative flex w-full max-w-screen-sm gap-x-2">
+      <form onSubmit={handleSubmit} className="relative w-full">
         <Button
           size="icon"
           variant="link"

@@ -5,9 +5,13 @@ import Link from "next/link";
 
 export function HomeButton() {
   return (
-    <Link href="/home" className="flex items-center gap-x-2">
-      <Aperture className="h-8 w-8" />
-      <span className="hidden text-xl lg:block">Home</span>
+    <Link href="/home" className="flex items-center">
+      <span className="rounded-full border p-1 text-xl font-medium lg:hidden">
+        H!P
+      </span>
+      <span className="hidden text-xl font-medium lg:block">
+        Hello! Picboard
+      </span>
     </Link>
   );
 }

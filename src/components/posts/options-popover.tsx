@@ -67,7 +67,7 @@ export function OptionsPopover({
           <Copy className="mr-2 h-4 w-4" />
           Copy URL
         </Button>
-        <Link href={sourceUrl} download>
+        <Link href={sourceUrl} prefetch={false} download>
           <Button
             variant="ghost"
             size="sm"

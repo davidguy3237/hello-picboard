@@ -16,7 +16,7 @@ export function UploadButton() {
       <Button
         variant="outline"
         aria-label="Upload"
-        className=" h-10 w-10 shrink-0 items-center justify-center p-0 active:bg-background lg:w-auto lg:space-x-2 lg:p-2"
+        className=" h-10 w-10 items-center justify-center p-0 active:bg-background lg:w-auto lg:space-x-2 lg:p-2"
       >
         <Upload size={18} />
         <span className="hidden lg:block">Upload</span>
