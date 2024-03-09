@@ -56,6 +56,10 @@ export async function deleteAlbum(
 export async function createNewAlbum(
   newAlbumData: z.infer<typeof NewAlbumSchema>,
 ) {
+  if (!process.env.NANOID_ALPHABET) {
+    throw new Error("Missing environment variable: NANOID_ALPHABET");
+  }
+
   const user = await currentUser();
 
   if (!user || !user.id) {
@@ -74,7 +78,7 @@ export async function createNewAlbum(
 
   const { postId, albumName } = validatedFields.data;
 
-  const nanoid = customAlphabet(process.env.NANOID_ALPHABET!, 12);
+  const nanoid = customAlphabet(process.env.NANOID_ALPHABET, 12);
   const publicId = nanoid();
 
   const newAlbum = await db.album.create({

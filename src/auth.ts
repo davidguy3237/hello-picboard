@@ -7,6 +7,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth, { Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
+if (!process.env.AUTH_SECRET) {
+  throw new Error("Missing environment variable: AUTH_SECRET");
+}
+
 export const {
   handlers: { GET, POST },
   auth,

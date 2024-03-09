@@ -6,9 +6,19 @@ import db from "@/lib/db";
 import { EditPostSchema, NewPostSchema } from "@/schemas";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { customAlphabet } from "nanoid";
-import { revalidatePath } from "next/cache";
 import sharp from "sharp";
 import * as z from "zod";
+
+if (
+  !process.env.B2_ENDPOINT ||
+  !process.env.B2_REGION ||
+  !process.env.B2_APPLICATION_KEY_ID ||
+  !process.env.B2_APPLICATION_KEY
+) {
+  throw new Error(
+    "Missing environment variable: B2_ENDPOINT, B2_REGION, B2_APPLICATION_KEY_ID or B2_APPLICATION_KEY",
+  );
+}
 
 const acceptedFileTypes = ["image/jpeg", "image/png"];
 const maxFileSize = 1024 * 1024 * 4; // 4MB
@@ -17,12 +27,22 @@ const s3 = new S3Client({
   endpoint: process.env.B2_ENDPOINT,
   region: process.env.B2_REGION,
   credentials: {
-    accessKeyId: process.env.B2_APPLICATION_KEY_ID!,
-    secretAccessKey: process.env.B2_APPLICATION_KEY!,
+    accessKeyId: process.env.B2_APPLICATION_KEY_ID,
+    secretAccessKey: process.env.B2_APPLICATION_KEY,
   },
 });
 
 export async function newPost(newPostData: FormData) {
+  if (
+    !process.env.NANOID_ALPHABET ||
+    !process.env.B2_BUCKET_NAME ||
+    !process.env.PHOTOS_DOMAIN
+  ) {
+    throw new Error(
+      "Missing environment variable: NANOID_ALPHABET, B2_BUCKET_NAME or PHOTOS_DOMAIN",
+    );
+  }
+
   const user = await currentUser();
   if (!user || !user.id) {
     return { error: "Unauthorized" };
@@ -54,7 +74,7 @@ export async function newPost(newPostData: FormData) {
   const sourcefileExtension = image.type === "image/jpeg" ? ".jpg" : ".png";
   const thumbnailFileExtension = ".webp";
   const folderName = "thumbnails";
-  const nanoid = customAlphabet(process.env.NANOID_ALPHABET!, 12);
+  const nanoid = customAlphabet(process.env.NANOID_ALPHABET, 12);
   const publicId = nanoid();
   const thumbnailName = publicId + "-thumbnail";
 

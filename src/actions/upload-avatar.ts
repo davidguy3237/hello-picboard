@@ -8,12 +8,23 @@ import sharp from "sharp";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
+if (
+  !process.env.B2_ENDPOINT ||
+  !process.env.B2_REGION ||
+  !process.env.B2_APPLICATION_KEY_ID ||
+  !process.env.B2_APPLICATION_KEY
+) {
+  throw new Error(
+    "Missing environment variable: B2_ENDPOINT, B2_REGION, B2_APPLICATION_KEY_ID or B2_APPLICATION_KEY",
+  );
+}
+
 const s3 = new S3Client({
   endpoint: process.env.B2_ENDPOINT,
   region: process.env.B2_REGION,
   credentials: {
-    accessKeyId: process.env.B2_APPLICATION_KEY_ID!,
-    secretAccessKey: process.env.B2_APPLICATION_KEY!,
+    accessKeyId: process.env.B2_APPLICATION_KEY_ID,
+    secretAccessKey: process.env.B2_APPLICATION_KEY,
   },
 });
 
@@ -21,6 +32,16 @@ const acceptedFileTypes = ["image/jpeg", "image/png"];
 const maxFileSize = 1024 * 1024 * 4; // 4MB
 
 export async function uploadAvatar(uploadAvatarData: FormData) {
+  if (
+    !process.env.NANOID_ALPHABET ||
+    !process.env.B2_BUCKET_NAME ||
+    !process.env.PHOTOS_DOMAIN
+  ) {
+    throw new Error(
+      "Missing environment variable: NANOID_ALPHABET, B2_BUCKET_NAME or PHOTOS_DOMAIN",
+    );
+  }
+
   const user = await currentUser();
 
   if (!user || !user.id) {
@@ -40,10 +61,16 @@ export async function uploadAvatar(uploadAvatarData: FormData) {
       error: "No avatar image provided",
     };
   }
+  if (!acceptedFileTypes.includes(avatarImage.type)) {
+    return { error: "Invalid file type" };
+  }
+  if (avatarImage.size > maxFileSize) {
+    return { error: "File too large" };
+  }
 
   const fileExtension = ".jpg";
   const folderName = "avatars";
-  const nanoid = customAlphabet(process.env.NANOID_ALPHABET!, 12);
+  const nanoid = customAlphabet(process.env.NANOID_ALPHABET, 12);
   const publicId = nanoid();
 
   const fileBuffer = Buffer.from(await avatarImage.arrayBuffer());
@@ -57,7 +84,7 @@ export async function uploadAvatar(uploadAvatarData: FormData) {
     resizedAvatarObj;
 
   const putAvatar = new PutObjectCommand({
-    Bucket: process.env.B2_BUCKET_NAME!,
+    Bucket: process.env.B2_BUCKET_NAME,
     Key: `${folderName}/${publicId}${fileExtension}`,
     ContentType: avatarImage.type,
     ContentLength: resizedAvatarInfo.size,

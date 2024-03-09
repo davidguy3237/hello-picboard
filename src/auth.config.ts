@@ -5,6 +5,12 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  throw new Error(
+    "Missing environment variable: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET",
+  );
+}
+
 export default {
   providers: [
     Google({
