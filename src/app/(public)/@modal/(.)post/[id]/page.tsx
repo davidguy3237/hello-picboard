@@ -84,7 +84,6 @@ export default async function InterceptedPostPage({
           <OptionsPopover
             postId={post.id}
             userId={post.userId || ""}
-            sourceUrl={post.sourceUrl}
             publicId={post.publicId}
           />
           {post.user ? (

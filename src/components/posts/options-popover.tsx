@@ -16,7 +16,6 @@ import { SaveToAlbumModal } from "./save-to-album-modal";
 interface OptionsPopoverProps {
   postId: string;
   userId: string;
-  sourceUrl: string;
   publicId: string;
   isInvisible?: boolean;
   classNames?: string;
@@ -25,7 +24,6 @@ interface OptionsPopoverProps {
 export function OptionsPopover({
   postId,
   userId,
-  sourceUrl,
   publicId,
   isInvisible,
   classNames,
@@ -67,16 +65,6 @@ export function OptionsPopover({
           <Copy className="mr-2 h-4 w-4" />
           Copy URL
         </Button>
-        <a href={sourceUrl} target="_blank" download>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex w-full justify-between active:bg-background"
-          >
-            <Download className="mr-2 h-4 w-4" />
-            Download
-          </Button>
-        </a>
         <SaveToAlbumModal postId={postId} />
         {userId === currentUser?.id && (
           <Link href={`/edit/${publicId}`} prefetch={false}>

@@ -84,7 +84,6 @@ export default async function PostPage({ params }: PostPageProps) {
         <OptionsPopover
           postId={post.id}
           userId={post.userId || ""}
-          sourceUrl={post.sourceUrl}
           publicId={post.publicId}
         />
         <div className="flex items-center gap-x-2">

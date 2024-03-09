@@ -71,7 +71,6 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
           <OptionsPopover
             postId={id}
             userId={userId}
-            sourceUrl={sourceUrl}
             publicId={publicId}
             isInvisible={true}
             classNames="text-white"
@@ -119,7 +118,6 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
           <OptionsPopover
             postId={id}
             userId={userId}
-            sourceUrl={sourceUrl}
             publicId={publicId}
             isInvisible={true}
             classNames="text-white"
