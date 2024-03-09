@@ -39,12 +39,17 @@ export async function register(registerData: z.infer<typeof RegisterSchema>) {
       },
     });
   } catch (error) {
+    console.error(error);
     return { error: "Something went wrong registering your account." };
   }
 
   const verificationToken = await generateVerificationToken(email);
 
-  sendVerificationEmail(verificationToken.email, verificationToken.token);
+  sendVerificationEmail(
+    username,
+    verificationToken.email,
+    verificationToken.token,
+  );
 
   return { success: "Please check your email for a confirmation link!" };
 }

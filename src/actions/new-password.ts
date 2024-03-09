@@ -52,10 +52,7 @@ export async function newPassword(
     where: { id: existingToken.id },
   });
 
-  const passwordResetToken = await generatePasswordResetToken(
-    existingUser.email,
-  );
-  sendPasswordChangedEmail(passwordResetToken.email, passwordResetToken.token);
+  sendPasswordChangedEmail(existingUser.name, existingUser.email);
 
   return { success: "Password updated!" };
 }

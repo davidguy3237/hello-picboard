@@ -27,7 +27,11 @@ export async function resetPassword(
 
   const passwordResetToken = await generatePasswordResetToken(email);
 
-  sendResetPasswordEmail(passwordResetToken.email, passwordResetToken.token);
+  sendResetPasswordEmail(
+    existingUser.name,
+    passwordResetToken.email,
+    passwordResetToken.token,
+  );
 
   return {
     success:

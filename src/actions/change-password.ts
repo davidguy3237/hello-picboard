@@ -52,11 +52,7 @@ export async function changePassword(
     data: { password: hashedNewPassword },
   });
 
-  const passwordResetToken = await generatePasswordResetToken(
-    existingUser.email,
-  );
-
-  sendPasswordChangedEmail(existingUser.email, passwordResetToken.token);
+  sendPasswordChangedEmail(existingUser.name, existingUser.email);
 
   return { success: "Password updated!" };
 }

@@ -42,6 +42,7 @@ export async function login(
       existingUser.email,
     );
     await sendVerificationEmail(
+      existingUser.name,
       verificationToken.email,
       verificationToken.token,
     );
@@ -86,7 +87,7 @@ export async function login(
         },
       });
     } else {
-      sendTwoFactorTokenEmail(existingUser.email);
+      sendTwoFactorTokenEmail(existingUser.name, existingUser.email);
       return { twoFactor: true };
     }
   }
