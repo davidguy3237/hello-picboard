@@ -20,23 +20,14 @@ export function Social() {
     <div className="flex w-full items-center gap-x-2">
       <Button
         size="lg"
-        className="w-full"
+        className="w-full space-x-2"
         variant="outline"
         onClick={() => {
           onClick("google");
         }}
       >
         <FcGoogle className="h-5 w-5" />
-      </Button>
-      <Button
-        size="lg"
-        className="w-full"
-        variant="outline"
-        onClick={() => {
-          onClick("github");
-        }}
-      >
-        <FaGithub className="h-5 w-5" />
+        <span>Sign in with Google</span>
       </Button>
     </div>
   );

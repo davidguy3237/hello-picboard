@@ -9,6 +9,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Separator } from "../ui/separator";
 
 interface CardWrapperProps {
   children: React.ReactNode;
@@ -34,7 +35,12 @@ export function CardWrapper({
       </CardHeader>
       <CardContent>{children}</CardContent>
       {showSocial && (
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-4">
+          <div className="flex w-full items-center gap-2 p-0">
+            <Separator className=" shrink" />
+            <span className="text-sm italic text-muted-foreground">or</span>
+            <Separator className="shrink" />
+          </div>
           <Social />
         </CardFooter>
       )}
