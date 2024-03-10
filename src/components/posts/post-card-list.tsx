@@ -64,7 +64,6 @@ export function PostCardList({
                 publicId={post.publicId}
                 sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
-                isFavorited={post.favorites[0]?.userId === user?.id}
               />
             );
           }
@@ -76,7 +75,6 @@ export function PostCardList({
               publicId={post.publicId}
               sourceUrl={post.sourceUrl}
               thumbnailUrl={post.thumbnailUrl}
-              isFavorited={post.favorites[0]?.userId === user?.id}
             />
           );
         })}

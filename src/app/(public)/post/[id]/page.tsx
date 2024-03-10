@@ -36,13 +36,6 @@ export default async function PostPage({ params }: PostPageProps) {
         },
       },
       tags: true,
-      favorites: user
-        ? {
-            where: {
-              userId: user.id,
-            },
-          }
-        : undefined,
     },
   });
 
@@ -78,7 +71,6 @@ export default async function PostPage({ params }: PostPageProps) {
         {user && (
           <FavoriteButton
             postId={post.id}
-            isFavorited={post.favorites[0]?.userId === user?.id}
             classNames="text-foreground right-8 left-auto"
           />
         )}

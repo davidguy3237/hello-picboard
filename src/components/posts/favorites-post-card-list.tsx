@@ -1,18 +1,15 @@
 "use client";
 import { PostCard } from "@/components/posts/post-card";
 import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-list";
-import useCurrentUser from "@/hooks/use-current-user";
 import usePostsSearchMultiCursor from "@/hooks/use-posts-search-multi-cursor";
 import { Loader2Icon } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
   const [cursor, setCursor] = useState<{
     id: string;
     date: Date | string;
   }>({ id: "", date: "" });
-
-  const user = useCurrentUser();
 
   const { isLoading, error, posts, hasMore } = usePostsSearchMultiCursor({
     cursor,
@@ -63,7 +60,6 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
                 publicId={post.publicId}
                 sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
-                isFavorited={post.favorites[0]?.userId === user?.id}
               />
             );
           }
@@ -75,7 +71,6 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
               publicId={post.publicId}
               sourceUrl={post.sourceUrl}
               thumbnailUrl={post.thumbnailUrl}
-              isFavorited={post.favorites[0]?.userId === user?.id}
             />
           );
         })}

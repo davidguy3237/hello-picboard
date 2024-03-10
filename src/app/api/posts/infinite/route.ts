@@ -130,13 +130,6 @@ export async function GET(req: NextRequest) {
           id: cursor,
         }
       : undefined,
-    include: {
-      favorites: {
-        where: {
-          userId: user?.id,
-        },
-      },
-    },
     take: 25,
     skip: cursor ? 1 : 0,
     where: whereClause,

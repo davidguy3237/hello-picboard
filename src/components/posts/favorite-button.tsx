@@ -1,31 +1,41 @@
 "use client";
 
 import { favoritePost } from "@/actions/posts";
-import useCurrentUser from "@/hooks/use-current-user";
-import { Heart } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { Heart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 interface FavoriteButtonProps {
   postId: string;
-  isFavorited: boolean;
   isInvisible?: boolean;
   classNames?: string;
 }
 
 export function FavoriteButton({
   postId,
-  isFavorited,
   isInvisible,
   classNames,
 }: FavoriteButtonProps) {
-  const [favorited, setFavorited] = useState<boolean>(isFavorited);
-  const user = useCurrentUser();
+  const [favorited, setFavorited] = useState<boolean>(false);
 
-  if (!user) return null;
+  useEffect(() => {
+    const getFavoriteState = async () => {
+      const res = await fetch(`/api/check-favorite/post?postId=${postId}`, {
+        method: "GET",
+      });
+
+      const data = await res.json();
+      if (data.favorite) {
+        setFavorited(true);
+      } else {
+        setFavorited(false);
+      }
+    };
+
+    getFavoriteState();
+  }, [postId]);
 
   const handleClick = async () => {
     const originalFavoriteState = favorited;

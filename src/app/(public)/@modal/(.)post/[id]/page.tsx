@@ -40,13 +40,6 @@ export default async function InterceptedPostPage({
         },
       },
       tags: true,
-      favorites: user
-        ? {
-            where: {
-              userId: user.id,
-            },
-          }
-        : undefined,
     },
   });
 
@@ -77,7 +70,6 @@ export default async function InterceptedPostPage({
           {user && (
             <FavoriteButton
               postId={post.id}
-              isFavorited={post.favorites[0]?.userId === user?.id}
               classNames="text-foreground right-8 left-auto"
             />
           )}

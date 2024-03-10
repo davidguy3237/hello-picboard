@@ -70,7 +70,6 @@ export function AlbumsPostCardList({
                 publicId={post.publicId}
                 sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
-                isFavorited={post.favorites[0]?.userId === user?.id}
               />
             );
           }
@@ -82,7 +81,6 @@ export function AlbumsPostCardList({
               publicId={post.publicId}
               sourceUrl={post.sourceUrl}
               thumbnailUrl={post.thumbnailUrl}
-              isFavorited={post.favorites[0]?.userId === user?.id}
             />
           );
         })}
