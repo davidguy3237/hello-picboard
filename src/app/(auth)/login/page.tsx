@@ -139,7 +139,11 @@ export default function LoginPage() {
                         asChild
                         className="px-0 font-normal"
                       >
-                        <Link href="/reset-password" prefetch={false}>
+                        <Link
+                          href="/reset-password"
+                          prefetch={false}
+                          scroll={false}
+                        >
                           Forgot password?
                         </Link>
                       </Button>

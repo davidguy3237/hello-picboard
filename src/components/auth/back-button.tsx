@@ -11,7 +11,7 @@ interface BackButtonProps {
 export function BackButton({ label, href }: BackButtonProps) {
   return (
     <Button variant="link" className="w-full font-normal" size="sm" asChild>
-      <Link href={href} prefetch={false}>
+      <Link href={href} prefetch={false} scroll={false}>
         {label}
       </Link>
     </Button>
