@@ -201,7 +201,7 @@ export const SearchSchema = z.object({
   dateRange: z.optional(
     z.object({
       from: z.date().min(new Date(2024, 1, 1)),
-      to: z.optional(z.date().max(new Date())),
+      to: z.optional(z.date()),
     }),
   ),
 });

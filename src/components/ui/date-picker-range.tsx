@@ -60,9 +60,7 @@ export function DatePickerWithRange({
             onSelect={setDateRange}
             numberOfMonths={2}
             fromYear={2024}
-            fromMonth={new Date(2024, 1)}
-            toDate={new Date()}
-            // TODO: limit date to start of launch to prevent users from searching for dates before there were any uploads
+            fromMonth={new Date(2024, 2)}
           />
         </PopoverContent>
       </Popover>
