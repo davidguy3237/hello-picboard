@@ -89,7 +89,7 @@ export default async function InterceptedPostPage({
           {post.user ? (
             <Link
               href={`/user/${post.user.name}/posts`}
-              className="flex items-center gap-x-2"
+              className="flex w-fit items-center gap-x-2"
             >
               <Avatar className="h-8 w-8">
                 <AvatarImage src={post.user?.image || ""} />

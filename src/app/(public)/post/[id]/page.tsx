@@ -14,6 +14,7 @@ import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
 import { Clock, Ruler, User } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface PostPageProps {
@@ -86,17 +87,34 @@ export default async function PostPage({ params }: PostPageProps) {
           userId={post.userId || ""}
           publicId={post.publicId}
         />
-        <div className="flex items-center gap-x-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={post.user?.image || ""} />
-            <AvatarFallback className="bg-foreground">
-              <User className="text-background" />
-            </AvatarFallback>
-          </Avatar>
-          <span className={cn(!post.user && "italic text-muted-foreground")}>
-            {post.user?.name || "deleted"}
-          </span>
-        </div>
+        {post.user ? (
+          <Link
+            href={`/user/${post.user.name}/posts`}
+            className="flex w-fit items-center gap-x-2"
+          >
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={post.user?.image || ""} />
+              <AvatarFallback className="bg-foreground">
+                <User className="text-background" />
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm font-medium underline-offset-4 hover:underline">
+              {post.user?.name}
+            </span>
+          </Link>
+        ) : (
+          <div className="flex items-center gap-x-2">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="" />
+              <AvatarFallback className="bg-foreground">
+                <User className="text-background" />
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm italic text-muted-foreground">
+              deleted
+            </span>
+          </div>
+        )}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
