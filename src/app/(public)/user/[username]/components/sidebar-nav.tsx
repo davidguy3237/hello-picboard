@@ -14,7 +14,7 @@ interface SidebarNavProps {
   dbUser: User;
 }
 
-export default function SidebarNav({ items, dbUser }: SidebarNavProps) {
+export function SidebarNav({ items, dbUser }: SidebarNavProps) {
   const pathname = usePathname();
   return (
     <nav className="flex h-full min-w-40 flex-col space-y-2 border-r p-2">

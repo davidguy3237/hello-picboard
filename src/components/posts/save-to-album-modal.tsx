@@ -28,6 +28,8 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { ScrollArea } from "../ui/scroll-area";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface SaveToAlbumModalProps {
   postId: string;
@@ -57,6 +59,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
   }, [showModal, user?.id, postId]);
 
   const form = useForm<z.infer<typeof NewAlbumSchema>>({
+    resolver: zodResolver(NewAlbumSchema),
     defaultValues: {
       postId: postId,
       albumName: "",
@@ -71,6 +74,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
       } else if (createNewAlbumResults.success) {
         setShowModal(false);
         setShowForm(false);
+        form.reset();
         toast.success("Created new album");
       }
     });
@@ -105,34 +109,39 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
           Add To Album
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-96">
+      <DialogContent className="h-full max-h-[50%]">
         <DialogHeader>
           <DialogTitle>Save To Album</DialogTitle>
         </DialogHeader>
-        <div className="space-y-2">
-          {albums.length ? (
-            albums.map((album) => (
-              <div key={album.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={album.id}
-                  defaultChecked={album.posts.some(
-                    (post) => post.postId === postId,
-                  )}
-                  onCheckedChange={(checked) =>
-                    handleChecked(album.id, checked)
-                  }
-                />
-                <Label htmlFor={album.id} className="text-sm font-medium">
-                  {album.name}
-                </Label>
+        <ScrollArea className="h-full w-full">
+          <div className="w-full space-y-2 py-4">
+            {albums.length ? (
+              albums.map((album) => (
+                <div
+                  key={album.id}
+                  className="flex w-full items-center space-x-2"
+                >
+                  <Checkbox
+                    id={album.id}
+                    defaultChecked={album.posts.some(
+                      (post) => post.postId === postId,
+                    )}
+                    onCheckedChange={(checked) =>
+                      handleChecked(album.id, checked)
+                    }
+                  />
+                  <Label htmlFor={album.id} className="text-sm font-medium ">
+                    {album.name}
+                  </Label>
+                </div>
+              ))
+            ) : !albums.length && fetchCompleted ? null : (
+              <div className="flex w-full items-center justify-center">
+                <Loader2 className="h-4 w-4 animate-spin text-center" />
               </div>
-            ))
-          ) : !albums.length && fetchCompleted ? null : (
-            <div className="flex w-full items-center justify-center">
-              <Loader2 className="h-4 w-4 animate-spin text-center" />
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </ScrollArea>
         {showForm ? (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">

@@ -23,11 +23,15 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { AlbumCardType } from "./album-cards-list";
 
-export function NewAlbumButton() {
+export function NewAlbumButton({
+  setAlbums,
+}: {
+  setAlbums: React.Dispatch<React.SetStateAction<AlbumCardType[]>>;
+}) {
   const [isPending, startTransition] = useTransition();
   const [showModal, setShowModal] = useState<boolean>(false);
-
   const form = useForm<z.infer<typeof NewAlbumSchema>>({
     defaultValues: {
       postId: undefined,
@@ -41,7 +45,16 @@ export function NewAlbumButton() {
       if (!createNewAlbumResults.success) {
         toast.error("Failed to create new album");
       } else if (createNewAlbumResults.success) {
+        const newAlbum: AlbumCardType = {
+          ...createNewAlbumResults.success,
+          posts: [],
+          _count: {
+            posts: 0,
+          },
+        };
+        setAlbums((prevAlbums) => [newAlbum, ...prevAlbums]);
         setShowModal(false);
+        form.reset();
         toast.success("Created new album");
       }
     });

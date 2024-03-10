@@ -112,7 +112,7 @@ export async function createNewAlbum(
     revalidatePath(`/user/${user.name}/albums`);
   }
   return {
-    success: "Album created!",
+    success: newAlbum,
   };
 }
 

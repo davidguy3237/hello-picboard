@@ -11,8 +11,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json("Album not found", { status: 404 });
   }
 
-  // Same issue as /api/posts/infinite/favorites
-
   let posts;
 
   if (cursorId && cursorDate) {
@@ -67,26 +65,27 @@ export async function GET(req: NextRequest) {
   );
 }
 
-// THIS KEEPS THROWING PRISMA ERRORS (investigate?)
-// code: 22P03
-// message: 'ERROR: incorrect binary data format in bind parameter 3
-// const posts = await db.$queryRaw`
-// SELECT post.id,
-// post.public_id AS "publicId",
-// post.user_id AS "userId",
-// post.source_url AS "sourceUrl",
-// post.thumbnail_url AS "thumbnailUrl",
-// post.description,
-// post.width,
-// post.height,
-// post.created_at AS "createdAt",
-// post.updated_at AS "updatedAt",
-// json_object_agg('postAddedToAlbumDate', posts_albums.created_at) as album
-// FROM post
-// JOIN posts_albums ON post.id = posts_albums.post_id
-// WHERE posts_albums.album_id = ${albumId}
-// AND (${cursorId}::text IS NULL OR (posts_albums.created_at < ${cursorDate} AND post.id > ${cursorId}))
-// GROUP BY post.id
-// ORDER BY MAX(posts_albums.created_at) DESC, post.id DESC
-// LIMIT 25
-// `;
+/*
+refer to bottom of file: src/app/api/posts/infinite/favorites/route.ts
+
+const posts = await db.$queryRaw`
+SELECT post.id,
+post.public_id AS "publicId",
+post.user_id AS "userId",
+post.source_url AS "sourceUrl",
+post.thumbnail_url AS "thumbnailUrl",
+post.description,
+post.width,
+post.height,
+post.created_at AS "createdAt",
+post.updated_at AS "updatedAt",
+json_object_agg('postAddedToAlbumDate', posts_albums.created_at) as album
+FROM post
+JOIN posts_albums ON post.id = posts_albums.post_id
+WHERE posts_albums.album_id = ${albumId}
+AND (${cursorId}::text IS NULL OR (posts_albums.created_at < ${cursorDate} AND post.id > ${cursorId}))
+GROUP BY post.id
+ORDER BY MAX(posts_albums.created_at) DESC, post.id DESC
+LIMIT 25
+`;
+*/

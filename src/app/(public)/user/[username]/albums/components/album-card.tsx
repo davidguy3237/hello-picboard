@@ -16,29 +16,27 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import useCurrentUser from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
-import { Album } from "@prisma/client";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { format } from "date-fns";
 import { Copy, ImageIcon, Loader2, MoreHorizontal, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { AlbumCardType } from "./album-cards-list";
 
 interface AlbumCardProps {
-  album: Album & {
-    posts: {
-      postId: string;
-      albumId: string;
-      createdAt: Date;
-      post: { thumbnailUrl: string };
-    }[];
-    _count: { posts: number };
-  };
+  album: AlbumCardType;
   username: string;
   userId: string;
+  setAlbums: React.Dispatch<React.SetStateAction<AlbumCardType[]>>;
 }
 
-export function AlbumCard({ album, username, userId }: AlbumCardProps) {
+export function AlbumCard({
+  album,
+  username,
+  userId,
+  setAlbums,
+}: AlbumCardProps) {
   const [isPending, startTransition] = useTransition();
   const [showAlertDialog, setShowAlertDialog] = useState<boolean>(false);
   const user = useCurrentUser();
@@ -66,6 +64,7 @@ export function AlbumCard({ album, username, userId }: AlbumCardProps) {
         toast.error(deleteAlbumResults.error);
         return;
       } else if (deleteAlbumResults.success) {
+        setAlbums((prev) => prev.filter((a) => a.publicId !== album.publicId));
         setShowAlertDialog(false);
         toast.success(deleteAlbumResults.success);
       }
@@ -88,9 +87,9 @@ export function AlbumCard({ album, username, userId }: AlbumCardProps) {
             </div>
           )}
           <div className="relative h-1/3 w-full space-y-1 p-1 text-sm">
-            <div className="w-full font-medium">{album.name}</div>
-            <div>{format(album.createdAt, "MMMM d, yyyy")}</div>
-            <div>{album._count.posts} Posts</div>
+            <p className="w-full truncate font-medium">{album.name}</p>
+            <p>{format(album.createdAt, "MMMM d, yyyy")}</p>
+            <p>{album._count.posts} Posts</p>
           </div>
         </Link>
         <Popover>

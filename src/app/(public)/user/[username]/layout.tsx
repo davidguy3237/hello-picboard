@@ -1,4 +1,4 @@
-import SidebarNav from "@/app/(public)/user/[username]/components/sidebar-nav";
+import { SidebarNav } from "@/app/(public)/user/[username]/components/sidebar-nav";
 import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
