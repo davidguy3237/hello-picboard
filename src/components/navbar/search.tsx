@@ -149,28 +149,15 @@ export function Search() {
           <div className="absolute z-10 mt-2 h-fit w-full">
             <ScrollArea className="rounded-md border bg-background">
               <ul className="max-h-40 w-full">
-                {searchSuggestions.map((suggestion) => {
-                  const searchBar = document.getElementById(
-                    "search",
-                  ) as HTMLInputElement;
-                  if (searchBar) {
-                    const inputValueArray = searchBar.value
-                      .trim()
-                      .split(",")
-                      .map((word: string) => word.trim());
-                    if (!inputValueArray.includes(suggestion)) {
-                      return (
-                        <li
-                          key={suggestion}
-                          onMouseDown={() => handleClick(suggestion)}
-                          className="flex h-8 items-center pl-2 hover:cursor-pointer hover:bg-secondary"
-                        >
-                          {suggestion}
-                        </li>
-                      );
-                    }
-                  }
-                })}
+                {searchSuggestions.map((suggestion) => (
+                  <li
+                    key={suggestion}
+                    onMouseDown={() => handleClick(suggestion)}
+                    className="flex h-8 items-center pl-2 hover:cursor-pointer hover:bg-secondary"
+                  >
+                    {suggestion}
+                  </li>
+                ))}
               </ul>
             </ScrollArea>
           </div>
