@@ -48,7 +48,7 @@ export default function ImageDisplay({
       <img
         src={url}
         alt=""
-        className="h-fit max-h-screen w-auto max-w-full object-contain"
+        className="max-h-screen max-w-full object-contain"
         onLoad={() => setIsLoading(false)}
       />
     </div>
