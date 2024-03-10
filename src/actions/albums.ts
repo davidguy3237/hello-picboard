@@ -18,7 +18,6 @@ export async function deleteAlbum(
     }[];
     _count: { posts: number };
   },
-  username: string,
 ) {
   const user = await currentUser();
 
@@ -47,7 +46,7 @@ export async function deleteAlbum(
     };
   }
 
-  revalidatePath(`/user/${username}/albums`);
+  revalidatePath(`/user/${user.name}/albums`);
   return {
     success: "Album Deleted!",
   };
@@ -92,7 +91,7 @@ export async function createNewAlbum(
   if (postId) {
     const result = await db.post.update({
       where: {
-        id: newAlbumData.postId,
+        id: postId,
       },
       data: {
         albums: {
@@ -109,7 +108,9 @@ export async function createNewAlbum(
       };
     }
   }
-
+  if (!postId) {
+    revalidatePath(`/user/${user.name}/albums`);
+  }
   return {
     success: "Album created!",
   };

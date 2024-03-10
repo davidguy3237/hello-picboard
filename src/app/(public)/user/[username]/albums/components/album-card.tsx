@@ -15,10 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import useCurrentUser from "@/hooks/use-current-user";
+import { cn } from "@/lib/utils";
 import { Album } from "@prisma/client";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { format } from "date-fns";
-import { Copy, Loader2, MoreHorizontal, Trash2 } from "lucide-react";
+import { Copy, ImageIcon, Loader2, MoreHorizontal, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -58,7 +59,7 @@ export function AlbumCard({ album, username, userId }: AlbumCardProps) {
 
   const handleDeleteAlbum = () => {
     startTransition(async () => {
-      const deleteAlbumResults = await deleteAlbum(album, username);
+      const deleteAlbumResults = await deleteAlbum(album);
 
       if (!deleteAlbumResults.success) {
         setShowAlertDialog(false);
@@ -75,19 +76,30 @@ export function AlbumCard({ album, username, userId }: AlbumCardProps) {
     <Card className="h-60 w-60 overflow-hidden">
       <CardContent className="group relative h-full w-full p-0">
         <Link href={`/user/${username}/albums/${album.publicId}`}>
-          <img
-            alt=""
-            src={album.posts[0].post.thumbnailUrl}
-            className="h-2/3 w-full rounded-b-none object-cover"
-          />
-          <div className="h-1/3 w-full space-y-1 p-1 text-sm">
+          {album.posts.length > 0 ? (
+            <img
+              alt=""
+              src={album.posts[0].post.thumbnailUrl}
+              className="h-2/3 w-full rounded-b-none object-cover"
+            />
+          ) : (
+            <div className="flex h-2/3 w-full items-center justify-center rounded-b-none bg-secondary object-cover">
+              <ImageIcon className=" h-20 w-20 text-muted-foreground" />
+            </div>
+          )}
+          <div className="relative h-1/3 w-full space-y-1 p-1 text-sm">
             <div className="w-full font-medium">{album.name}</div>
             <div>{format(album.createdAt, "MMMM d, yyyy")}</div>
             <div>{album._count.posts} Posts</div>
           </div>
         </Link>
         <Popover>
-          <PopoverTrigger className="invisible absolute right-0 top-0 flex h-8 w-8 items-center justify-center rounded-full text-white hover:bg-accent hover:text-accent-foreground group-hover:visible">
+          <PopoverTrigger
+            className={cn(
+              "invisible absolute right-0 top-0 flex h-8 w-8 items-center justify-center rounded-full text-white hover:bg-accent hover:text-accent-foreground group-hover:visible",
+              album.posts.length === 0 && "text-muted-foreground",
+            )}
+          >
             <MoreHorizontal />
           </PopoverTrigger>
           <PopoverContent className="z-50 w-fit border bg-popover p-0 text-popover-foreground sm:rounded-sm">

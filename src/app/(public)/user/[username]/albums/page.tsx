@@ -1,8 +1,7 @@
+import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 import { AlbumCard } from "./components/album-card";
-import { PlusCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { NewAlbumButton } from "./components/new-album-button";
 
 export default async function UserAlbumsPage({
@@ -10,6 +9,7 @@ export default async function UserAlbumsPage({
 }: {
   params: { username: string };
 }) {
+  const user = await currentUser();
   const dbUser = await db.user.findUnique({
     where: {
       name: params.username,
@@ -19,6 +19,11 @@ export default async function UserAlbumsPage({
   if (!dbUser) {
     notFound();
   }
+
+  // TODO: this page caches on the server, so if the user views the album page, goes to the home page,
+  // creates a new album, and then goes back to the album page,
+  // it will not show the updated list of albums until the page is refreshed
+  // possible solution is to fetch the data client side, instead of server side
 
   const albums = await db.album.findMany({
     orderBy: [
@@ -56,7 +61,7 @@ export default async function UserAlbumsPage({
 
   return (
     <div className="flex h-full w-full gap-4 p-4">
-      {albums.length ? (
+      {albums.length > 0 &&
         albums.map((album) => (
           <AlbumCard
             key={album.id}
@@ -64,14 +69,16 @@ export default async function UserAlbumsPage({
             username={params.username}
             userId={dbUser.id}
           />
-        ))
-      ) : (
+        ))}
+      {user?.id === dbUser.id ? (
+        <NewAlbumButton />
+      ) : albums.length === 0 ? (
         <div className="flex h-full w-full flex-col items-center justify-center">
           <p className="font-medium italic text-muted-foreground">
             No albums found...
           </p>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
