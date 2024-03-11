@@ -35,7 +35,7 @@ export default async function RootLayout({
         </body>
         <Script
           defer
-          src="http://5.161.187.63:3000/script.js"
+          src="https://analytics.hellopicboard.com/script.js"
           data-website-id="a5ad84f5-8421-491c-9f78-9c16110d3a20"
         />
       </html>
