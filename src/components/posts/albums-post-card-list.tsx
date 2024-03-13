@@ -3,8 +3,16 @@ import { PostCard } from "@/components/posts/post-card";
 import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-list";
 import useCurrentUser from "@/hooks/use-current-user";
 import usePostsSearchMultiCursor from "@/hooks/use-posts-search-multi-cursor";
-import { Loader2Icon } from "lucide-react";
+import { Grid2X2, Grid3X3, Loader2Icon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 export function AlbumsPostCardList({
   endpoint,
@@ -13,6 +21,7 @@ export function AlbumsPostCardList({
   endpoint: string;
   queryString: string;
 }) {
+  const [expandView, setExpandView] = useState<boolean>(false);
   const [cursor, setCursor] = useState<{
     id: string;
     date: Date | string;
@@ -56,46 +65,79 @@ export function AlbumsPostCardList({
     return <div>Error: {error.message}</div>;
   }
 
-  return posts.length ? (
-    <div className=" flex w-full max-w-screen-2xl flex-col items-center justify-start pb-4 md:m-4">
-      <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-1">
-        {posts.map((post, i) => {
-          if (i === posts.length - 1) {
-            return (
-              <PostCard
-                ref={lastPostRef}
-                key={post.sourceUrl}
-                id={post.id}
-                userId={post.userId || ""}
-                publicId={post.publicId}
-                sourceUrl={post.sourceUrl}
-                thumbnailUrl={post.thumbnailUrl}
-              />
-            );
-          }
-          return (
-            <PostCard
-              key={post.sourceUrl}
-              id={post.id}
-              userId={post.userId || ""}
-              publicId={post.publicId}
-              sourceUrl={post.sourceUrl}
-              thumbnailUrl={post.thumbnailUrl}
-            />
-          );
-        })}
-      </div>
-      {isLoading && (
-        <div>
-          <Loader2Icon className="animate-spin" />
-        </div>
+  return (
+    <div
+      className={cn(
+        "flex w-full max-w-screen-2xl flex-col items-center justify-center pb-4",
+        expandView && " max-w-full px-4",
       )}
+    >
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger className="m-1 self-end" asChild>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => setExpandView(!expandView)}
+              disabled={posts.length === 0 || isLoading}
+            >
+              {expandView ? <Grid2X2 /> : <Grid3X3 />}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            {expandView ? "Normal View" : "Expand View"}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <>
+        {posts.length ? (
+          <div
+            className={cn(
+              "grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-1",
+              expandView && "grid-cols-[repeat(auto-fit,minmax(200px,1fr))]",
+            )}
+          >
+            {posts.map((post, i) => {
+              if (i === posts.length - 1) {
+                return (
+                  <PostCard
+                    ref={lastPostRef}
+                    key={post.sourceUrl}
+                    id={post.id}
+                    userId={post.userId || ""}
+                    publicId={post.publicId}
+                    sourceUrl={post.sourceUrl}
+                    thumbnailUrl={post.thumbnailUrl}
+                    expandView={expandView || false}
+                  />
+                );
+              }
+              return (
+                <PostCard
+                  key={post.sourceUrl}
+                  id={post.id}
+                  userId={post.userId || ""}
+                  publicId={post.publicId}
+                  sourceUrl={post.sourceUrl}
+                  thumbnailUrl={post.thumbnailUrl}
+                  expandView={expandView}
+                />
+              );
+            })}
+          </div>
+        ) : posts.length === 0 && !hasMore ? (
+          <p className="flex w-full items-center justify-center font-medium italic text-muted-foreground">
+            No posts found...
+          </p>
+        ) : (
+          <PostCardListSkeleton />
+        )}
+        {isLoading && (
+          <div className="flex w-full justify-center">
+            <Loader2Icon className="animate-spin" />
+          </div>
+        )}
+      </>
     </div>
-  ) : posts.length === 0 && !hasMore ? (
-    <p className="flex h-full w-full items-center justify-center font-medium italic text-muted-foreground">
-      No posts found...
-    </p>
-  ) : (
-    <PostCardListSkeleton classNames="justify-start" />
   );
 }

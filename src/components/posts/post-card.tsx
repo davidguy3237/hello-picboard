@@ -2,6 +2,7 @@
 "use client";
 import { OptionsPopover } from "@/components/posts/options-popover";
 import useIsWindowSmall from "@/hooks/use-is-window-small";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { SyntheticEvent } from "react";
 
@@ -11,10 +12,14 @@ interface PostProps {
   publicId: string;
   sourceUrl: string;
   thumbnailUrl: string;
+  expandView: boolean;
 }
 
 export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
-  function PostCard({ id, userId, publicId, sourceUrl, thumbnailUrl }, ref) {
+  function PostCard(
+    { id, userId, publicId, sourceUrl, thumbnailUrl, expandView },
+    ref,
+  ) {
     const isWindowSmall = useIsWindowSmall();
 
     const handleOnError = (e: SyntheticEvent<HTMLImageElement>) => {
@@ -25,7 +30,10 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
     return ref ? (
       <div
         ref={ref}
-        className="relative h-fit w-auto overflow-hidden bg-muted sm:h-96 sm:rounded-sm"
+        className={cn(
+          "relative h-fit overflow-hidden bg-muted sm:h-96 sm:rounded-sm",
+          expandView && "sm:h-56",
+        )}
       >
         <div className="group h-full w-full">
           {isWindowSmall ? (
@@ -67,7 +75,12 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
         </div>
       </div>
     ) : (
-      <div className="relative h-fit w-auto overflow-hidden bg-muted sm:h-96 sm:rounded-sm">
+      <div
+        className={cn(
+          "relative h-fit overflow-hidden bg-muted sm:h-96 sm:rounded-sm",
+          expandView && "sm:h-56",
+        )}
+      >
         <div className="group h-full w-full">
           {isWindowSmall ? (
             <img
