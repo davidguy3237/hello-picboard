@@ -44,7 +44,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
   const [isPending, startTransition] = useTransition();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [albums, setAlbums] = useState<AlbumWithPost[]>([]);
-  const [fetchCompleted, setFetchCompleted] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const user = useCurrentUser();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
       fetch(`/api/albums/checkboxes?user=${user?.id}&postId=${postId}`)
         .then((res) => res.json())
         .then((data) => {
-          setFetchCompleted(true);
+          setIsLoading(false);
           setAlbums(data.albums);
         });
     }
@@ -75,7 +75,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
         setShowModal(false);
         setShowForm(false);
         form.reset();
-        toast.success("Created new album");
+        toast.success(`Saved to album: ${createNewAlbumResults.success.name}`);
       }
     });
   };
@@ -109,12 +109,12 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
           Add To Album
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-full max-h-[50%]">
+      <DialogContent className="flex h-fit max-h-[50%] flex-col">
         <DialogHeader>
           <DialogTitle>Save To Album</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="h-full w-full">
-          <div className="w-full space-y-2 py-4">
+        <ScrollArea>
+          <div className="max-h-[400px] w-full space-y-2 py-4">
             {albums.length ? (
               albums.map((album) => (
                 <div
@@ -135,9 +135,13 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
                   </Label>
                 </div>
               ))
-            ) : !albums.length && fetchCompleted ? null : (
+            ) : isLoading ? (
               <div className="flex w-full items-center justify-center">
                 <Loader2 className="h-4 w-4 animate-spin text-center" />
+              </div>
+            ) : (
+              <div className="flex w-full items-center justify-center text-sm font-medium italic text-muted-foreground">
+                <p>You have no albums...</p>
               </div>
             )}
           </div>

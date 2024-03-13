@@ -55,7 +55,9 @@ export function NewAlbumButton({
         setAlbums((prevAlbums) => [newAlbum, ...prevAlbums]);
         setShowModal(false);
         form.reset();
-        toast.success("Created new album");
+        toast.success(
+          `Created new album: ${createNewAlbumResults.success.name}`,
+        );
       }
     });
   };
