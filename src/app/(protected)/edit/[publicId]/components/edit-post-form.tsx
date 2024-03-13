@@ -167,7 +167,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
               <img
                 alt=""
                 src={post.sourceUrl}
-                className="fixed left-[50%] top-[50%] z-50 h-fit max-h-screen w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
+                className="fixed left-[50%] top-[50%] z-50 h-fit max-h-[100dvh] w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
               />
               <DialogClose
                 className="absolute right-4 top-4 z-50 text-white"
