@@ -71,6 +71,7 @@ export function PostCardList({
               variant="ghost"
               onClick={() => setExpandView(!expandView)}
               disabled={posts.length === 0 || isLoading}
+              aria-label={expandView ? "Normal View" : "Expand View"}
             >
               {expandView ? <Grid2X2 /> : <Grid3X3 />}
             </Button>
