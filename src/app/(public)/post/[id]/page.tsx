@@ -36,10 +36,15 @@ export default async function PostPage({ params }: PostPageProps) {
         },
       },
       tags: true,
+      _count: {
+        select: {
+          reports: true,
+        },
+      },
     },
   });
 
-  if (!post) {
+  if (!post || post._count.reports >= 3) {
     notFound();
   }
 
