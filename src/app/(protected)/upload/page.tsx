@@ -1,9 +1,10 @@
 "use client";
+import { UploadForm } from "@/app/(protected)/upload/components/upload-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { UploadForm } from "@/app/(protected)/upload/components/upload-form";
 import { cn } from "@/lib/utils";
 import { ImagePlus } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useState } from "react";
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone";
 import { toast } from "sonner";
@@ -74,7 +75,7 @@ export default function UploadPage() {
       )}
     </div>
   ) : (
-    <div className="flex h-full w-full items-center justify-center">
+    <div className="flex h-full w-full flex-col items-center justify-center">
       <Card className="flex h-1/2 w-full max-w-screen-lg cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground text-muted-foreground hover:bg-muted">
         <CardContent
           className={cn(
@@ -98,6 +99,16 @@ export default function UploadPage() {
           </div>
         </CardContent>
       </Card>
+      <p className="m-2 font-medium">
+        By uploading, you agree to adhere to the{" "}
+        <Link
+          href="/guidelines"
+          target="_blank"
+          className="underline hover:font-bold"
+        >
+          Content Guidelines
+        </Link>
+      </p>
     </div>
   );
 }

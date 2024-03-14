@@ -130,6 +130,13 @@ export async function GET(req: NextRequest) {
           id: cursor,
         }
       : undefined,
+    include: {
+      _count: {
+        select: {
+          reports: true,
+        },
+      },
+    },
     take: 25,
     skip: cursor ? 1 : 0,
     where: whereClause,

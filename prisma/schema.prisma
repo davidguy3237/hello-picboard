@@ -32,6 +32,7 @@ model User {
   posts                 Post[]
   albums                Album[]
   favorites             Favorites[]
+  reports               Report[]
 
   @@unique([name, email])
   @@map("users")
@@ -110,6 +111,7 @@ model Post {
   tags         Tag[]
   albums       PostsAlbums[]
   favorites    Favorites[]
+  reports      Report[]
 
   user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
@@ -141,8 +143,8 @@ model Album {
 }
 
 model PostsAlbums {
-  postId String @map("post_id")
-  albumId String @map("album_id")
+  postId    String @map("post_id")
+  albumId   String @map("album_id")
   createdAt DateTime @default(now()) @map("created_at")
 
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -162,4 +164,27 @@ model Favorites {
 
   @@id([postId, userId])
   @@map("favorites")
+}
+
+enum ReportReason {
+  spam
+  guidelines
+  duplicate
+  quality
+  explicit
+  unrelated
+  other
+}
+model Report {
+  id String @id @default(cuid())
+  postId  String @map("post_id")
+  userId  String @map("user_id")
+  reason  ReportReason
+  url     String?
+  details String?
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("report")
 }

@@ -223,3 +223,58 @@ export const NewAlbumSchema = z.object({
     .min(3, { message: "Name must be at least 3 characters" })
     .max(100, { message: "Name must be 100 characters or fewer" }),
 });
+
+export const ReportSchema = z
+  .object({
+    postId: z.string().min(1),
+    userId: z.string().min(1),
+    reason: z.enum([
+      "spam",
+      "guidelines",
+      "duplicate",
+      "quality",
+      "explicit",
+      "unrelated",
+      "other",
+    ]),
+    url: z
+      .union([z.string().url({ message: "Invalid URL" }), z.literal("")])
+      .refine(
+        (url) => {
+          if (url) {
+            return url.includes("hellopicboard.com");
+          }
+          return true;
+        },
+        { message: "URL must be from hellopicboard.com" },
+      ),
+    details: z.optional(
+      z
+        .string()
+        .max(1000, { message: "details must be 1000 characters or fewer" }),
+    ),
+  })
+  .refine(
+    (data) => {
+      if (data.reason === "other" || data.reason === "guidelines") {
+        return !!data.details;
+      }
+      return true;
+    },
+    {
+      message: "Please provide details",
+      path: ["details"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.reason === "duplicate" || data.reason === "quality") {
+        return !!data.url;
+      }
+      return true;
+    },
+    {
+      message: "A link to the other post is required",
+      path: ["url"],
+    },
+  );

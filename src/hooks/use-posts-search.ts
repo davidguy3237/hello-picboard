@@ -7,12 +7,18 @@ interface usePostSearchProps {
   endpoint?: string;
 }
 
+type PostWithReportCount = Post & {
+  _count: {
+    reports: number;
+  };
+};
+
 export default function usePostsSearch({
   query,
   cursor = "",
   endpoint = "/api/posts/infinite",
 }: usePostSearchProps) {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostWithReportCount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [hasMore, setHasMore] = useState(true);
@@ -29,7 +35,10 @@ export default function usePostsSearch({
           signal,
         });
         const data = await response.json();
-        setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+        const filteredPosts = data.posts.filter(
+          (post: PostWithReportCount) => post._count.reports < 3,
+        );
+        setPosts((prevPosts) => [...prevPosts, ...filteredPosts]);
         setHasMore(data.posts.length === 25);
       } catch (error) {
         if (signal.aborted) {

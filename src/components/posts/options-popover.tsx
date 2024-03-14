@@ -1,5 +1,6 @@
 "use client";
 
+import { ReportButton } from "@/components/posts/report-button";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -8,7 +9,7 @@ import {
 } from "@/components/ui/popover";
 import useCurrentUser from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
-import { Copy, Download, MoreHorizontal, Pencil } from "lucide-react";
+import { Copy, MoreHorizontal, Pencil } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { SaveToAlbumModal } from "./save-to-album-modal";
@@ -66,6 +67,7 @@ export function OptionsPopover({
           Copy URL
         </Button>
         <SaveToAlbumModal postId={postId} />
+        <ReportButton postId={postId} />
         {userId === currentUser?.id && (
           <Link href={`/edit/${publicId}`} prefetch={false}>
             <Button
