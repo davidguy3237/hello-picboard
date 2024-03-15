@@ -1,5 +1,5 @@
+import { AlbumCardsList } from "@/app/(public)/user/[username]/albums/components/album-cards-list";
 import db from "@/lib/db";
-import { AlbumCardsList } from "./components/album-cards-list";
 import { notFound } from "next/navigation";
 
 export default async function UserAlbumsPage({
@@ -18,7 +18,7 @@ export default async function UserAlbumsPage({
   }
 
   return (
-    <div className="flex h-full w-full flex-wrap content-start gap-4 p-4">
+    <div className="flex h-full w-full flex-col items-center overflow-y-auto">
       <AlbumCardsList username={params.username} userId={dbUser.id} />
     </div>
   );

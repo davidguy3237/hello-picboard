@@ -37,7 +37,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
   const queryString = `albumId=${album.id}`;
   return (
-    <div className="flex h-full w-full items-center">
+    <div className="flex h-full w-full items-center overflow-y-auto">
       <Link
         href={`/user/${dbUser.name}/albums`}
         className={cn(buttonVariants({ variant: "ghost" }), "m-1 h-full p-0")}

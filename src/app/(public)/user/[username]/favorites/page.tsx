@@ -16,7 +16,7 @@ export default async function UserFavoritesPage({
     redirect("/");
   }
   return (
-    <div className="flex h-full w-full flex-col items-center overflow-y-auto ">
+    <div className="flex h-full w-full flex-col items-center overflow-y-auto">
       <FavoritesPostCardList endpoint="/api/posts/infinite/favorites" />
     </div>
   );

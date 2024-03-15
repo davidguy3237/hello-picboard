@@ -72,21 +72,21 @@ export function AlbumCard({
   };
 
   return (
-    <Card className="h-60 w-60 overflow-hidden">
+    <Card className="h-40 w-40 overflow-hidden md:h-60 md:w-60">
       <CardContent className="group relative h-full w-full p-0">
         <Link href={`/user/${username}/albums/${album.publicId}`}>
           {album.posts.length > 0 ? (
             <img
               alt=""
               src={album.posts[0].post.thumbnailUrl}
-              className="h-2/3 w-full rounded-b-none object-cover"
+              className="h-1/2 w-full rounded-b-none object-cover md:h-2/3"
             />
           ) : (
-            <div className="flex h-2/3 w-full items-center justify-center rounded-b-none bg-secondary object-cover">
+            <div className="flex h-1/2 w-full items-center justify-center rounded-b-none bg-secondary object-cover md:h-2/3">
               <ImageIcon className=" h-20 w-20 text-muted-foreground" />
             </div>
           )}
-          <div className="relative h-1/3 w-full space-y-1 p-1 text-sm">
+          <div className="relative flex h-1/2 w-full flex-col justify-between p-1 text-sm md:h-1/3">
             <p className="w-full truncate font-medium">{album.name}</p>
             <p>{format(album.createdAt, "MMMM d, yyyy")}</p>
             <p>{album._count.posts} Posts</p>
@@ -95,7 +95,7 @@ export function AlbumCard({
         <Popover>
           <PopoverTrigger
             className={cn(
-              "invisible absolute right-0 top-0 flex h-8 w-8 items-center justify-center rounded-full text-white hover:bg-accent hover:text-accent-foreground group-hover:visible",
+              "absolute right-0 top-0 flex h-8 w-8 items-center justify-center rounded-full text-white hover:bg-accent hover:text-accent-foreground group-hover:visible md:invisible",
               album.posts.length === 0 && "text-muted-foreground",
             )}
           >

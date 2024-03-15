@@ -67,7 +67,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
             userId={userId}
             publicId={publicId}
             isInvisible={true}
-            classNames="text-white hidden md:block"
+            classNames="text-white hidden md:flex"
           />
         </div>
       </div>

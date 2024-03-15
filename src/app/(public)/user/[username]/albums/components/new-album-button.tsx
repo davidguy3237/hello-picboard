@@ -64,7 +64,7 @@ export function NewAlbumButton({
 
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
-      <DialogTrigger className="flex h-60 w-60 flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground bg-muted text-muted-foreground hover:border-accent-foreground hover:bg-accent hover:text-accent-foreground">
+      <DialogTrigger className="flex h-40 w-40 flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground bg-muted text-muted-foreground hover:border-accent-foreground hover:bg-accent hover:text-accent-foreground md:h-60 md:w-60">
         <PlusCircle className="h-12 w-12" />
         <p className="italic">Create an album</p>
       </DialogTrigger>

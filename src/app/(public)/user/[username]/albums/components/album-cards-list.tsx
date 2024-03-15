@@ -46,7 +46,7 @@ export function AlbumCardsList({ username, userId }: AlbumCardsListProps) {
   }, [username, userId]);
 
   return (
-    <>
+    <div className="mx-auto flex flex-wrap justify-evenly gap-2 md:justify-normal">
       {isLoading ? (
         <SkeletonAlbumCardList />
       ) : albums.length > 0 ? (
@@ -69,6 +69,6 @@ export function AlbumCardsList({ username, userId }: AlbumCardsListProps) {
       {user?.name === username && !isLoading && (
         <NewAlbumButton setAlbums={setAlbums} />
       )}
-    </>
+    </div>
   );
 }
