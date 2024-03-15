@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { OptionsPopover } from "@/components/posts/options-popover";
-import useIsWindowSmall from "@/hooks/use-is-window-small";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { SyntheticEvent } from "react";
@@ -20,8 +19,6 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
     { id, userId, publicId, sourceUrl, thumbnailUrl, expandView },
     ref,
   ) {
-    const isWindowSmall = useIsWindowSmall();
-
     const handleOnError = (e: SyntheticEvent<HTMLImageElement>) => {
       e.currentTarget.onerror = null;
       e.currentTarget.src = "/image.svg";
