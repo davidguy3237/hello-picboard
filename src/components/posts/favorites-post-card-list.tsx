@@ -87,22 +87,9 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
           )}
         >
           {posts.map((post, i) => {
-            if (i === posts.length - 1) {
-              return (
-                <PostCard
-                  ref={lastPostRef}
-                  key={post.sourceUrl}
-                  id={post.id}
-                  userId={post.userId || ""}
-                  publicId={post.publicId}
-                  sourceUrl={post.sourceUrl}
-                  thumbnailUrl={post.thumbnailUrl}
-                  expandView={expandView}
-                />
-              );
-            }
             return (
               <PostCard
+                ref={i === posts.length - 1 ? lastPostRef : null}
                 key={post.sourceUrl}
                 id={post.id}
                 userId={post.userId || ""}

@@ -89,55 +89,40 @@ export function AlbumsPostCardList({
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <>
-        {posts.length ? (
-          <div
-            className={cn(
-              "grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-1",
-              expandView && "grid-cols-[repeat(auto-fit,minmax(200px,1fr))]",
-            )}
-          >
-            {posts.map((post, i) => {
-              if (i === posts.length - 1) {
-                return (
-                  <PostCard
-                    ref={lastPostRef}
-                    key={post.sourceUrl}
-                    id={post.id}
-                    userId={post.userId || ""}
-                    publicId={post.publicId}
-                    sourceUrl={post.sourceUrl}
-                    thumbnailUrl={post.thumbnailUrl}
-                    expandView={expandView || false}
-                  />
-                );
-              }
-              return (
-                <PostCard
-                  key={post.sourceUrl}
-                  id={post.id}
-                  userId={post.userId || ""}
-                  publicId={post.publicId}
-                  sourceUrl={post.sourceUrl}
-                  thumbnailUrl={post.thumbnailUrl}
-                  expandView={expandView}
-                />
-              );
-            })}
-          </div>
-        ) : posts.length === 0 && !hasMore ? (
-          <p className="flex w-full items-center justify-center font-medium italic text-muted-foreground">
-            No posts found...
-          </p>
-        ) : (
-          <PostCardListSkeleton />
-        )}
-        {isLoading && (
-          <div className="flex w-full justify-center">
-            <Loader2Icon className="animate-spin" />
-          </div>
-        )}
-      </>
+      {posts.length ? (
+        <div
+          className={cn(
+            "grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-1",
+            expandView && "grid-cols-[repeat(auto-fit,minmax(200px,1fr))]",
+          )}
+        >
+          {posts.map((post, i) => {
+            return (
+              <PostCard
+                ref={i === posts.length - 1 ? lastPostRef : null}
+                key={post.sourceUrl}
+                id={post.id}
+                userId={post.userId || ""}
+                publicId={post.publicId}
+                sourceUrl={post.sourceUrl}
+                thumbnailUrl={post.thumbnailUrl}
+                expandView={expandView}
+              />
+            );
+          })}
+        </div>
+      ) : posts.length === 0 && !hasMore ? (
+        <p className="flex w-full items-center justify-center font-medium italic text-muted-foreground">
+          No posts found...
+        </p>
+      ) : (
+        <PostCardListSkeleton />
+      )}
+      {isLoading && (
+        <div className="flex w-full justify-center">
+          <Loader2Icon className="animate-spin" />
+        </div>
+      )}
     </div>
   );
 }

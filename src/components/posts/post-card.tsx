@@ -27,7 +27,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
       e.currentTarget.src = "/image.svg";
     };
 
-    return ref ? (
+    return (
       <div
         ref={ref}
         className={cn(
@@ -37,67 +37,23 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
       >
         <div className="group h-full w-full">
           {isWindowSmall ? (
-            <img
-              decoding="async"
-              loading="lazy"
-              alt=""
-              src={sourceUrl} // Show the full image on phones
-              height={384} // height & weight being overwritten by className
-              width={320} // but having these explicitly declared enables lazy loading
-              className="h-full w-full object-cover"
-              onError={handleOnError}
-            />
-          ) : (
-            <Link
-              href={`/post/${publicId}`}
-              scroll={false}
-              aria-label="Open Image"
-            >
+            <a href={`/post/${publicId}`}>
               <img
                 decoding="async"
                 loading="lazy"
                 alt=""
-                src={thumbnailUrl}
+                src={sourceUrl} // Show the full image on phones
                 height={384} // height & weight being overwritten by className
-                width={320} // but having these explicitly declared seems to enable lazy loading?
-                className="peer h-full w-full cursor-pointer object-cover"
+                width={320} // but having these explicitly declared enables lazy loading
+                className="h-full w-full object-cover"
                 onError={handleOnError}
               />
-            </Link>
-          )}
-          <OptionsPopover
-            postId={id}
-            userId={userId}
-            publicId={publicId}
-            isInvisible={true}
-            classNames="text-white"
-          />
-        </div>
-      </div>
-    ) : (
-      <div
-        className={cn(
-          "relative h-fit overflow-hidden bg-muted sm:h-96 sm:rounded-sm",
-          expandView && "sm:h-56",
-        )}
-      >
-        <div className="group h-full w-full">
-          {isWindowSmall ? (
-            <img
-              decoding="async"
-              loading="lazy"
-              alt=""
-              src={sourceUrl} // Show the full image on phones
-              height={384} // height & weight being overwritten by className
-              width={320} // but having these explicitly declared enables lazy loading
-              className="h-full w-full object-cover"
-              onError={handleOnError}
-            />
+            </a>
           ) : (
             <Link
               href={`/post/${publicId}`}
               scroll={false}
-              aria-label="Open Image"
+              aria-label="Open Image Modal"
             >
               <img
                 decoding="async"
