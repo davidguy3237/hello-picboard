@@ -32,7 +32,7 @@ export default function ImageDisplay({
 
   return (
     <div
-      className="relative flex max-w-full items-center justify-center bg-background lg:max-w-[calc(100%-20rem)]"
+      className="relative flex max-h-[calc(100dvh-15rem)] max-w-full items-center justify-center bg-background lg:max-h-none lg:max-w-[calc(100%-20rem)]"
       style={{
         height: !useWidth && isLoading ? `${maxHeight}px` : undefined,
         width: useWidth && isLoading ? `${maxWidth}px` : undefined,

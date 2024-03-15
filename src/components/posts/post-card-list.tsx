@@ -60,7 +60,7 @@ export function PostCardList({
     <div
       className={cn(
         "flex w-full max-w-screen-2xl flex-col items-center justify-center pb-4",
-        expandView && " max-w-full px-4",
+        expandView && " max-w-full lg:px-4",
       )}
     >
       <TooltipProvider>
@@ -72,6 +72,7 @@ export function PostCardList({
               onClick={() => setExpandView(!expandView)}
               disabled={posts.length === 0 || isLoading}
               aria-label={expandView ? "Normal View" : "Expand View"}
+              className="hidden md:inline-flex"
             >
               {expandView ? <Grid2X2 /> : <Grid3X3 />}
             </Button>
@@ -84,8 +85,8 @@ export function PostCardList({
       {posts.length ? (
         <div
           className={cn(
-            "grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-1",
-            expandView && "grid-cols-[repeat(auto-fit,minmax(200px,1fr))]",
+            "grid w-full grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-1 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]",
+            expandView && "sm:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]",
           )}
         >
           {posts.map((post, i) => {

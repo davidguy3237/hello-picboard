@@ -31,48 +31,46 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
       <div
         ref={ref}
         className={cn(
-          "relative h-fit overflow-hidden bg-muted sm:h-96 sm:rounded-sm",
+          "relative h-56 overflow-hidden bg-muted sm:h-96 sm:rounded-sm",
           expandView && "sm:h-56",
         )}
       >
         <div className="group h-full w-full">
-          {isWindowSmall ? (
-            <a href={`/post/${publicId}`}>
-              <img
-                decoding="async"
-                loading="lazy"
-                alt=""
-                src={sourceUrl} // Show the full image on phones
-                height={384} // height & weight being overwritten by className
-                width={320} // but having these explicitly declared enables lazy loading
-                className="h-full w-full object-cover"
-                onError={handleOnError}
-              />
-            </a>
-          ) : (
-            <Link
-              href={`/post/${publicId}`}
-              scroll={false}
-              aria-label="Open Image Modal"
-            >
-              <img
-                decoding="async"
-                loading="lazy"
-                alt=""
-                src={thumbnailUrl}
-                height={384} // height & weight being overwritten by className
-                width={320} // but having these explicitly declared seems to enable lazy loading?
-                className="peer h-full w-full cursor-pointer object-cover"
-                onError={handleOnError}
-              />
-            </Link>
-          )}
+          <a href={`/post/${publicId}`} className=" md:hidden">
+            <img
+              decoding="async"
+              loading="lazy"
+              alt=""
+              src={thumbnailUrl} // Show the full image on phones
+              height={384} // height & weight being overwritten by className
+              width={320} // but having these explicitly declared enables lazy loading
+              className="h-full w-full cursor-pointer object-cover"
+              onError={handleOnError}
+            />
+          </a>
+          <Link
+            href={`/post/${publicId}`}
+            scroll={false}
+            aria-label="Open Image Modal"
+            className="hidden md:inline"
+          >
+            <img
+              decoding="async"
+              loading="lazy"
+              alt=""
+              src={thumbnailUrl}
+              height={384} // height & weight being overwritten by className
+              width={320} // but having these explicitly declared seems to enable lazy loading?
+              className="peer h-full w-full cursor-pointer object-cover"
+              onError={handleOnError}
+            />
+          </Link>
           <OptionsPopover
             postId={id}
             userId={userId}
             publicId={publicId}
             isInvisible={true}
-            classNames="text-white"
+            classNames="text-white hidden md:block"
           />
         </div>
       </div>
