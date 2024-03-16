@@ -94,8 +94,8 @@ export function AlbumsPostCardList({
       {posts.length ? (
         <div
           className={cn(
-            "grid w-full grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-1 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]",
-            expandView && "sm:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]",
+            "grid w-full grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]",
+            expandView && "sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]",
           )}
         >
           {posts.map((post, i) => {
