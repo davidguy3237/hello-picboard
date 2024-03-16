@@ -59,6 +59,10 @@ export default async function PostPage({ params }: PostPageProps) {
       ? fullDate
       : distance;
 
+  const avatarImageUrl = post.user?.image?.includes("avatars/")
+    ? `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post.user.image}`
+    : post.user?.image;
+
   return (
     <div
       className={
@@ -68,7 +72,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <div className="relative flex h-full max-h-[calc(100dvh-57px-180px)] w-full justify-center lg:max-h-full">
         <img
           alt=""
-          src={post.sourceUrl}
+          src={`${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post.sourceUrl}`}
           className="h-full w-full object-contain"
         />
       </div>
@@ -90,7 +94,7 @@ export default async function PostPage({ params }: PostPageProps) {
             className="flex w-fit items-center gap-x-2"
           >
             <Avatar className="h-8 w-8">
-              <AvatarImage src={post.user?.image || ""} />
+              <AvatarImage src={avatarImageUrl || ""} />
               <AvatarFallback className="bg-foreground">
                 <User className="text-background" />
               </AvatarFallback>

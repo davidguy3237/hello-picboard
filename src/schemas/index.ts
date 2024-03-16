@@ -165,8 +165,12 @@ export const NewPostSchema = z
         .string()
         .max(500, { message: "Description must be 500 characters or fewer" }),
     ),
-    sourceUrl: z.string().url(),
-    thumbnailUrl: z.string().url(),
+    sourceUrl: z
+      .string()
+      .refine((val) => val.endsWith(".jpg") || val.endsWith(".png")),
+    thumbnailUrl: z
+      .string()
+      .refine((val) => val.startsWith("thumbnails/") && val.endsWith(".webp")),
     width: z.optional(z.number()),
     height: z.optional(z.number()),
   })

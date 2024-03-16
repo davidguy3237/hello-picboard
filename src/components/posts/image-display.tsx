@@ -6,13 +6,13 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface ImageDisplayProps {
-  url: string;
+  sourceUrl: string;
   width: number | null;
   height: number | null;
 }
 
 export default function ImageDisplay({
-  url,
+  sourceUrl,
   width,
   height,
 }: ImageDisplayProps) {
@@ -46,7 +46,7 @@ export default function ImageDisplay({
         )}
       />
       <img
-        src={url}
+        src={`${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${sourceUrl}`}
         alt=""
         className="max-h-[100dvh] max-w-full object-contain"
         onLoad={() => setIsLoading(false)}

@@ -78,7 +78,7 @@ export function AlbumCard({
           {album.posts.length > 0 ? (
             <img
               alt=""
-              src={album.posts[0].post.thumbnailUrl}
+              src={`${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${album.posts[0].post.thumbnailUrl}`}
               className="h-1/2 w-full rounded-b-none object-cover md:h-2/3"
             />
           ) : (

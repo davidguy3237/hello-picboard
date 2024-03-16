@@ -44,7 +44,9 @@ interface SettingsFormProps {
 export function SettingsForm({ user }: SettingsFormProps) {
   const { update } = useSession();
   const [currentAvatar, setCurrentAvatar] = useState<string | null | undefined>(
-    user.image,
+    user?.image?.includes("avatars/")
+      ? `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${user.image}`
+      : user?.image,
   );
   const [isPending, startTransition] = useTransition();
   const [usernameDialogOpen, setUsernameDialogOpen] = useState<boolean>(false);

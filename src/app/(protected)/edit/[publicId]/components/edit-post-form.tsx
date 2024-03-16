@@ -157,7 +157,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
           <DialogTrigger className=" flex w-1/4 items-center justify-center pr-2">
             <img
               alt=""
-              src={post.thumbnailUrl}
+              src={`${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post.thumbnailUrl}`}
               className="max-h-full max-w-full object-contain"
             />
           </DialogTrigger>
@@ -166,7 +166,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
             <DialogContent>
               <img
                 alt=""
-                src={post.sourceUrl}
+                src={`${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post.sourceUrl}`}
                 className="fixed left-[50%] top-[50%] z-50 h-fit max-h-[100dvh] w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
               />
               <DialogClose

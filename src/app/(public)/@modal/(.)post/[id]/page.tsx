@@ -58,11 +58,15 @@ export default async function InterceptedPostPage({
       ? fullDate
       : distance;
 
+  const avatarImageUrl = post.user?.image?.includes("avatars/")
+    ? `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post.user.image}`
+    : post.user?.image;
+
   return (
     <PostInterceptModal>
       <div className="fixed left-[50%] top-[50%] z-50 flex h-max max-h-[100dvh] w-max max-w-full translate-x-[-50%] translate-y-[-50%] flex-col divide-y lg:flex-row lg:divide-y-0">
         <ImageDisplay
-          url={post.sourceUrl}
+          sourceUrl={post.sourceUrl}
           width={post.width}
           height={post.height}
         />
@@ -84,7 +88,7 @@ export default async function InterceptedPostPage({
               className="flex w-fit items-center gap-x-2"
             >
               <Avatar className="h-8 w-8">
-                <AvatarImage src={post.user?.image || ""} />
+                <AvatarImage src={avatarImageUrl || ""} />
                 <AvatarFallback className="bg-foreground">
                   <User className="text-background" />
                 </AvatarFallback>

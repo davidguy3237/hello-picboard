@@ -24,11 +24,15 @@ export function UserButton({ user }: UserButtonProps) {
     return null;
   }
 
+  const avatarImageUrl = user.image?.includes("avatars/")
+    ? `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${user.image}`
+    : user.image;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Profile">
         <Avatar className="mx-2" aria-label="Profile">
-          <AvatarImage src={user?.image || ""} />
+          <AvatarImage src={avatarImageUrl || ""} />
           <AvatarFallback className="bg-foreground">
             <User className="text-background" />
           </AvatarFallback>

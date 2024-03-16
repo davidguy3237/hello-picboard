@@ -35,10 +35,10 @@ export async function uploadAvatar(uploadAvatarData: FormData) {
   if (
     !process.env.NANOID_ALPHABET ||
     !process.env.B2_BUCKET_NAME ||
-    !process.env.PHOTOS_DOMAIN
+    !process.env.NEXT_PUBLIC_PHOTOS_DOMAIN
   ) {
     throw new Error(
-      "Missing environment variable: NANOID_ALPHABET, B2_BUCKET_NAME or PHOTOS_DOMAIN",
+      "Missing environment variable: NANOID_ALPHABET, B2_BUCKET_NAME or NEXT_PUBLIC_PHOTOS_DOMAIN",
     );
   }
 
@@ -100,7 +100,7 @@ export async function uploadAvatar(uploadAvatarData: FormData) {
     };
   }
 
-  const avatarUrl = `${process.env.PHOTOS_DOMAIN}/avatars/${publicId}${fileExtension}`;
+  const avatarUrl = `avatars/${publicId}${fileExtension}`;
 
   await db.user.update({
     where: { id: dbUser.id },

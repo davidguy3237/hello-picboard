@@ -16,11 +16,16 @@ interface SidebarNavProps {
 
 export function SidebarNav({ items, dbUser }: SidebarNavProps) {
   const pathname = usePathname();
+
+  const avatarImageUrl = dbUser?.image?.includes("avatars/")
+    ? `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${dbUser.image}`
+    : dbUser?.image;
+
   return (
     <nav className="flex h-full min-w-40 flex-col space-y-2 p-2 md:border-r">
       <div className="flex items-center gap-2">
         <Avatar className="mx-2" aria-label="Profile">
-          <AvatarImage src={dbUser?.image || ""} />
+          <AvatarImage src={avatarImageUrl || ""} />
           <AvatarFallback className="bg-foreground">
             <UserIcon className="text-background" />
           </AvatarFallback>
