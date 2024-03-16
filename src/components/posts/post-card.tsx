@@ -36,7 +36,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
           <a href={`/post/${publicId}`} className=" md:hidden">
             <img
               decoding="async"
-              loading="lazy"
+              // loading="lazy"
               alt=""
               src={`${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${thumbnailUrl}`} // Show the full image on phones
               height={384} // height & weight being overwritten by className
@@ -53,7 +53,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
           >
             <img
               decoding="async"
-              loading="lazy"
+              // loading="lazy"
               alt=""
               src={`${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${thumbnailUrl}`}
               height={384} // height & weight being overwritten by className
