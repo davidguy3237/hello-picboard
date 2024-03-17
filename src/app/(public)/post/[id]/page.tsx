@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { currentUser } from "@/lib/auth";
@@ -116,19 +115,17 @@ export default async function PostPage({ params }: PostPageProps) {
             </span>
           </div>
         )}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span>{dateToShow}</span>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{fullDate}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span>{dateToShow}</span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{fullDate}</p>
+          </TooltipContent>
+        </Tooltip>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Ruler className="h-4 w-4" />
           {post.width && post.height ? (

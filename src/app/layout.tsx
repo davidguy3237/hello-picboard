@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,9 +29,11 @@ export default async function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={cn(inter.className, "bg-background")}>
           <ThemeProvider attribute="class" disableTransitionOnChange>
-            <Toaster closeButton richColors position="top-center" />
-            {children}
-            {auth}
+            <TooltipProvider>
+              <Toaster closeButton richColors position="top-center" />
+              {children}
+              {auth}
+            </TooltipProvider>
           </ThemeProvider>
         </body>
         <Script

@@ -4,14 +4,15 @@ import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-
 import { Button } from "@/components/ui/button";
 import usePostsSearch from "@/hooks/use-posts-search";
 import { cn } from "@/lib/utils";
-import { Grid2X2, Grid3X3, Loader2Icon } from "lucide-react";
+import { Grid2X2, Grid3X3, Loader2Icon, Trash2 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { usePathname } from "next/navigation";
+import useCurrentUser from "@/hooks/use-current-user";
 
 export function PostCardList({
   queryString,
@@ -22,6 +23,10 @@ export function PostCardList({
 }) {
   const [expandView, setExpandView] = useState(false);
   const [cursor, setCursor] = useState("");
+  const [toggleSelectDelete, setToggleSelectDelete] = useState<boolean>(false);
+  const [postsToDelete, setPostsToDelete] = useState<string[]>([]);
+  const pathname = usePathname();
+  const user = useCurrentUser();
 
   const { isLoading, error, posts, hasMore } = usePostsSearch({
     query: queryString,
@@ -63,9 +68,30 @@ export function PostCardList({
         expandView && " max-w-full lg:px-4",
       )}
     >
-      <TooltipProvider>
+      <div
+        className={cn(
+          "flex w-full items-center justify-end",
+          user &&
+            pathname.includes(`/user/${user.name}/posts`) &&
+            "justify-between",
+        )}
+      >
+        {user && pathname.includes(`/user/${user.name}/posts`) && (
+          <Tooltip>
+            <TooltipTrigger className="m-1" asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              >
+                <Trash2 />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Delete Posts</TooltipContent>
+          </Tooltip>
+        )}
         <Tooltip>
-          <TooltipTrigger className="m-1 self-end" asChild>
+          <TooltipTrigger className="m-1" asChild>
             <Button
               size="icon"
               variant="ghost"
@@ -81,7 +107,7 @@ export function PostCardList({
             {expandView ? "Normal View" : "Expand View"}
           </TooltipContent>
         </Tooltip>
-      </TooltipProvider>
+      </div>
       {posts.length ? (
         <div
           className={cn(
