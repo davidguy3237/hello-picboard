@@ -2,7 +2,13 @@
 import { newPost } from "@/actions/posts";
 import { searchTags } from "@/actions/search-tags";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -38,6 +44,7 @@ interface GroupUploadProps {
   removeFile: (file: FileWithPath) => void;
   uploadedFiles: FileWithPath[];
   setUploadedFiles: React.Dispatch<React.SetStateAction<FileWithPath[]>>;
+  setRenderBatchUpload: React.Dispatch<React.SetStateAction<boolean>>;
 }
 interface TagOption {
   value: string;
@@ -49,6 +56,7 @@ export function BatchUpload({
   removeFile,
   uploadedFiles,
   setUploadedFiles,
+  setRenderBatchUpload,
 }: GroupUploadProps) {
   const [isPending, startTransition] = useTransition();
   const [failedUploads, setFailedUploads] = useState<FileWithPath[]>([]);
@@ -114,6 +122,9 @@ export function BatchUpload({
     <Card className="w-full shadow-lg">
       <CardHeader>
         <CardTitle>Batch Upload</CardTitle>
+        <CardDescription>
+          Apply the same tags and description to multiple images
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -200,16 +211,24 @@ export function BatchUpload({
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              disabled={
-                isPending ||
-                uploadedFiles.length > 0 ||
-                failedUploads.length > 0
-              }
-            >
-              Upload All
-            </Button>
+            <div className="flex justify-between">
+              <Button
+                variant="outline"
+                onClick={() => setRenderBatchUpload(false)}
+              >
+                Upload Individually
+              </Button>
+              <Button
+                type="submit"
+                disabled={
+                  isPending ||
+                  uploadedFiles.length > 0 ||
+                  failedUploads.length > 0
+                }
+              >
+                Upload All
+              </Button>
+            </div>
             <Separator />
           </form>
         </Form>

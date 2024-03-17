@@ -13,7 +13,7 @@ import { toast } from "sonner";
 export default function UploadPage() {
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<FileWithPath[]>([]);
-  const [renderGroupUpload, setRenderGroupUpload] = useState<boolean>(false);
+  const [renderBatchUpload, setRenderBatchUpload] = useState<boolean>(false);
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (rejectedFiles.length > 0) {
@@ -52,7 +52,7 @@ export default function UploadPage() {
   const removeFile = (file: FileWithPath) => {
     const updatedFiles = files.filter((f) => f !== file);
     if (updatedFiles.length === 0) {
-      setRenderGroupUpload(false);
+      setRenderBatchUpload(false);
     }
     setFiles(updatedFiles);
   };
@@ -64,21 +64,22 @@ export default function UploadPage() {
 
   return files.length > 0 ? (
     <div className="my-4 flex w-full max-w-screen-md flex-col items-center justify-start gap-4">
-      {renderGroupUpload ? (
+      {renderBatchUpload ? (
         <BatchUpload
           files={files}
           removeFile={removeFile}
           uploadedFiles={uploadedFiles}
           setUploadedFiles={setUploadedFiles}
+          setRenderBatchUpload={setRenderBatchUpload}
         />
       ) : (
         <>
           <Button
             className={cn(
               "hidden",
-              !renderGroupUpload && files.length >= 2 && "block",
+              !renderBatchUpload && files.length >= 2 && "block",
             )}
-            onClick={() => setRenderGroupUpload(true)}
+            onClick={() => setRenderBatchUpload(true)}
           >
             Batch Upload
           </Button>
