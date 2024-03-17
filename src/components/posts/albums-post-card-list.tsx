@@ -103,7 +103,6 @@ export function AlbumsPostCardList({
                 id={post.id}
                 userId={post.userId || ""}
                 publicId={post.publicId}
-                sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
                 expandView={expandView}
               />

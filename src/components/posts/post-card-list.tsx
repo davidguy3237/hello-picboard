@@ -1,11 +1,11 @@
 "use client";
 import { PostCard } from "@/components/posts/post-card";
 import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-list";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import usePostsSearch from "@/hooks/use-posts-search";
 import { cn } from "@/lib/utils";
-import { Grid2X2, Grid3X3, Loader2Icon, Trash2 } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { Grid2X2, Grid3X3, Loader2, Loader2Icon, Trash2 } from "lucide-react";
+import { useCallback, useRef, useState, useTransition } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -13,6 +13,19 @@ import {
 } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
 import useCurrentUser from "@/hooks/use-current-user";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { deleteManyPosts } from "@/actions/posts";
+import { toast } from "sonner";
 
 export function PostCardList({
   queryString,
@@ -25,6 +38,7 @@ export function PostCardList({
   const [cursor, setCursor] = useState("");
   const [toggleSelectDelete, setToggleSelectDelete] = useState<boolean>(false);
   const [postsToDelete, setPostsToDelete] = useState<string[]>([]);
+  const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
   const user = useCurrentUser();
 
@@ -61,6 +75,23 @@ export function PostCardList({
     return <div>Error: {error.message}</div>;
   }
 
+  const handleDeleteSelectedPosts = () => {
+    startTransition(async () => {
+      const deleteManyPostsResults = await deleteManyPosts(postsToDelete);
+      if (!deleteManyPostsResults.success) {
+        toast.error(deleteManyPostsResults.error);
+      } else if (deleteManyPostsResults.success) {
+        toast.success(deleteManyPostsResults.success);
+        setPostsToDelete([]);
+        setToggleSelectDelete(false);
+      }
+    });
+  };
+  const handleCancelDelete = () => {
+    setPostsToDelete([]);
+    setToggleSelectDelete(false);
+  };
+
   return (
     <div
       className={cn(
@@ -76,20 +107,65 @@ export function PostCardList({
             "justify-between",
         )}
       >
-        {user && pathname.includes(`/user/${user.name}/posts`) && (
+        {user &&
+        pathname.includes(`/user/${user.name}/posts`) &&
+        !toggleSelectDelete ? (
           <Tooltip>
             <TooltipTrigger className="m-1" asChild>
               <Button
                 variant="ghost"
                 size="icon"
                 className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                onClick={() => setToggleSelectDelete(true)}
               >
                 <Trash2 />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Delete Posts</TooltipContent>
           </Tooltip>
-        )}
+        ) : user &&
+          pathname.includes(`/user/${user.name}/posts`) &&
+          toggleSelectDelete ? (
+          <div className="flex items-center gap-2">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {postsToDelete.length} Selected
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    You are about to delete {postsToDelete.length} posts.
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={isPending}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <Button
+                    disabled={isPending}
+                    variant="destructive"
+                    onClick={handleDeleteSelectedPosts}
+                  >
+                    {isPending ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      "Delete"
+                    )}
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <Button variant="outline" onClick={handleCancelDelete}>
+              Cancel
+            </Button>
+          </div>
+        ) : null}
         <Tooltip>
           <TooltipTrigger className="m-1" asChild>
             <Button
@@ -123,9 +199,11 @@ export function PostCardList({
                 id={post.id}
                 userId={post.userId || ""}
                 publicId={post.publicId}
-                sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
                 expandView={expandView}
+                toggleSelectDelete={toggleSelectDelete}
+                postsToDelete={postsToDelete}
+                setPostsToDelete={setPostsToDelete}
               />
             );
           })}

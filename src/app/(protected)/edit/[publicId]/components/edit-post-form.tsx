@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -290,7 +290,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
               <AlertDialogAction
                 disabled={isPending}
                 onClick={handleDeletePost}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
+                className={cn(buttonVariants({ variant: "destructive" }))}
               >
                 Delete
               </AlertDialogAction>

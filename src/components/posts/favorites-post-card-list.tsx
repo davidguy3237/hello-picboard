@@ -93,7 +93,6 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
                 id={post.id}
                 userId={post.userId || ""}
                 publicId={post.publicId}
-                sourceUrl={post.sourceUrl}
                 thumbnailUrl={post.thumbnailUrl}
                 expandView={expandView}
               />

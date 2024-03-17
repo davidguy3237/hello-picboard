@@ -6,6 +6,7 @@ import db from "@/lib/db";
 import { EditPostSchema, NewPostSchema } from "@/schemas";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { customAlphabet } from "nanoid";
+import { revalidatePath } from "next/cache";
 import sharp from "sharp";
 import * as z from "zod";
 
@@ -233,6 +234,36 @@ export async function deletePost(publicId: string) {
   } else {
     return {
       success: "Post successfully deleted!",
+    };
+  }
+}
+
+export async function deleteManyPosts(publicIds: string[]) {
+  const user = await currentUser();
+
+  if (!user) {
+    return {
+      error: "Unauthorized",
+    };
+  }
+
+  const deletedPosts = await db.post.deleteMany({
+    where: {
+      id: {
+        in: publicIds,
+      },
+      userId: user.id,
+    },
+  });
+
+  if (!deletedPosts) {
+    return {
+      error: "There was a problem deleting these posts",
+    };
+  } else {
+    revalidatePath(`/user/${user.name}/posts`);
+    return {
+      success: "Posts successfully deleted!",
     };
   }
 }
