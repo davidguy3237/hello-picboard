@@ -38,6 +38,7 @@ import { useForm } from "react-hook-form";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import { toast } from "sonner";
 import * as z from "zod";
+import { MemoizedImg } from "./memoized-img";
 
 interface GroupUploadProps {
   files: FileWithPath[];
@@ -60,7 +61,6 @@ export function BatchUpload({
 }: GroupUploadProps) {
   const [isPending, startTransition] = useTransition();
   const [failedUploads, setFailedUploads] = useState<FileWithPath[]>([]);
-
   const form = useForm<z.infer<typeof GroupUploadSchema>>({
     resolver: zodResolver(GroupUploadSchema),
     defaultValues: {
@@ -94,7 +94,6 @@ export function BatchUpload({
   const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 300);
 
   const onSubmit = (batchUploadData: z.infer<typeof GroupUploadSchema>) => {
-    console.log("HANDLING SUBMIT");
     startTransition(async () => {
       for (let i = 0; i < batchUploadData.images.length; i++) {
         const image = batchUploadData.images[i];
@@ -239,18 +238,16 @@ export function BatchUpload({
           >
             <Dialog>
               <DialogTrigger className="grid h-10 w-10 cursor-zoom-in place-items-center">
-                <img
-                  alt=""
-                  src={URL.createObjectURL(file)}
+                <MemoizedImg
+                  file={file}
                   className="max-h-10 max-w-10 object-contain"
                 />
               </DialogTrigger>
               <DialogPortal>
                 <DialogOverlay />
                 <DialogContent>
-                  <img
-                    alt=""
-                    src={URL.createObjectURL(file)}
+                  <MemoizedImg
+                    file={file}
                     className="fixed left-[50%] top-[50%] z-50 h-fit max-h-[100dvh] w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
                   />
                   <DialogClose

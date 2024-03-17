@@ -51,7 +51,7 @@ export function UploadForm({
   const [isPending, startTransition] = useTransition();
   const [postUrl, setPostUrl] = useState<string>("");
   const [uploadFailed, setUploadFailed] = useState<boolean>(false);
-  const blobURL = URL.createObjectURL(file);
+  const [blobUrl, setBlobUrl] = useState(URL.createObjectURL(file));
 
   const form = useForm<z.infer<typeof UploadSchema>>({
     resolver: zodResolver(UploadSchema),
@@ -139,7 +139,7 @@ export function UploadForm({
                   <DialogTrigger className="cursor-zoom-in">
                     <img
                       alt=""
-                      src={blobURL}
+                      src={blobUrl}
                       className="max-h-full max-w-full object-contain"
                     />
                   </DialogTrigger>
@@ -148,7 +148,7 @@ export function UploadForm({
                     <DialogContent>
                       <img
                         alt=""
-                        src={blobURL}
+                        src={blobUrl}
                         className="fixed left-[50%] top-[50%] z-50 h-fit max-h-[100dvh] w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
                       />
                       <DialogClose
