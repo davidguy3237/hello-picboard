@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
 import { newPost } from "@/actions/posts";
 import { searchTags } from "@/actions/search-tags";
 import { Button } from "@/components/ui/button";
@@ -37,8 +36,7 @@ import * as z from "zod";
 interface UploadFormProps {
   file: FileWithPath;
   removeFile: (file: FileWithPath) => void;
-  uploadedFiles: FileWithPath[];
-  setUploadedFiles: (file: FileWithPath[]) => void;
+  setUploadedFiles: React.Dispatch<React.SetStateAction<FileWithPath[]>>;
 }
 interface TagOption {
   value: string;
@@ -48,7 +46,6 @@ interface TagOption {
 export function UploadForm({
   file,
   removeFile,
-  uploadedFiles,
   setUploadedFiles,
 }: UploadFormProps) {
   const [isPending, startTransition] = useTransition();
@@ -98,7 +95,7 @@ export function UploadForm({
         console.error(newPostResult);
         toast.error("Error: " + newPostResult.error);
       } else if (newPostResult.success) {
-        setUploadedFiles([...uploadedFiles, file]);
+        setUploadedFiles((prev) => [...prev, file]);
         setPostUrl(newPostResult.success.postUrl);
       }
     });
@@ -139,7 +136,7 @@ export function UploadForm({
             render={({ field }) => (
               <FormItem className=" flex h-full basis-1/4 flex-col items-center justify-center pr-2">
                 <Dialog>
-                  <DialogTrigger>
+                  <DialogTrigger className="cursor-zoom-in">
                     <img
                       alt=""
                       src={blobURL}
@@ -237,7 +234,7 @@ export function UploadForm({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Description (optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}

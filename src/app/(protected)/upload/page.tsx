@@ -1,4 +1,5 @@
 "use client";
+import { BatchUpload } from "@/app/(protected)/upload/components/batch-upload-form";
 import { UploadForm } from "@/app/(protected)/upload/components/upload-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { toast } from "sonner";
 export default function UploadPage() {
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<FileWithPath[]>([]);
+  const [renderGroupUpload, setRenderGroupUpload] = useState<boolean>(false);
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (rejectedFiles.length > 0) {
@@ -49,6 +51,9 @@ export default function UploadPage() {
 
   const removeFile = (file: FileWithPath) => {
     const updatedFiles = files.filter((f) => f !== file);
+    if (updatedFiles.length === 0) {
+      setRenderGroupUpload(false);
+    }
     setFiles(updatedFiles);
   };
 
@@ -59,15 +64,34 @@ export default function UploadPage() {
 
   return files.length > 0 ? (
     <div className="my-4 flex w-full max-w-screen-md flex-col items-center justify-start gap-4">
-      {files.map((file: FileWithPath) => (
-        <UploadForm
-          key={file.path}
-          file={file}
+      {renderGroupUpload ? (
+        <BatchUpload
+          files={files}
           removeFile={removeFile}
           uploadedFiles={uploadedFiles}
           setUploadedFiles={setUploadedFiles}
         />
-      ))}
+      ) : (
+        <>
+          <Button
+            className={cn(
+              "hidden",
+              !renderGroupUpload && files.length >= 2 && "block",
+            )}
+            onClick={() => setRenderGroupUpload(true)}
+          >
+            Batch Upload
+          </Button>
+          {files.map((file: FileWithPath) => (
+            <UploadForm
+              key={file.path}
+              file={file}
+              removeFile={removeFile}
+              setUploadedFiles={setUploadedFiles}
+            />
+          ))}
+        </>
+      )}
       {files.length === uploadedFiles.length && (
         <Button size="lg" onClick={resetFiles} className="mb-4 flex-shrink-0">
           Upload More

@@ -154,6 +154,31 @@ export const UploadSchema = z
     path: ["tags"],
   });
 
+export const GroupUploadSchema = z.object({
+  tags: z.array(z.string()).min(1, { message: "Must include at least 1 tag" }),
+  description: z.optional(
+    z
+      .string()
+      .max(500, { message: "Description must be 500 characters or fewer" }),
+  ),
+  images: z.array(
+    z
+      .instanceof(File)
+      .refine(
+        (file) => {
+          return file.size <= 1024 * 1024 * 4;
+        },
+        { message: "Image must be 4MB or smaller" },
+      )
+      .refine(
+        async (file) => {
+          return await isValidImageFile(file);
+        },
+        { message: "Must be valid JPEG or PNG file" },
+      ),
+  ),
+});
+
 export const NewPostSchema = z
   .object({
     publicId: z.string(),
