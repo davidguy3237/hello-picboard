@@ -61,23 +61,25 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
         expandView && " max-w-full lg:px-4",
       )}
     >
-      <Tooltip>
-        <TooltipTrigger className="m-1 self-end" asChild>
-          <Button
-            size="icon"
-            variant="ghost"
-            onClick={() => setExpandView(!expandView)}
-            disabled={posts.length === 0 || isLoading}
-            aria-label={expandView ? "Normal View" : "Expand View"}
-            className="hidden md:inline-flex"
-          >
-            {expandView ? <Grid2X2 /> : <Grid3X3 />}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          {expandView ? "Normal View" : "Expand View"}
-        </TooltipContent>
-      </Tooltip>
+      <div className="sticky top-0 z-10 flex  w-full items-center justify-end bg-background">
+        <Tooltip>
+          <TooltipTrigger className="m-1 self-end" asChild>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => setExpandView(!expandView)}
+              disabled={posts.length === 0 || isLoading}
+              aria-label={expandView ? "Normal View" : "Expand View"}
+              className="hidden md:inline-flex"
+            >
+              {expandView ? <Grid2X2 /> : <Grid3X3 />}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            {expandView ? "Normal View" : "Expand View"}
+          </TooltipContent>
+        </Tooltip>
+      </div>
       {posts.length ? (
         <div
           className={cn(
