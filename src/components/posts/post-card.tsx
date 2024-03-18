@@ -10,6 +10,7 @@ interface PostProps {
   id: string;
   userId: string;
   publicId: string;
+  sourceUrl: string;
   thumbnailUrl: string;
   expandView: boolean;
   toggleSelectDelete?: boolean;
@@ -23,6 +24,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
       id,
       userId,
       publicId,
+      sourceUrl,
       thumbnailUrl,
       expandView,
       toggleSelectDelete,
@@ -132,6 +134,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
             postId={id}
             userId={userId}
             publicId={publicId}
+            sourceUrl={sourceUrl}
             isInvisible={true}
             classNames="text-white hidden md:flex"
           />

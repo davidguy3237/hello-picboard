@@ -80,6 +80,7 @@ export default async function InterceptedPostPage({
             postId={post.id}
             userId={post.userId || ""}
             publicId={post.publicId}
+            sourceUrl={post.sourceUrl}
           />
           {post.user ? (
             <Link

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/popover";
 import useCurrentUser from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
-import { Copy, MoreHorizontal, Pencil } from "lucide-react";
+import { Copy, Download, MoreHorizontal, Pencil } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { SaveToAlbumModal } from "./save-to-album-modal";
@@ -20,6 +20,7 @@ interface OptionsPopoverProps {
   publicId: string;
   isInvisible?: boolean;
   classNames?: string;
+  sourceUrl: string;
 }
 
 export function OptionsPopover({
@@ -28,6 +29,7 @@ export function OptionsPopover({
   publicId,
   isInvisible,
   classNames,
+  sourceUrl,
 }: OptionsPopoverProps) {
   const currentUser = useCurrentUser();
   const writeURLToClipboard = async () => {
@@ -43,6 +45,20 @@ export function OptionsPopover({
       toast.error(message);
       return;
     }
+  };
+
+  const handleDownload = async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${sourceUrl}`,
+      { method: "GET", cache: "no-cache" },
+    );
+    const blob = await response.blob();
+    const href = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = href;
+    a.download = `${sourceUrl}`;
+    a.click();
   };
 
   return (
@@ -66,6 +82,17 @@ export function OptionsPopover({
           <Copy className="mr-2 h-4 w-4" />
           Copy URL
         </Button>
+        {currentUser && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDownload}
+            className="flex w-full justify-between active:bg-background"
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Download
+          </Button>
+        )}
         <SaveToAlbumModal postId={postId} />
         <ReportButton postId={postId} />
         {userId === currentUser?.id && (

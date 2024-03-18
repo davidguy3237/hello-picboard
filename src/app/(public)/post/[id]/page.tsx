@@ -86,6 +86,7 @@ export default async function PostPage({ params }: PostPageProps) {
           postId={post.id}
           userId={post.userId || ""}
           publicId={post.publicId}
+          sourceUrl={post.sourceUrl}
         />
         {post.user ? (
           <Link
