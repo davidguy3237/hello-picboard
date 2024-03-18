@@ -7,7 +7,7 @@ interface PublicLayoutProps {
 
 export default function PublicLayout({ children, modal }: PublicLayoutProps) {
   return (
-    <div className="relative flex h-full w-full flex-col items-center">
+    <div className="relative flex w-full flex-col items-center">
       <Navbar />
       {children}
       {modal}
