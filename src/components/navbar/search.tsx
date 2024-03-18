@@ -140,8 +140,13 @@ export function Search() {
           onBlur={() => setShowDropdown(false)}
           id="search"
         />
+        {searchSuggestions.length === 0 && showDropdown && !isPending && (
+          <div className="absolute z-10 mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background italic text-muted-foreground">
+            To search for more than one tag, separate each tag with a comma.
+          </div>
+        )}
         {isPending && (
-          <div className="absolute z-10 mt-2 flex h-8 w-full items-center justify-center rounded-md border bg-background">
+          <div className="absolute z-10 mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background">
             <Loader2 className="animate-spin" />
           </div>
         )}
