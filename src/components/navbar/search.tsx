@@ -130,7 +130,7 @@ export function Search() {
           <SearchIcon strokeWidth={3} />
         </Button>
         <Input
-          placeholder="Search for posts..."
+          placeholder="Search for tags"
           minLength={3}
           className="peer flex-grow placeholder:italic"
           name="search"

@@ -203,7 +203,7 @@ export async function removeManyPostsFromAlbum(
     };
   }
   // TODO: for some reason this is not revalidating
-  revalidatePath(`/user/${user.name}/albums/${albumPublicId}`);
+  // revalidatePath(`/user/${user.name}/albums/${albumPublicId}`);
 
   return {
     success: "Successfully removed posts from album",
