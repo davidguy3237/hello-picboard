@@ -1,6 +1,9 @@
 "use client";
-import { createNewAlbum } from "@/actions/albums";
-import { addPostToAlbum, removePostToAlbum } from "@/actions/albums";
+import {
+  addPostToAlbum,
+  createNewAlbum,
+  removePostToAlbum,
+} from "@/actions/albums";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -22,14 +25,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useCurrentUser from "@/hooks/use-current-user";
 import { NewAlbumSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Album, PostsAlbums } from "@prisma/client";
 import { AlbumIcon, Loader2, Plus } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { ScrollArea } from "../ui/scroll-area";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 interface SaveToAlbumModalProps {
   postId: string;
@@ -113,39 +115,37 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
         <DialogHeader>
           <DialogTitle>Save To Album</DialogTitle>
         </DialogHeader>
-        <ScrollArea>
-          <div className="max-h-[400px] w-full space-y-2 py-4">
-            {albums.length ? (
-              albums.map((album) => (
-                <div
-                  key={album.id}
-                  className="flex w-full items-center space-x-2"
-                >
-                  <Checkbox
-                    id={album.id}
-                    defaultChecked={album.posts.some(
-                      (post) => post.postId === postId,
-                    )}
-                    onCheckedChange={(checked) =>
-                      handleChecked(album.id, checked)
-                    }
-                  />
-                  <Label htmlFor={album.id} className="text-sm font-medium ">
-                    {album.name}
-                  </Label>
-                </div>
-              ))
-            ) : isLoading ? (
-              <div className="flex w-full items-center justify-center">
-                <Loader2 className="h-4 w-4 animate-spin text-center" />
+        <div className="max-h-[400px] w-full space-y-2 overflow-y-auto overflow-x-hidden py-4">
+          {albums.length ? (
+            albums.map((album) => (
+              <div
+                key={album.id}
+                className="flex w-full items-center space-x-2"
+              >
+                <Checkbox
+                  id={album.id}
+                  defaultChecked={album.posts.some(
+                    (post) => post.postId === postId,
+                  )}
+                  onCheckedChange={(checked) =>
+                    handleChecked(album.id, checked)
+                  }
+                />
+                <Label htmlFor={album.id} className="text-sm font-medium ">
+                  {album.name}
+                </Label>
               </div>
-            ) : (
-              <div className="flex w-full items-center justify-center text-sm font-medium italic text-muted-foreground">
-                <p>You have no albums...</p>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+            ))
+          ) : isLoading ? (
+            <div className="flex w-full items-center justify-center">
+              <Loader2 className="h-4 w-4 animate-spin text-center" />
+            </div>
+          ) : (
+            <div className="flex w-full items-center justify-center text-sm font-medium italic text-muted-foreground">
+              <p>You have no albums...</p>
+            </div>
+          )}
+        </div>
         {showForm ? (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
