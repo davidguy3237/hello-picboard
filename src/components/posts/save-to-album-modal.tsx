@@ -2,7 +2,7 @@
 import {
   addPostToAlbum,
   createNewAlbum,
-  removePostToAlbum,
+  removePostFromAlbum,
 } from "@/actions/albums";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -82,16 +82,28 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
     });
   };
 
-  const handleChecked = (
-    albumId: string,
+  const handleChecked = async (
     checked: boolean | "indeterminate",
+    albumId: string,
+    albumName: string,
   ) => {
     if (checked === "indeterminate") {
       return;
     } else if (checked) {
-      addPostToAlbum(albumId, postId);
+      const addPostToAlbumResults = await addPostToAlbum(albumId, postId);
+
+      if (!addPostToAlbumResults.success) {
+        toast.error(`Failed to add post to album: ${albumName}`);
+      }
     } else {
-      removePostToAlbum(albumId, postId);
+      const removePostFromAlbumResults = await removePostFromAlbum(
+        albumId,
+        postId,
+      );
+
+      if (!removePostFromAlbumResults.success) {
+        toast.error(`Failed to remove post from album: ${albumName}`);
+      }
     }
   };
 
@@ -128,7 +140,7 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
                     (post) => post.postId === postId,
                   )}
                   onCheckedChange={(checked) =>
-                    handleChecked(album.id, checked)
+                    handleChecked(checked, album.id, album.name)
                   }
                 />
                 <Label htmlFor={album.id} className="text-sm font-medium ">

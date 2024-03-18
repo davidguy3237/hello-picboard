@@ -35,23 +35,28 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
     notFound();
   }
 
-  const queryString = `albumId=${album.id}`;
   return (
     <div className="flex h-full w-full items-center overflow-y-auto">
-      <Link
-        href={`/user/${dbUser.name}/albums`}
-        className={cn(buttonVariants({ variant: "ghost" }), "m-1 h-full p-0")}
-      >
-        <ChevronLeft size={32} />
-      </Link>
       <div className=" flex h-full w-full flex-col items-center overflow-y-auto">
-        <div className="flex w-full flex-col items-center p-2 text-center text-lg font-medium">
-          <p>{album.name}</p>
-          <Separator className="w-1/2" />
+        <div className="relative flex w-full items-center p-2">
+          <Link
+            href={`/user/${dbUser.name}/albums`}
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "absolute left-0 p-0",
+            )}
+          >
+            <ChevronLeft size={32} />
+          </Link>
+          <div className="flex w-full flex-col items-center justify-center">
+            <p className=" text-lg font-medium">{album.name}</p>
+            <Separator className="w-1/2" />
+          </div>
         </div>
         <AlbumsPostCardList
-          queryString={queryString}
           endpoint="/api/posts/infinite/albums"
+          albumId={album.id}
+          albumPublicId={album.publicId}
         />
       </div>
     </div>

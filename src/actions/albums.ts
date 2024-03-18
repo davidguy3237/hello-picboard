@@ -137,12 +137,18 @@ export async function addPostToAlbum(albumId: string, postId: string) {
     },
   });
 
+  if (!album) {
+    return {
+      error: "Could not add post to album",
+    };
+  }
+
   return {
-    success: true,
+    success: album,
   };
 }
 
-export async function removePostToAlbum(albumId: string, postId: string) {
+export async function removePostFromAlbum(albumId: string, postId: string) {
   const user = await currentUser();
   if (!user) {
     return {
@@ -159,7 +165,47 @@ export async function removePostToAlbum(albumId: string, postId: string) {
     },
   });
 
+  if (!postsAlbum) {
+    return {
+      error: "Could not remove post from album",
+    };
+  }
+
   return {
     success: true,
+  };
+}
+
+export async function removeManyPostsFromAlbum(
+  albumId: string,
+  albumPublicId: string,
+  postIds: string[],
+) {
+  const user = await currentUser();
+  if (!user) {
+    return {
+      error: "Unauthorized",
+    };
+  }
+
+  const postsAlbums = await db.postsAlbums.deleteMany({
+    where: {
+      postId: {
+        in: postIds,
+      },
+      albumId,
+    },
+  });
+
+  if (!postsAlbums) {
+    return {
+      error: "Could not remove posts from album",
+    };
+  }
+  // TODO: for some reason this is not revalidating
+  revalidatePath(`/user/${user.name}/albums/${albumPublicId}`);
+
+  return {
+    success: "Successfully removed posts from album",
   };
 }

@@ -133,7 +133,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
 
   // TODO: I might need to refactor the forms into smaller components
   return (
-    <Card className="mt-4 w-full min-w-9 max-w-screen-md p-4 shadow-lg">
+    <Card className="mt-4 w-full min-w-9 max-w-screen-md p-4 text-sm shadow-lg">
       <CardContent>
         <div className="flex flex-col items-center justify-center space-y-2">
           <Avatar className="h-24 w-24">
@@ -163,11 +163,11 @@ export function SettingsForm({ user }: SettingsFormProps) {
         <div className="mt-4 divide-y">
           <div className="grid grid-cols-3 items-center p-2">
             <span className="py-2 text-muted-foreground">Email</span>
-            <span className="font-medium">{user.email}</span>
+            <span className="truncate font-medium">{user.email}</span>
           </div>
           <div className="grid grid-cols-3 items-center p-2">
             <span className="py-2 text-muted-foreground">Username</span>
-            <span className="font-medium">{user.name}</span>
+            <span className="truncate font-medium">{user.name}</span>
             <Dialog
               open={usernameDialogOpen}
               onOpenChange={setUsernameDialogOpen}

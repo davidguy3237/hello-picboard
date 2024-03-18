@@ -1,21 +1,9 @@
 "use client";
+import { deleteManyPosts } from "@/actions/posts";
 import { PostCard } from "@/components/posts/post-card";
 import { PostCardListSkeleton } from "@/components/skeletons/skeleton-post-card-list";
-import { Button, buttonVariants } from "@/components/ui/button";
-import usePostsSearch from "@/hooks/use-posts-search";
-import { cn } from "@/lib/utils";
-import { Grid2X2, Grid3X3, Loader2, Loader2Icon, Trash2 } from "lucide-react";
-import { useCallback, useRef, useState, useTransition } from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { usePathname } from "next/navigation";
-import useCurrentUser from "@/hooks/use-current-user";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -23,8 +11,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../ui/alert-dialog";
-import { deleteManyPosts } from "@/actions/posts";
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import useCurrentUser from "@/hooks/use-current-user";
+import usePostsSearch from "@/hooks/use-posts-search";
+import { cn } from "@/lib/utils";
+import { Grid2X2, Grid3X3, Loader2, Loader2Icon, Trash2 } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useCallback, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 export function PostCardList({
@@ -101,10 +100,10 @@ export function PostCardList({
     >
       <div
         className={cn(
-          "flex w-full items-center justify-end",
+          "flex w-full items-center justify-end bg-background",
           user &&
             pathname.includes(`/user/${user.name}/posts`) &&
-            "justify-between",
+            "sticky top-0 z-10 justify-between ",
         )}
       >
         {user &&
