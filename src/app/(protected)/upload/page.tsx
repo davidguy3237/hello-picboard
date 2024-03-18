@@ -58,6 +58,7 @@ export default function UploadPage() {
   };
 
   const resetFiles = () => {
+    setRenderBatchUpload(false);
     setFiles([]);
     setUploadedFiles([]);
   };
