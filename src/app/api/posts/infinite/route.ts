@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const searchParams = new URL(req.url).searchParams;
   const cursor = searchParams.get("cursor");
 
-  const query = searchParams.get("query");
+  const query = searchParams.get("query") || undefined;
   const sortBy = searchParams.get("sort") || "desc";
   const isStrictSearch = searchParams.get("strict") === "true";
   const fromDate = searchParams.get("from");
@@ -68,52 +68,59 @@ export async function GET(req: NextRequest) {
       );
   }
 
-  const whereClause: WhereClause = {
-    AND: tagsToSearch?.map((tag) => ({
-      tags: {
-        some: {
-          name: {
-            search: tag,
+  if (!validatedParams.success) {
+    console.log(validatedParams.error);
+  }
+
+  const whereClause: WhereClause = { AND: [] };
+
+  if (tagsToSearch?.length) {
+    whereClause.AND.push(
+      ...tagsToSearch.map((tag) => ({
+        tags: {
+          some: {
+            name: {
+              search: tag,
+            },
           },
         },
-      },
-    })),
-  };
+      })),
+    );
+  }
 
-  if (whereClause.AND) {
+  if (validatedFromDate) {
     const dateFilter: DateFilterConditional = {
       createdAt: validatedFromDate && {
         gte: validatedFromDate ? new Date(validatedFromDate) : undefined,
         lte: validatedToDate ? new Date(validatedToDate) : undefined,
       },
     };
-
     whereClause.AND.push(dateFilter);
+  }
 
-    if (validatedIsStrictSearch) {
-      const strictSearch: StrictSearchConditional = {
-        tags: {
-          some: {
-            NOT: {
-              name: {
-                in: originalTagsToSearch,
-                mode: "insensitive",
-              },
+  if (validatedIsStrictSearch) {
+    const strictSearch: StrictSearchConditional = {
+      tags: {
+        some: {
+          NOT: {
+            name: {
+              in: originalTagsToSearch,
+              mode: "insensitive",
             },
           },
         },
-      };
-
-      whereClause.NOT = strictSearch;
-    }
-  } else if (username && !whereClause.AND) {
-    whereClause.AND = [
-      {
-        user: {
-          name: username,
-        },
       },
-    ];
+    };
+
+    whereClause.NOT = strictSearch;
+  }
+
+  if (username) {
+    whereClause.AND.push({
+      user: {
+        name: username,
+      },
+    });
   }
 
   const posts = await db.post.findMany({

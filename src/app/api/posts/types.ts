@@ -43,8 +43,11 @@ export interface FavoritesQuery {
 }
 
 export interface WhereClause {
-  AND:
-    | (TagsQuery | DateFilterConditional | UserSpecificQuery | FavoritesQuery)[]
-    | undefined;
+  AND: (
+    | TagsQuery
+    | DateFilterConditional
+    | UserSpecificQuery
+    | FavoritesQuery
+  )[];
   NOT?: StrictSearchConditional | undefined;
 }

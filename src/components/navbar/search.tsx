@@ -23,7 +23,7 @@ export function Search() {
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setShowDropdown(true);
@@ -78,7 +78,7 @@ export function Search() {
     const searchValue = target.search.value;
 
     const searchObj = {
-      query: searchValue,
+      query: searchValue || undefined,
       isStrictSearch,
       sortBy,
       dateRange,
@@ -88,7 +88,7 @@ export function Search() {
     if (validatedFields.success) {
       const { query, isStrictSearch, sortBy, dateRange } = validatedFields.data;
       const params = new URLSearchParams();
-      params.set("query", query);
+      params.set("query", query || "");
       if (isStrictSearch) {
         params.set("strict", isStrictSearch.toString());
       }
@@ -99,8 +99,7 @@ export function Search() {
         params.set("from", dateRange.from.toISOString());
         dateRange.to && params.set("to", dateRange.to.toISOString());
       }
-
-      replace(`${pathname}?${params.toString()}`);
+      router.replace(`${pathname}?${params.toString()}`);
     } else if (validatedFields.error) {
       console.error(validatedFields.error);
     }
@@ -116,6 +115,10 @@ export function Search() {
       setSortBy(undefined);
     }
   };
+
+  if (pathname.includes("/albums") || pathname.includes("/favorites")) {
+    return null;
+  }
 
   return (
     <div className="relative flex w-full max-w-screen-sm gap-x-2">
@@ -141,17 +144,17 @@ export function Search() {
           id="search"
         />
         {searchSuggestions.length === 0 && showDropdown && !isPending && (
-          <div className="absolute z-10 mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background italic text-muted-foreground">
+          <div className="absolute mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background italic text-muted-foreground">
             To search for more than one tag, separate each tag with a comma.
           </div>
         )}
         {isPending && (
-          <div className="absolute z-10 mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background">
+          <div className="absolute mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background">
             <Loader2 className="animate-spin" />
           </div>
         )}
         {searchSuggestions.length > 0 && showDropdown && (
-          <div className="absolute z-10 mt-2 h-fit w-full">
+          <div className="absolute mt-2 h-fit w-full">
             <ScrollArea className="rounded-md border bg-background">
               <ul className="max-h-40 w-full">
                 {searchSuggestions.map((suggestion) => (

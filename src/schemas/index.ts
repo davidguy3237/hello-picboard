@@ -224,7 +224,9 @@ export const EditPostSchema = z.object({
 });
 
 export const SearchSchema = z.object({
-  query: z.string().min(3),
+  query: z.optional(
+    z.string().min(3, { message: "Search must be at least 3 characters" }),
+  ),
   isStrictSearch: z.optional(z.boolean()),
   sortBy: z.optional(z.enum(["asc", "desc"])),
   dateRange: z.optional(
