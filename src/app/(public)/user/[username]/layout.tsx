@@ -17,7 +17,7 @@ export default async function UsernameLayout({
   const user = await currentUser();
   const dbUser = await db.user.findUnique({
     where: {
-      name: params.username,
+      name: decodeURIComponent(params.username),
     },
   });
 
