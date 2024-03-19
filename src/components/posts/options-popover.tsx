@@ -58,7 +58,20 @@ export function OptionsPopover({
     document.body.appendChild(a);
     a.href = href;
     a.download = `${sourceUrl}`;
+    a.id = "temporary-download-link";
+
+    const downloadLink = document.getElementById("temporary-download-link");
+
+    const removeAnchorTag = () => {
+      if (downloadLink) {
+        document.body.removeChild(downloadLink);
+        downloadLink.removeEventListener("click", removeAnchorTag);
+      }
+    };
+
+    downloadLink?.addEventListener("click", removeAnchorTag);
     a.click();
+    URL.revokeObjectURL(href);
   };
 
   return (
