@@ -154,7 +154,7 @@ export const UploadSchema = z
     path: ["tags"],
   });
 
-export const GroupUploadSchema = z.object({
+export const BatchUploadSchema = z.object({
   tags: z.array(z.string()).min(1, { message: "Must include at least 1 tag" }),
   description: z.optional(
     z

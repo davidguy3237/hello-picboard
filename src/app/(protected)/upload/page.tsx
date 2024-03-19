@@ -45,7 +45,7 @@ export default function UploadPage() {
   const { getRootProps, getInputProps, isDragReject, isDragAccept } =
     useDropzone({
       onDrop,
-      maxFiles: 10,
+      maxFiles: 200,
       validator: validateFile,
     });
 
@@ -120,7 +120,7 @@ export default function UploadPage() {
                 </span>{" "}
                 or drag and drop
               </p>
-              <p>up to 10 images (JPG or PNG only), 4MB per file</p>
+              <p>up to 200 images (JPG or PNG only), 4MB per file</p>
             </div>
           </div>
         </CardContent>

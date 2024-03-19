@@ -28,7 +28,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useDebounceFunction } from "@/hooks/use-debounce";
 import { cn, writeReadableFileSize } from "@/lib/utils";
-import { GroupUploadSchema } from "@/schemas";
+import { BatchUploadSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogContent } from "@radix-ui/react-dialog";
 import { Check, Loader2, Trash2, X } from "lucide-react";
@@ -61,8 +61,8 @@ export function BatchUpload({
 }: GroupUploadProps) {
   const [isPending, startTransition] = useTransition();
   const [failedUploads, setFailedUploads] = useState<FileWithPath[]>([]);
-  const form = useForm<z.infer<typeof GroupUploadSchema>>({
-    resolver: zodResolver(GroupUploadSchema),
+  const form = useForm<z.infer<typeof BatchUploadSchema>>({
+    resolver: zodResolver(BatchUploadSchema),
     defaultValues: {
       tags: [],
       description: "",
@@ -93,7 +93,7 @@ export function BatchUpload({
 
   const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 300);
 
-  const onSubmit = (batchUploadData: z.infer<typeof GroupUploadSchema>) => {
+  const onSubmit = (batchUploadData: z.infer<typeof BatchUploadSchema>) => {
     startTransition(async () => {
       for (let i = 0; i < batchUploadData.images.length; i++) {
         const image = batchUploadData.images[i];
@@ -228,82 +228,83 @@ export function BatchUpload({
                 Upload All
               </Button>
             </div>
-            <Separator />
           </form>
         </Form>
-        {files.map((file) => (
-          <div
-            key={file.name}
-            className="mt-4 flex items-center justify-between rounded-lg border p-2"
-          >
-            <Dialog>
-              <DialogTrigger className="grid h-10 w-10 cursor-zoom-in place-items-center">
-                <MemoizedImg
-                  file={file}
-                  className="max-h-10 max-w-10 object-contain"
-                />
-              </DialogTrigger>
-              <DialogPortal>
-                <DialogOverlay />
-                <DialogContent>
+        <div className=" mt-4 divide-y rounded-lg border">
+          {files.map((file) => (
+            <div
+              key={file.name}
+              className="flex items-center justify-between p-1"
+            >
+              <Dialog>
+                <DialogTrigger className="grid h-10 w-10 cursor-zoom-in place-items-center">
                   <MemoizedImg
                     file={file}
-                    className="fixed left-[50%] top-[50%] z-50 h-fit max-h-[100dvh] w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
+                    className="max-h-10 max-w-10 object-contain"
                   />
-                  <DialogClose
-                    className="absolute right-4 top-4 z-50 text-white"
-                    aria-label="Close"
-                  >
-                    <X />
-                  </DialogClose>
-                </DialogContent>
-              </DialogPortal>
-            </Dialog>
-            <p className="flex w-2/3 gap-1">
-              <span className="truncate">{file.name}</span>
-              <span> - </span>
-              <span className="shrink-0">
-                {writeReadableFileSize(file.size)}
-              </span>
-            </p>
-            {isPending &&
-            !uploadedFiles.includes(file) &&
-            !failedUploads.includes(file) ? (
-              <Loader2
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "icon" }),
-                  "shrink-0 animate-spin hover:bg-transparent",
-                )}
-              />
-            ) : uploadedFiles.includes(file) ? (
-              <Check
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "icon" }),
-                  "shrink-0 text-green-500 duration-500 animate-in fade-in zoom-in hover:bg-transparent hover:text-green-500",
-                )}
-              />
-            ) : failedUploads.includes(file) ? (
-              <X
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "icon" }),
-                  "shrink-0 text-destructive duration-500 animate-in fade-in zoom-in hover:bg-transparent hover:text-destructive",
-                )}
-              />
-            ) : (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  removeFile(file);
-                }}
-                disabled={isPending}
-                className="shrink-0 hover:bg-destructive hover:text-destructive-foreground"
-              >
-                <Trash2 />
-              </Button>
-            )}
-          </div>
-        ))}
+                </DialogTrigger>
+                <DialogPortal>
+                  <DialogOverlay />
+                  <DialogContent>
+                    <MemoizedImg
+                      file={file}
+                      className="fixed left-[50%] top-[50%] z-50 h-fit max-h-[100dvh] w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
+                    />
+                    <DialogClose
+                      className="absolute right-4 top-4 z-50 text-white"
+                      aria-label="Close"
+                    >
+                      <X />
+                    </DialogClose>
+                  </DialogContent>
+                </DialogPortal>
+              </Dialog>
+              <p className="flex w-2/3 gap-1">
+                <span className="truncate">{file.name}</span>
+                <span> - </span>
+                <span className="shrink-0">
+                  {writeReadableFileSize(file.size)}
+                </span>
+              </p>
+              {isPending &&
+              !uploadedFiles.includes(file) &&
+              !failedUploads.includes(file) ? (
+                <Loader2
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "shrink-0 animate-spin hover:bg-transparent",
+                  )}
+                />
+              ) : uploadedFiles.includes(file) ? (
+                <Check
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "shrink-0 text-green-500 duration-500 animate-in fade-in zoom-in hover:bg-transparent hover:text-green-500",
+                  )}
+                />
+              ) : failedUploads.includes(file) ? (
+                <X
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "shrink-0 text-destructive duration-500 animate-in fade-in zoom-in hover:bg-transparent hover:text-destructive",
+                  )}
+                />
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    removeFile(file);
+                  }}
+                  disabled={isPending}
+                  className="shrink-0 hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  <Trash2 />
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
