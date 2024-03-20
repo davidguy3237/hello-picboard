@@ -170,8 +170,12 @@ export function UploadForm({
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex w-full basis-3/4 flex-col gap-y-1 border-l pl-2"
           >
-            <div>
-              {file.path} - {writeReadableFileSize(file.size)}
+            <div className="flex w-11/12 items-center">
+              <span className="max-w-3/4 truncate">{file.name}</span>
+              <span>&nbsp;-&nbsp;</span>
+              <span className="shrink-0">
+                {writeReadableFileSize(file.size)}
+              </span>
             </div>
             <FormField
               disabled={isPending || !!postUrl || uploadFailed}

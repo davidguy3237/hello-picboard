@@ -64,7 +64,7 @@ export default function UploadPage() {
   };
 
   return files.length > 0 ? (
-    <div className="my-4 flex w-full max-w-screen-md flex-col items-center justify-start gap-4">
+    <div className="my-4 flex w-full max-w-screen-md flex-col items-center justify-start gap-1">
       {renderBatchUpload ? (
         <BatchUpload
           files={files}
