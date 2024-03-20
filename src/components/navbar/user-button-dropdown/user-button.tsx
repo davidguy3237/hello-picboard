@@ -32,7 +32,7 @@ export function UserButton({ user }: UserButtonProps) {
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Profile">
         <Avatar className="mx-2" aria-label="Profile">
-          <AvatarImage src={avatarImageUrl || ""} />
+          <AvatarImage src={avatarImageUrl || ""} alt="Avatar Icon" />
           <AvatarFallback className="bg-foreground">
             <User className="text-background" />
           </AvatarFallback>

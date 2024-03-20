@@ -3,11 +3,11 @@ import { Skeleton } from "../ui/skeleton";
 
 export function PostCardListSkeleton({ classNames }: { classNames?: string }) {
   return (
-    <div className="flex w-full flex-row flex-wrap justify-center gap-1">
-      {[...Array(20)].map((x, i) => (
+    <div className="grid w-full grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-1 md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
+      {[...Array(40)].map((x, i) => (
         <div
           key={i}
-          className="relative flex h-96 w-72 flex-auto items-center justify-center overflow-hidden bg-secondary sm:rounded-sm"
+          className="relative flex h-32 flex-auto items-center justify-center overflow-hidden bg-muted sm:rounded-sm md:h-60 md:rounded-sm lg:h-96"
         >
           <div className="group h-full w-full">
             <Skeleton className="h-full w-full bg-muted" />

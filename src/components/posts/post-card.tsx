@@ -55,8 +55,8 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
         <div
           ref={ref}
           className={cn(
-            "relative h-56 overflow-hidden bg-muted sm:h-96 sm:rounded-sm",
-            expandView && "sm:h-56",
+            "relative h-32 overflow-hidden bg-muted md:h-60 md:rounded-sm lg:h-96",
+            expandView && "md:h-32 lg:h-56",
           )}
         >
           <div className="group h-full w-full">
@@ -98,8 +98,8 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
       <div
         ref={ref}
         className={cn(
-          "relative h-56 overflow-hidden bg-muted sm:h-96 sm:rounded-sm",
-          expandView && "sm:h-56",
+          "relative h-32 overflow-hidden bg-muted md:h-60 md:rounded-sm lg:h-96",
+          expandView && "md:h-32 lg:h-56",
         )}
       >
         <div className="group h-full w-full">

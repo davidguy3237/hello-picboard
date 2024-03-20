@@ -186,8 +186,9 @@ export function PostCardList({
       {posts.length ? (
         <div
           className={cn(
-            "grid w-full grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]",
-            expandView && "sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]",
+            "grid w-full grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-1 md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]",
+            expandView &&
+              "md:grid-cols-[repeat(auto-fill,minmax(110px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]",
           )}
         >
           {posts.map((post, i) => {
