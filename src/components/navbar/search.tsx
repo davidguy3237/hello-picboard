@@ -99,7 +99,12 @@ export function Search() {
         params.set("from", dateRange.from.toISOString());
         dateRange.to && params.set("to", dateRange.to.toISOString());
       }
-      router.replace(`${pathname}?${params.toString()}`);
+
+      if (pathname.includes("/post/")) {
+        router.push(`/home?${params.toString()}`);
+      } else {
+        router.replace(`${pathname}?${params.toString()}`);
+      }
     } else if (validatedFields.error) {
       console.error(validatedFields.error);
     }
