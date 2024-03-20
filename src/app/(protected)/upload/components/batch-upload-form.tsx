@@ -79,15 +79,15 @@ export function BatchUpload({
     callback: (options: TagOption[]) => void,
   ) => {
     if (inputValue.length >= 3 && inputValue.length <= 40) {
-      searchTags(inputValue).then((data) => {
-        if (data.error) {
+      fetch(`/api/tags?tag=${inputValue}`).then((res) => {
+        if (!res.ok) {
           callback([]);
-        } else if (data.success) {
-          callback(data.success);
+        } else {
+          res.json().then((data) => {
+            callback(data);
+          });
         }
       });
-    } else {
-      callback([]);
     }
   };
 
@@ -95,25 +95,39 @@ export function BatchUpload({
 
   const onSubmit = (batchUploadData: z.infer<typeof BatchUploadSchema>) => {
     startTransition(async () => {
+      const promises = [];
       for (let i = 0; i < batchUploadData.images.length; i++) {
-        const image = batchUploadData.images[i];
         const newPostData = new FormData();
+        const image = batchUploadData.images[i];
         newPostData.append("image", image);
         newPostData.append(
           "description",
           batchUploadData.description as string,
         );
         for (let i = 0; i < batchUploadData.tags.length; i++) {
-          newPostData.append("tags[]", batchUploadData.tags[i]);
+          const tag = batchUploadData.tags[i];
+          newPostData.append("tags[]", tag);
         }
-        const newPostResult = await newPost(newPostData);
-        if (!newPostResult.success) {
-          toast.error(`Error uploading ${image.name}: ${newPostResult.error}`);
-          setFailedUploads((prev) => [...prev, image]);
-        } else {
-          setUploadedFiles((prev) => [...prev, image]);
-        }
+
+        promises.push(
+          fetch("/api/posts/upload", {
+            method: "POST",
+            body: newPostData,
+          }).then((response) => {
+            if (!response.ok) {
+              toast.error(
+                `Error uploading ${image.name}: ${response.statusText}`,
+              );
+              setFailedUploads((prev) => [...prev, image]);
+            } else {
+              setUploadedFiles((prev) => [...prev, image]);
+            }
+          }),
+        );
       }
+
+      const results = await Promise.allSettled(promises);
+      console.log("results", results);
     });
   };
 

@@ -1,6 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { newPost } from "@/actions/posts";
-import { searchTags } from "@/actions/search-tags";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -67,21 +65,21 @@ export function UploadForm({
     callback: (options: TagOption[]) => void,
   ) => {
     if (inputValue.length >= 3 && inputValue.length <= 40) {
-      searchTags(inputValue).then((data) => {
-        if (data.error) {
+      fetch(`/api/tags?tag=${inputValue}`).then((res) => {
+        if (!res.ok) {
           callback([]);
-        } else if (data.success) {
-          callback(data.success);
+        } else {
+          res.json().then((data) => {
+            callback(data);
+          });
         }
       });
-    } else {
-      callback([]);
     }
   };
 
   const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 300);
 
-  const onSubmit = async (uploadData: z.infer<typeof UploadSchema>) => {
+  const onSubmit = (uploadData: z.infer<typeof UploadSchema>) => {
     startTransition(async () => {
       const newPostData = new FormData();
       newPostData.append("image", file);
@@ -89,14 +87,18 @@ export function UploadForm({
       for (let i = 0; i < uploadData.tags.length; i++) {
         newPostData.append("tags[]", uploadData.tags[i]);
       }
-      const newPostResult = await newPost(newPostData);
-      if (newPostResult.error) {
+      const response = await fetch("/api/posts/upload", {
+        method: "POST",
+        body: newPostData,
+      });
+
+      if (!response.ok) {
         setUploadFailed(true);
-        console.error(newPostResult);
-        toast.error("Error: " + newPostResult.error);
-      } else if (newPostResult.success) {
+        toast.error("Something went wrong uploading your image");
+      } else {
+        const data = await response.json();
         setUploadedFiles((prev) => [...prev, file]);
-        setPostUrl(newPostResult.success.postUrl);
+        setPostUrl(data.postUrl);
       }
     });
   };

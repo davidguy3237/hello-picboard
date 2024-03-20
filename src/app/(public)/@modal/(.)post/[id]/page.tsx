@@ -139,7 +139,7 @@ export default async function InterceptedPostPage({
           >
             {post.description || "No description"}
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-1">
             {post.tags
               .sort((a, b) => (a.name > b.name ? 1 : -1))
               .map((tag) => (
