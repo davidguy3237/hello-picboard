@@ -1,22 +1,26 @@
 "use client";
 
-import { searchTags } from "@/actions/search-tags";
 import { SearchFilter } from "@/components/navbar/search-filter";
 import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDebounceFunction } from "@/hooks/use-debounce";
+import { cn } from "@/lib/utils";
 import { SearchSchema } from "@/schemas";
 import { Loader2, SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useState, useTransition } from "react";
 import { DateRange } from "react-day-picker";
 
+interface TagOption {
+  value: string;
+  label: string;
+}
+
 export function Search() {
   // TODO: Search input should probably be set in state, but currently can't get it to work properly
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [isStrictSearch, setIsStrictSearch] = useState<boolean | undefined>();
   const [sortBy, setSortBy] = useState<"asc" | "desc" | undefined>();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -26,7 +30,6 @@ export function Search() {
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setShowDropdown(true);
     const inputValue = e.target.value;
     const inputValueArray = inputValue
       .trim()
@@ -34,15 +37,15 @@ export function Search() {
       .map((word) => word.trim());
     const lastSearchValue = inputValueArray[inputValueArray.length - 1];
     if (lastSearchValue.length >= 3) {
-      startTransition(() => {
-        searchTags(lastSearchValue).then((data) => {
-          if (data.error) {
-            setSearchSuggestions([]);
-          } else if (data.success) {
-            const results = data.success.map((tag) => tag.value);
-            setSearchSuggestions(results);
-          }
-        });
+      startTransition(async () => {
+        const res = await fetch(`/api/tags?tag=${lastSearchValue}`);
+        if (!res.ok) {
+          setSearchSuggestions([]);
+        } else {
+          const data = await res.json();
+          const results = data.map((tag: TagOption) => tag.value);
+          setSearchSuggestions(results);
+        }
       });
     } else {
       setSearchSuggestions([]);
@@ -62,12 +65,11 @@ export function Search() {
 
       inputValueArray.splice(inputValueArray.length - 1, 1, suggestion);
 
-      const newInputValue = inputValueArray.join(", ");
+      const newInputValue = inputValueArray.join(", ") + ", ";
 
       searchBar.value = newInputValue;
 
       setSearchSuggestions([]);
-      setShowDropdown(false);
     }
   };
 
@@ -113,6 +115,7 @@ export function Search() {
   const handleStrictSearch = (value: boolean) => {
     setIsStrictSearch(value);
   };
+
   const handleSortBy = (value: string) => {
     if (value === "asc" || value === "desc" || value === undefined) {
       setSortBy(value);
@@ -127,7 +130,11 @@ export function Search() {
 
   return (
     <div className="relative flex w-full max-w-screen-sm gap-x-2">
-      <form onSubmit={handleSubmit} className="relative w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="relative w-full"
+        autoComplete="off"
+      >
         <Button
           size="icon"
           variant="link"
@@ -144,37 +151,46 @@ export function Search() {
           name="search"
           onChange={debouncedHandleChange}
           defaultValue={searchParams.get("query")?.toString()}
-          onFocus={() => setShowDropdown(true)}
-          onBlur={() => setShowDropdown(false)}
           id="search"
         />
-        {searchSuggestions.length === 0 && showDropdown && !isPending && (
-          <div className="absolute mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background italic text-muted-foreground">
-            To search for more than one tag, separate each tag with a comma.
-          </div>
-        )}
-        {isPending && (
-          <div className="absolute mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background">
-            <Loader2 className="animate-spin" />
-          </div>
-        )}
-        {searchSuggestions.length > 0 && showDropdown && (
-          <div className="absolute mt-2 h-fit w-full">
-            <ScrollArea className="rounded-md border bg-background">
-              <ul className="max-h-40 w-full">
-                {searchSuggestions.map((suggestion) => (
-                  <li
-                    key={suggestion}
-                    onMouseDown={() => handleClick(suggestion)}
-                    className="flex h-8 items-center pl-2 hover:cursor-pointer hover:bg-secondary"
-                  >
-                    {suggestion}
-                  </li>
-                ))}
-              </ul>
-            </ScrollArea>
-          </div>
-        )}
+        <div
+          className={cn(
+            "invisible absolute mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background",
+            isPending && "peer-focus:visible",
+          )}
+        >
+          <Loader2 className="animate-spin" />
+        </div>
+        <div
+          className={cn(
+            "invisible absolute mt-2 flex min-h-9 w-full flex-wrap items-center justify-center rounded-md border bg-background italic text-muted-foreground",
+            searchSuggestions.length === 0 &&
+              !isPending &&
+              "peer-focus:visible",
+          )}
+        >
+          To search for more than one tag, separate each tag with a comma.
+        </div>
+        <div
+          className={cn(
+            "invisible absolute mt-2 h-fit w-full",
+            searchSuggestions.length > 0 && !isPending && "peer-focus:visible",
+          )}
+        >
+          <ScrollArea className="rounded-md border bg-background">
+            <ul className="max-h-40 w-full">
+              {searchSuggestions.map((suggestion) => (
+                <li
+                  key={suggestion}
+                  onMouseDown={() => handleClick(suggestion)}
+                  className="flex h-8 items-center pl-2 hover:cursor-pointer hover:bg-secondary"
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          </ScrollArea>
+        </div>
       </form>
       <SearchFilter
         isStrictSearch={isStrictSearch}
