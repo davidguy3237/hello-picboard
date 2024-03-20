@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   const dbUser = await getUserById(user.id);
 
   if (!dbUser) {
-    return { error: "Unauthorized" };
+    return NextResponse.json("Unauthorized", { status: 401 });
   }
 
   const formData = await req.formData();
@@ -109,7 +109,10 @@ export async function POST(req: NextRequest) {
     await s3.send(putSource);
     await s3.send(putThumbnail);
   } catch (error) {
-    return { error: "Failed to upload image", details: error };
+    return NextResponse.json(
+      { error: "Failed to upload image", details: error },
+      { status: 500 },
+    );
   }
   const sourceUrl = `${publicId}${sourcefileExtension}`;
   const thumbnailUrl = `${folderName}/${thumbnailName}${thumbnailFileExtension}`;
