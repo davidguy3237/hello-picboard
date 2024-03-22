@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -36,7 +34,7 @@ export function SearchFilter({
           variant="ghost"
           size="icon"
           className=" shrink-0 active:bg-background"
-          aria-label="Filter"
+          aria-label="Search Filters"
         >
           <SlidersHorizontal />
         </Button>

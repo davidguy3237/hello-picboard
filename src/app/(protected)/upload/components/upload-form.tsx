@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -77,7 +76,7 @@ export function UploadForm({
     }
   };
 
-  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 300);
+  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 200);
 
   const onSubmit = (uploadData: z.infer<typeof UploadSchema>) => {
     startTransition(async () => {
@@ -104,71 +103,61 @@ export function UploadForm({
   };
 
   return (
-    <Card className="flex h-full w-full items-center">
-      <CardContent className="relative flex h-full w-full p-2">
-        {(isPending || !!postUrl) && (
-          <div
-            className={cn(
-              "absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-lg bg-muted/50 backdrop-blur-sm",
-            )}
+    <div className="relative w-full py-2">
+      {(isPending || !!postUrl) && (
+        <div
+          className={cn(
+            "absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-lg bg-muted/50 backdrop-blur-sm",
+          )}
+        >
+          {isPending ? (
+            <Loader2 size={48} className="animate-spin" />
+          ) : !!postUrl ? (
+            <div className="flex flex-col items-center justify-center">
+              <CheckCircle
+                size={48}
+                className=" text-green-500 duration-500 animate-in fade-in zoom-in"
+              />
+              <Link target="_blank" href={postUrl} className="hover:underline">
+                Click here to visit your new post
+              </Link>
+            </div>
+          ) : null}
+        </div>
+      )}
+      <div className="flex">
+        <Dialog>
+          <DialogTrigger
+            className="grid basis-1/4 cursor-zoom-in place-items-center px-1"
+            disabled={isPending || !!postUrl || uploadFailed}
           >
-            {isPending ? (
-              <Loader2 size={48} className="animate-spin" />
-            ) : !!postUrl ? (
-              <div className="flex flex-col items-center justify-center">
-                <CheckCircle
-                  size={48}
-                  className=" text-green-500 duration-500 animate-in fade-in zoom-in"
-                />
-                <Link
-                  target="_blank"
-                  href={postUrl}
-                  className="hover:underline"
-                >
-                  Click here to visit your new post
-                </Link>
-              </div>
-            ) : null}
-          </div>
-        )}
+            <img
+              alt=""
+              src={blobUrl}
+              className="max-h-full max-w-full object-contain"
+            />
+          </DialogTrigger>
+          <DialogPortal>
+            <DialogOverlay />
+            <DialogContent>
+              <img
+                alt=""
+                src={blobUrl}
+                className="fixed left-[50%] top-[50%] z-50 h-fit max-h-[100dvh] w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
+              />
+              <DialogClose
+                className="fixed right-4 top-4 z-50 text-white"
+                aria-label="Close"
+              >
+                <X />
+              </DialogClose>
+            </DialogContent>
+          </DialogPortal>
+        </Dialog>
         <Form {...form}>
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem className=" flex h-full basis-1/4 flex-col items-center justify-center pr-2">
-                <Dialog>
-                  <DialogTrigger className="cursor-zoom-in">
-                    <img
-                      alt=""
-                      src={blobUrl}
-                      className="max-h-full max-w-full object-contain"
-                    />
-                  </DialogTrigger>
-                  <DialogPortal>
-                    <DialogOverlay />
-                    <DialogContent>
-                      <img
-                        alt=""
-                        src={blobUrl}
-                        className="fixed left-[50%] top-[50%] z-50 h-fit max-h-[100dvh] w-auto max-w-full translate-x-[-50%] translate-y-[-50%] object-contain"
-                      />
-                      <DialogClose
-                        className="absolute right-4 top-4 z-50 text-white"
-                        aria-label="Close"
-                      >
-                        <X />
-                      </DialogClose>
-                    </DialogContent>
-                  </DialogPortal>
-                </Dialog>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex w-full basis-3/4 flex-col gap-y-1 border-l pl-2"
+            className="flex w-full basis-3/4 flex-col gap-y-1 border-l pl-1"
           >
             <div className="flex w-11/12 items-center">
               <span className="max-w-3/4 truncate">{file.name}</span>
@@ -178,7 +167,6 @@ export function UploadForm({
               </span>
             </div>
             <FormField
-              disabled={isPending || !!postUrl || uploadFailed}
               control={form.control}
               name="tags"
               render={({ field: { onChange } }) => (
@@ -186,6 +174,7 @@ export function UploadForm({
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
                     <AsyncCreatableSelect<TagOption, true>
+                      isDisabled={isPending || !!postUrl || uploadFailed}
                       isMulti
                       isClearable
                       placeholder="Add tags"
@@ -269,7 +258,7 @@ export function UploadForm({
         >
           <X />
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

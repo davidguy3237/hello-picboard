@@ -64,42 +64,66 @@ export default function UploadPage() {
   };
 
   return files.length > 0 ? (
-    <div className="my-4 flex w-full max-w-screen-md flex-col items-center justify-start gap-1">
-      {renderBatchUpload ? (
-        <BatchUpload
-          files={files}
-          removeFile={removeFile}
-          uploadedFiles={uploadedFiles}
-          setUploadedFiles={setUploadedFiles}
-          setRenderBatchUpload={setRenderBatchUpload}
-        />
-      ) : (
-        <>
+    <>
+      <div className="my-4 flex w-full max-w-screen-md flex-col items-center rounded-lg border shadow-lg">
+        <div className="flex w-full divide-x">
           <Button
+            variant="ghost"
             className={cn(
-              "hidden",
-              !renderBatchUpload && files.length >= 2 && "block",
+              "w-full rounded-none font-semibold",
+              renderBatchUpload &&
+                "border-b bg-muted/15 font-normal text-muted-foreground",
+            )}
+            onClick={() => setRenderBatchUpload(false)}
+          >
+            Individual
+          </Button>
+          <Button
+            variant="ghost"
+            className={cn(
+              "w-full rounded-none font-semibold",
+              !renderBatchUpload &&
+                "border-b bg-muted/15 font-normal text-muted-foreground",
             )}
             onClick={() => setRenderBatchUpload(true)}
           >
-            Batch Upload
+            Batch
           </Button>
-          {files.map((file: FileWithPath) => (
-            <UploadForm
-              key={file.path}
-              file={file}
+        </div>
+        <div className="w-full">
+          {renderBatchUpload ? (
+            <BatchUpload
+              files={files}
               removeFile={removeFile}
+              uploadedFiles={uploadedFiles}
               setUploadedFiles={setUploadedFiles}
             />
-          ))}
-        </>
-      )}
+          ) : (
+            <div className="divide-y p-2">
+              <div className="p-2">
+                <h3 className="text-2xl font-semibold">Individual Uploads</h3>
+                <p className="text-sm text-muted-foreground">
+                  Separate tags and descriptions for each image
+                </p>
+              </div>
+              {files.map((file: FileWithPath) => (
+                <UploadForm
+                  key={file.path}
+                  file={file}
+                  removeFile={removeFile}
+                  setUploadedFiles={setUploadedFiles}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
       {files.length === uploadedFiles.length && (
         <Button size="lg" onClick={resetFiles} className="mb-4 flex-shrink-0">
           Upload More
         </Button>
       )}
-    </div>
+    </>
   ) : (
     <div className="flex h-full w-full flex-col items-center justify-center">
       <Card className="flex h-1/2 w-full max-w-screen-lg cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground text-muted-foreground hover:bg-muted">

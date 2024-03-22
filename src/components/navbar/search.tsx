@@ -140,14 +140,14 @@ export function Search() {
           variant="link"
           type="submit"
           aria-label="Search"
-          className="absolute right-0 top-0 hidden text-muted-foreground hover:text-foreground sm:block"
+          className="absolute right-0 top-0 text-muted-foreground hover:text-foreground"
         >
           <SearchIcon strokeWidth={3} />
         </Button>
         <Input
           placeholder="Search for tags"
           minLength={3}
-          className="peer flex-grow placeholder:italic"
+          className="peer flex-grow pr-10 placeholder:italic"
           name="search"
           onChange={debouncedHandleChange}
           defaultValue={searchParams.get("query")?.toString()}
@@ -155,7 +155,7 @@ export function Search() {
         />
         <div
           className={cn(
-            "invisible absolute mt-2 flex h-9 w-full items-center justify-center rounded-md border bg-background",
+            "invisible absolute mt-1 flex h-9 w-full items-center justify-center rounded-md border bg-background",
             isPending && "peer-focus:visible",
           )}
         >
@@ -163,17 +163,17 @@ export function Search() {
         </div>
         <div
           className={cn(
-            "invisible absolute mt-2 flex min-h-9 w-full flex-wrap items-center justify-center rounded-md border bg-background italic text-muted-foreground",
+            "invisible absolute mt-1 flex min-h-9 w-full flex-wrap items-center rounded-md border bg-background text-sm italic text-muted-foreground",
             searchSuggestions.length === 0 &&
               !isPending &&
               "peer-focus:visible",
           )}
         >
-          To search for more than one tag, separate each tag with a comma.
+          <p className="pl-2">Separate each tag with a comma.</p>
         </div>
         <div
           className={cn(
-            "invisible absolute mt-2 h-fit w-full",
+            "invisible absolute mt-1 h-fit w-full",
             searchSuggestions.length > 0 && !isPending && "peer-focus:visible",
           )}
         >
