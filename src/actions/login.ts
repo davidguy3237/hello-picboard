@@ -87,7 +87,7 @@ export async function login(
         },
       });
     } else {
-      sendTwoFactorTokenEmail(existingUser.name, existingUser.email);
+      await sendTwoFactorTokenEmail(existingUser.name, existingUser.email);
       return { twoFactor: true };
     }
   }
