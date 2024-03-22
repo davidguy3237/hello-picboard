@@ -32,6 +32,13 @@ Install dependencies
 ```
 Make a copy of the `env.example` file and fill out the necessary environment variables
 
+Use Prisma to set up tables in PostgreSQL database
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
 Run the development server
 
 ```bash
