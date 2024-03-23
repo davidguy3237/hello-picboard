@@ -4,13 +4,19 @@ import { SearchFilter } from "@/components/navbar/search-filter";
 import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDebounceFunction } from "@/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import { SearchSchema } from "@/schemas";
 import { Loader2, SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, FormEvent, useState, useTransition } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  KeyboardEvent,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { DateRange } from "react-day-picker";
 
 interface TagOption {
@@ -19,15 +25,16 @@ interface TagOption {
 }
 
 export function Search() {
-  // TODO: Search input should probably be set in state, but currently can't get it to work properly
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
   const [isStrictSearch, setIsStrictSearch] = useState<boolean | undefined>();
   const [sortBy, setSortBy] = useState<"asc" | "desc" | undefined>();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [selectedSuggestion, setSelectedSuggestion] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -52,35 +59,31 @@ export function Search() {
     }
   };
 
-  const debouncedHandleChange = useDebounceFunction(handleChange, 300);
+  const debouncedHandleChange = useDebounceFunction(handleChange, 200);
 
   const handleClick = (suggestion: string) => {
-    const searchBar = document.getElementById("search") as HTMLInputElement;
-
-    if (searchBar) {
-      const inputValueArray = searchBar.value
+    if (inputRef.current) {
+      const inputValueArray = inputRef.current.value
         .trim()
         .split(",")
-        .map((word: string) => word.trim());
+        .map((word) => word.trim());
 
       inputValueArray.splice(inputValueArray.length - 1, 1, suggestion);
 
-      const newInputValue = inputValueArray.join(", ") + ", ";
-
-      searchBar.value = newInputValue;
-
+      const newInputValue = inputValueArray?.join(", ") + ", ";
+      inputRef.current.value = newInputValue;
       setSearchSuggestions([]);
+      inputRef.current?.focus();
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const target = e.target as typeof e.target & { search: { value: string } };
-    const searchValue = target.search.value;
+  const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
+    if (e) {
+      e.preventDefault();
+    }
 
     const searchObj = {
-      query: searchValue || undefined,
+      query: inputRef.current?.value || undefined,
       isStrictSearch,
       sortBy,
       dateRange,
@@ -124,6 +127,55 @@ export function Search() {
     }
   };
 
+  const navigateSuggestions = (e: KeyboardEvent<HTMLInputElement>) => {
+    const key = e.key;
+
+    if (key === "ArrowDown") {
+      e.preventDefault();
+      if (searchSuggestions.length > 0) {
+        setSelectedSuggestion((prev) => {
+          if (prev === searchSuggestions.length - 1) {
+            return 0;
+          } else {
+            return prev + 1;
+          }
+        });
+      }
+    }
+
+    if (key === "ArrowUp") {
+      e.preventDefault();
+      if (searchSuggestions.length > 0) {
+        setSelectedSuggestion((prev) => {
+          if (prev === 0) {
+            return searchSuggestions.length - 1;
+          } else {
+            return prev - 1;
+          }
+        });
+      }
+    }
+
+    if (key === "Enter") {
+      e.preventDefault();
+      if (inputRef.current) {
+        const inputValueArray = inputRef.current.value
+          .trim()
+          .split(",")
+          .map((word) => word.trim());
+
+        const lastSearchValue = inputValueArray[inputValueArray.length - 1];
+
+        if (lastSearchValue.length === 0) {
+          handleSubmit();
+        } else if (searchSuggestions.length > 0) {
+          const suggestion = searchSuggestions[selectedSuggestion];
+          handleClick(suggestion);
+        }
+      }
+    }
+  };
+
   if (pathname.includes("/albums") || pathname.includes("/favorites")) {
     return null;
   }
@@ -145,13 +197,18 @@ export function Search() {
           <SearchIcon strokeWidth={3} />
         </Button>
         <Input
+          ref={inputRef}
+          id="search"
+          name="search"
           placeholder="Search for tags"
           minLength={3}
-          className="peer flex-grow pr-10 placeholder:italic"
-          name="search"
           onChange={debouncedHandleChange}
           defaultValue={searchParams.get("query")?.toString()}
-          id="search"
+          onKeyDown={navigateSuggestions}
+          onBlur={() => {
+            setSelectedSuggestion(0);
+          }}
+          className="peer flex-grow pr-10 placeholder:italic"
         />
         <div
           className={cn(
@@ -177,19 +234,25 @@ export function Search() {
             searchSuggestions.length > 0 && !isPending && "peer-focus:visible",
           )}
         >
-          <ScrollArea className="rounded-md border bg-background">
-            <ul className="max-h-40 w-full">
-              {searchSuggestions.map((suggestion) => (
+          <div className="rounded-md border bg-background">
+            <ul className="w-full">
+              {searchSuggestions.map((suggestion, index) => (
                 <li
                   key={suggestion}
-                  onMouseDown={() => handleClick(suggestion)}
-                  className="flex h-8 items-center pl-2 hover:cursor-pointer hover:bg-secondary"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleClick(suggestion);
+                  }}
+                  className={cn(
+                    "flex h-8 items-center pl-2 text-sm hover:cursor-pointer hover:bg-secondary",
+                    selectedSuggestion === index && "bg-secondary",
+                  )}
                 >
                   {suggestion}
                 </li>
               ))}
             </ul>
-          </ScrollArea>
+          </div>
         </div>
       </form>
       <SearchFilter
