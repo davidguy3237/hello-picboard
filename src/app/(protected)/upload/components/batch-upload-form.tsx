@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { MemoizedImg } from "@/app/(protected)/upload/components/memoized-img";
+import { CustomAsyncCreatableSelect } from "@/components/CustomAsyncCreatableSelect";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,7 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useDebounceFunction } from "@/hooks/use-debounce";
 import { cn, writeReadableFileSize } from "@/lib/utils";
 import { BatchUploadSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,7 +26,6 @@ import { Check, Loader2, Trash2, X } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { FileWithPath } from "react-dropzone";
 import { useForm } from "react-hook-form";
-import AsyncCreatableSelect from "react-select/async-creatable";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -35,10 +34,6 @@ interface GroupUploadProps {
   removeFile: (file: FileWithPath) => void;
   uploadedFiles: FileWithPath[];
   setUploadedFiles: React.Dispatch<React.SetStateAction<FileWithPath[]>>;
-}
-interface TagOption {
-  value: string;
-  label: string;
 }
 
 export function BatchUpload({
@@ -61,25 +56,6 @@ export function BatchUpload({
   useEffect(() => {
     form.setValue("images", files);
   }, [files, form]);
-
-  const fetchOptionsCallback = (
-    inputValue: string,
-    callback: (options: TagOption[]) => void,
-  ) => {
-    if (inputValue.length >= 3 && inputValue.length <= 40) {
-      fetch(`/api/tags?tag=${inputValue}`).then((res) => {
-        if (!res.ok) {
-          callback([]);
-        } else {
-          res.json().then((data) => {
-            callback(data);
-          });
-        }
-      });
-    }
-  };
-
-  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 200);
 
   const onSubmit = (batchUploadData: z.infer<typeof BatchUploadSchema>) => {
     startTransition(async () => {
@@ -135,52 +111,13 @@ export function BatchUpload({
               <FormItem>
                 <FormLabel>Tags</FormLabel>
                 <FormControl>
-                  <AsyncCreatableSelect<TagOption, true>
-                    isDisabled={
+                  <CustomAsyncCreatableSelect
+                    onChangeFromForm={onChange}
+                    disabled={
                       isPending ||
                       uploadedFiles.length > 0 ||
                       failedUploads.length > 0
                     }
-                    isMulti
-                    isClearable
-                    placeholder="Add tags"
-                    loadOptions={debouncedFetchOptions}
-                    onChange={(options) => {
-                      if (options === null) {
-                        onChange(null);
-                      } else {
-                        onChange(options.map((tag) => tag.value));
-                      }
-                    }}
-                    unstyled
-                    classNames={{
-                      control: ({ isFocused }) =>
-                        cn(
-                          "border rounded-sm px-1",
-                          isFocused && "ring-ring ring-2",
-                        ),
-                      container: () => "bg-background",
-                      placeholder: () => "text-muted-foreground text-sm italic",
-                      dropdownIndicator: ({ isFocused }) =>
-                        cn(
-                          "pl-1 text-muted-foreground hover:text-foreground border-l",
-                          isFocused && "text-foreground",
-                        ),
-                      option: ({ isFocused }) =>
-                        cn(
-                          "bg-background p-1 rounded-sm",
-                          isFocused && "bg-accent",
-                        ),
-                      noOptionsMessage: () => "p-1",
-                      multiValue: () =>
-                        "rounded-sm bg-accent overflow-hidden m-0.5",
-                      multiValueLabel: () => "px-1",
-                      multiValueRemove: () => "hover:bg-destructive/80 px-0.5",
-                      clearIndicator: () =>
-                        "text-muted-foreground hover:text-foreground px-1",
-                      menuList: () =>
-                        "bg-background border p-1 mt-2 rounded-sm shadow-lg",
-                    }}
                   />
                 </FormControl>
                 <FormMessage />

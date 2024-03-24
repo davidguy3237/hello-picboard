@@ -2,7 +2,7 @@
 "use client";
 
 import { deletePost, editPost } from "@/actions/posts";
-import { searchTags } from "@/actions/search-tags";
+import { CustomAsyncCreatableSelect } from "@/components/CustomAsyncCreatableSelect";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,7 +32,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useDebounceFunction } from "@/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import { EditPostSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,11 +41,10 @@ import { CheckCircle, Loader2, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import AsyncCreatableSelect from "react-select/async-creatable";
 import { toast } from "sonner";
 import * as z from "zod";
 
-type SelectTag = {
+type TagOption = {
   value: string;
   label: string;
 };
@@ -64,7 +62,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [postUrl, setPostUrl] = useState<string>("");
   const originalTags = post.tags.map((tag) => tag.name);
-  const defaultSelectTags: SelectTag[] = post.tags.map((tag) => ({
+  const defaultTagOptions: TagOption[] = post.tags.map((tag) => ({
     value: tag.name,
     label: tag.name,
   }));
@@ -78,25 +76,6 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
       description: post.description || undefined,
     },
   });
-
-  const fetchOptionsCallback = (
-    inputValue: string,
-    callback: (options: SelectTag[]) => void,
-  ) => {
-    if (inputValue.length >= 3 && inputValue.length <= 40) {
-      searchTags(inputValue).then((data) => {
-        if (data.error) {
-          callback([]);
-        } else if (data.success) {
-          callback(data.success);
-        }
-      });
-    } else {
-      callback([]);
-    }
-  };
-
-  const debouncedFetchOptions = useDebounceFunction(fetchOptionsCallback, 300);
 
   const onSubmit = async (editData: z.infer<typeof EditPostSchema>) => {
     startTransition(async () => {
@@ -190,52 +169,10 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
                 <FormItem>
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
-                    <AsyncCreatableSelect<SelectTag, true>
-                      isDisabled={isPending || isComplete}
-                      isMulti
-                      isClearable
-                      placeholder="Add tags"
-                      instanceId="edit-post-tags"
-                      defaultValue={defaultSelectTags}
-                      loadOptions={debouncedFetchOptions}
-                      onChange={(options) => {
-                        if (options === null) {
-                          onChange(null);
-                        } else {
-                          onChange(options.map((tag) => tag.value));
-                        }
-                      }}
-                      unstyled
-                      classNames={{
-                        control: ({ isFocused }) =>
-                          cn(
-                            "border rounded-sm px-1",
-                            isFocused && "ring-ring ring-2",
-                          ),
-                        container: () => "bg-background",
-                        placeholder: () =>
-                          "text-muted-foreground text-sm italic",
-                        dropdownIndicator: ({ isFocused }) =>
-                          cn(
-                            "pl-1 text-muted-foreground hover:text-foreground border-l",
-                            isFocused && "text-foreground",
-                          ),
-                        option: ({ isFocused }) =>
-                          cn(
-                            "bg-background p-1 rounded-sm",
-                            isFocused && "bg-accent",
-                          ),
-                        noOptionsMessage: () => "p-1",
-                        multiValue: () =>
-                          "rounded-sm bg-accent overflow-hidden m-0.5",
-                        multiValueLabel: () => "px-1",
-                        multiValueRemove: () =>
-                          "hover:bg-destructive/80 px-0.5",
-                        clearIndicator: () =>
-                          "text-muted-foreground hover:text-foreground px-1",
-                        menuList: () =>
-                          "bg-background border p-1 mt-2 rounded-sm shadow-lg",
-                      }}
+                    <CustomAsyncCreatableSelect
+                      onChangeFromForm={onChange}
+                      defaultValue={defaultTagOptions}
+                      disabled={isPending || isComplete}
                     />
                   </FormControl>
                   <FormMessage />
