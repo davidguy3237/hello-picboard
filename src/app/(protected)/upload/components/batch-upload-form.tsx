@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { MemoizedImg } from "@/app/(protected)/upload/components/memoized-img";
-import { CustomAsyncCreatableSelect } from "@/components/CustomAsyncCreatableSelect";
+import { CustomAsyncCreatableSelect } from "@/components/custom-async-creatable-select";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,

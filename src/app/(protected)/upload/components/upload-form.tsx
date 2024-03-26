@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { CustomAsyncCreatableSelect } from "@/components/CustomAsyncCreatableSelect";
+import { CustomAsyncCreatableSelect } from "@/components/custom-async-creatable-select";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

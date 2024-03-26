@@ -2,7 +2,7 @@
 "use client";
 
 import { deletePost, editPost } from "@/actions/posts";
-import { CustomAsyncCreatableSelect } from "@/components/CustomAsyncCreatableSelect";
+import { CustomAsyncCreatableSelect } from "@/components/custom-async-creatable-select";
 import {
   AlertDialog,
   AlertDialogAction,
