@@ -55,7 +55,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
         <div
           ref={ref}
           className={cn(
-            "relative h-32 overflow-hidden bg-muted focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 md:h-60 md:rounded-sm lg:h-96",
+            "relative h-32 overflow-hidden bg-muted md:h-60 md:rounded-sm lg:h-96",
             expandView && "md:h-32 lg:h-56",
           )}
         >
@@ -98,7 +98,7 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
       <div
         ref={ref}
         className={cn(
-          "relative h-32 overflow-hidden bg-muted focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 md:h-60 md:rounded-sm lg:h-96",
+          "relative h-32 overflow-hidden bg-muted md:h-60 md:rounded-sm lg:h-96",
           expandView && "md:h-32 lg:h-56",
         )}
       >
