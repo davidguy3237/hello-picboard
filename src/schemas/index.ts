@@ -229,8 +229,8 @@ export const SearchSchema = z.object({
       .string()
       .min(3, { message: "Search must be at least 3 characters" })
       .refine((val) => {
-        // if query contains anything other than alphanumeric characters
-        return /^[a-zA-Z0-9_,\- ]+$/.test(val);
+        const validCharactersRegex = /^[a-zA-Z0-9_,=!\- ]+$/;
+        return validCharactersRegex.test(val);
       }),
   ),
   isStrictSearch: z.optional(z.boolean()),
