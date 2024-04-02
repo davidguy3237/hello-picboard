@@ -225,7 +225,13 @@ export const EditPostSchema = z.object({
 
 export const SearchSchema = z.object({
   query: z.optional(
-    z.string().min(3, { message: "Search must be at least 3 characters" }),
+    z
+      .string()
+      .min(3, { message: "Search must be at least 3 characters" })
+      .refine((val) => {
+        // if query contains anything other than alphanumeric characters
+        return /^[a-zA-Z0-9_,\-]*$/.test(val);
+      }),
   ),
   isStrictSearch: z.optional(z.boolean()),
   sortBy: z.optional(z.enum(["asc", "desc"])),

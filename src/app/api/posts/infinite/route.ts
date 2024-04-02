@@ -43,6 +43,16 @@ export async function GET(req: NextRequest) {
 
   const validatedParams = SearchSchema.safeParse(paramsObj);
 
+  if (!validatedParams.success) {
+    console.error(validatedParams.error);
+    return NextResponse.json(
+      { posts: [] },
+      {
+        status: 200,
+      },
+    );
+  }
+
   if (validatedParams.success) {
     validatedSortBy = validatedParams.data.sortBy || "desc";
     validatedIsStrictSearch = validatedParams.data.isStrictSearch;
@@ -66,10 +76,6 @@ export async function GET(req: NextRequest) {
           .map((word) => word + ":*")
           .join(" & "),
       );
-  }
-
-  if (!validatedParams.success) {
-    console.log(validatedParams.error);
   }
 
   const whereClause: WhereClause = { AND: [] };
