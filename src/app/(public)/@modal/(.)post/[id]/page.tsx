@@ -110,45 +110,48 @@ export default async function InterceptedPostPage({
               </span>
             </div>
           )}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-end gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span>{dateToShow}</span>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{fullDate}</p>
-            </TooltipContent>
-          </Tooltip>
-          <div className="flex items-end gap-2 text-sm text-muted-foreground">
-            <Ruler className="h-4 w-4" />
-            {post.width && post.height ? (
-              <span>{`${post.width} x ${post.height}`}</span>
-            ) : (
-              <span className="italic text-muted-foreground">
-                No dimensions provided
+          <div className="flex flex-wrap gap-x-4 gap-y-1 lg:flex-col lg:gap-x-0 lg:gap-y-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-end gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>{dateToShow}</span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{fullDate}</p>
+              </TooltipContent>
+            </Tooltip>
+            <div className="flex items-end gap-2 text-sm text-muted-foreground">
+              <Ruler className="h-4 w-4" />
+              {post.width && post.height ? (
+                <span>{`${post.width} x ${post.height}`}</span>
+              ) : (
+                <span className="italic text-muted-foreground">
+                  No dimensions provided
+                </span>
+              )}
+            </div>
+            <div className="flex items-end gap-2 text-sm text-muted-foreground">
+              <Folder className="h-4 w-4" />
+              <span>
+                {post.category.slice(0, 1).toUpperCase() +
+                  post.category.slice(1)}
               </span>
+            </div>
+            {post.originUrl && (
+              <div className="flex items-end gap-2 text-sm text-muted-foreground">
+                <Link2 className="h-4 w-4" />
+                <a
+                  href={post.originUrl}
+                  target="_blank"
+                  className="text-blue-800 underline-offset-4 visited:text-purple-800 hover:underline dark:text-blue-500 dark:visited:text-purple-500"
+                >
+                  {new URL(post.originUrl).hostname}
+                </a>
+              </div>
             )}
           </div>
-          <div className="flex items-end gap-2 text-sm text-muted-foreground">
-            <Folder className="h-4 w-4" />
-            <span>
-              {post.category.slice(0, 1).toUpperCase() + post.category.slice(1)}
-            </span>
-          </div>
-          {post.originUrl && (
-            <div className="flex items-end gap-2 text-sm text-muted-foreground">
-              <Link2 className="h-4 w-4" />
-              <a
-                href={post.originUrl}
-                target="_blank"
-                className="text-blue-800 underline-offset-4 visited:text-purple-800 hover:underline dark:text-blue-500 dark:visited:text-purple-500"
-              >
-                {new URL(post.originUrl).hostname}
-              </a>
-            </div>
-          )}
           <p
             className={cn(
               "whitespace-pre-wrap text-wrap break-words",
