@@ -139,6 +139,9 @@ export const UploadSchema = z
       ],
       { required_error: "Must select a category" },
     ),
+    originUrl: z
+      .optional(z.string().url({ message: "Must be a valid URL" }))
+      .or(z.literal("")),
     description: z.optional(
       z
         .string()
@@ -184,6 +187,9 @@ export const BatchUploadSchema = z.object({
     ],
     { required_error: "Must select a category" },
   ),
+  originUrl: z
+    .optional(z.string().url({ message: "Must be a valid URL" }))
+    .or(z.literal("")),
   description: z.optional(
     z
       .string()
@@ -227,6 +233,9 @@ export const NewPostSchema = z
       ],
       { required_error: "Must select a category" },
     ),
+    originUrl: z
+      .optional(z.string().url({ message: "Must be a valid URL" }))
+      .or(z.literal("")),
     description: z.optional(
       z
         .string()
@@ -272,6 +281,9 @@ export const EditPostSchema = z.object({
     ],
     { required_error: "Must select a category" },
   ),
+  originUrl: z
+    .optional(z.string().url({ message: "Must be a valid URL" }))
+    .or(z.literal("")),
   description: z.optional(
     z
       .string()

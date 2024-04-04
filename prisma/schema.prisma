@@ -121,6 +121,7 @@ model Post {
   height       Int?
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
+  originUrl    String?      @map("origin_url")
   category     PostCategory @default(other)
   tags         Tag[]
   albums       PostsAlbums[]

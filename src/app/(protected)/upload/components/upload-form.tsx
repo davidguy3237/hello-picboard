@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn, writeReadableFileSize } from "@/lib/utils";
 import { UploadSchema } from "@/schemas";
@@ -51,6 +52,7 @@ export function UploadForm({
     defaultValues: {
       tags: [],
       description: "",
+      originUrl: "",
       image: file,
     },
   });
@@ -64,6 +66,7 @@ export function UploadForm({
         newPostData.append("tags[]", uploadData.tags[i]);
       }
       newPostData.append("category", uploadData.category);
+      newPostData.append("originUrl", uploadData.originUrl as string);
       const response = await fetch("/api/posts/upload", {
         method: "POST",
         body: newPostData,
@@ -161,6 +164,7 @@ export function UploadForm({
               )}
             />
             <FormField
+              disabled={isPending || !!postUrl || uploadFailed}
               control={form.control}
               name="category"
               render={({ field: { onChange } }) => (
@@ -170,6 +174,24 @@ export function UploadForm({
                     <CategorySelect
                       disabled={isPending || !!postUrl || uploadFailed}
                       onChangeFromForm={onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="originUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Source URL (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending || !!postUrl || uploadFailed}
+                      placeholder="Link to the post or article the image came from"
+                      type="url"
                     />
                   </FormControl>
                   <FormMessage />

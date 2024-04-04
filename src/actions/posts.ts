@@ -191,6 +191,14 @@ export async function editPost(editData: z.infer<typeof EditPostSchema>) {
     create: { name: tag },
   }));
 
+  let sanitizedUrl: string | undefined;
+
+  if (validatedFields.data.originUrl) {
+    const parsedUrl = new URL(validatedFields.data.originUrl);
+    parsedUrl.search = "";
+    sanitizedUrl = parsedUrl.toString();
+  }
+
   const updatedPost = await db.post.update({
     where: {
       publicId: validatedFields.data.publicId,
@@ -199,6 +207,7 @@ export async function editPost(editData: z.infer<typeof EditPostSchema>) {
     data: {
       description: validatedFields.data.description,
       category: validatedFields.data.category,
+      originUrl: sanitizedUrl,
       tags: {
         connectOrCreate: formattedUpdatedTags,
         disconnect: tagsToDisconnect,

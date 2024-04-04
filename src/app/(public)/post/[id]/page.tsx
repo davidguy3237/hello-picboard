@@ -12,7 +12,7 @@ import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
-import { Clock, Folder, Ruler, User } from "lucide-react";
+import { Clock, Folder, Link2, Ruler, User } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -143,6 +143,18 @@ export default async function PostPage({ params }: PostPageProps) {
             {post.category.slice(0, 1).toUpperCase() + post.category.slice(1)}
           </span>
         </div>
+        {post.originUrl && (
+          <div className="flex items-end gap-2 text-sm text-muted-foreground">
+            <Link2 className="h-4 w-4" />
+            <a
+              href={post.originUrl}
+              target="_blank"
+              className="text-blue-800 underline-offset-4 visited:text-purple-800 hover:underline dark:text-blue-500 dark:visited:text-purple-500"
+            >
+              {new URL(post.originUrl).hostname}
+            </a>
+          </div>
+        )}
         <p
           className={cn(
             "whitespace-pre-wrap text-wrap break-words",

@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
   const description = formData.get("description") as string;
   const category = formData.get("category") as PostCategory;
   const tags = formData.getAll("tags[]");
+  const originUrl = formData.get("originUrl") as string;
 
   if (!image) {
     return NextResponse.json("Missing image", { status: 400 });
@@ -122,6 +123,14 @@ export async function POST(req: NextRequest) {
   const sourceUrl = `${publicId}${sourcefileExtension}`;
   const thumbnailUrl = `${folderName}/${thumbnailName}${thumbnailFileExtension}`;
 
+  let sanitizedUrl: string | undefined;
+
+  if (originUrl) {
+    const parsedUrl = new URL(originUrl);
+    parsedUrl.search = "";
+    sanitizedUrl = parsedUrl.toString();
+  }
+
   const validatedFields = NewPostSchema.safeParse({
     publicId,
     tags,
@@ -131,6 +140,7 @@ export async function POST(req: NextRequest) {
     width,
     height,
     category,
+    originUrl: sanitizedUrl,
   });
 
   if (!validatedFields.success) {
@@ -147,6 +157,7 @@ export async function POST(req: NextRequest) {
           height,
           userId: user.id,
           category,
+          originUrl,
           tags: {
             connectOrCreate: validatedFields.data.tags.map((tag) => {
               return {
@@ -157,13 +168,13 @@ export async function POST(req: NextRequest) {
           },
         },
       });
-
       return NextResponse.json(
         { postUrl: `/post/${newPost.publicId}` },
         { status: 201 },
       );
     } catch (error) {
       // TODO: If adding to database fails, delete uploaded files?
+      console.error(error);
       return NextResponse.json(
         { error: "Failed to create post" },
         { status: 500 },

@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { MemoizedImg } from "@/app/(protected)/upload/components/memoized-img";
+import { CategorySelect } from "@/components/category-select";
 import { CustomAsyncCreatableSelect } from "@/components/custom-async-creatable-select";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn, writeReadableFileSize } from "@/lib/utils";
 import { BatchUploadSchema } from "@/schemas";
@@ -28,8 +30,6 @@ import { FileWithPath } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import Select from "react-select";
-import { CategorySelect } from "@/components/category-select";
 
 interface GroupUploadProps {
   files: FileWithPath[];
@@ -51,6 +51,7 @@ export function BatchUpload({
     defaultValues: {
       tags: [],
       description: "",
+      originUrl: "",
       images: [],
     },
   });
@@ -75,7 +76,7 @@ export function BatchUpload({
           newPostData.append("tags[]", tag);
         }
         newPostData.append("category", batchUploadData.category);
-
+        newPostData.append("originUrl", batchUploadData.originUrl as string);
         promises.push(
           fetch("/api/posts/upload", {
             method: "POST",
@@ -141,6 +142,28 @@ export function BatchUpload({
                       failedUploads.length > 0
                     }
                     onChangeFromForm={onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="originUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Source URL (optional)</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    disabled={
+                      isPending ||
+                      uploadedFiles.length > 0 ||
+                      failedUploads.length > 0
+                    }
+                    placeholder="Link to the post or article the image came from"
+                    type="url"
                   />
                 </FormControl>
                 <FormMessage />

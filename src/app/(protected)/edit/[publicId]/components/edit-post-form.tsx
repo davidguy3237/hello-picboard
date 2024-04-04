@@ -32,6 +32,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { EditPostSchema } from "@/schemas";
@@ -79,6 +80,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
       originalTags: originalTags,
       updatedTags: originalTags,
       category: post.category,
+      originUrl: post.originUrl || undefined,
       description: post.description || undefined,
     },
   });
@@ -200,6 +202,24 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
                       disabled={isPending || isComplete}
                       onChangeFromForm={onChange}
                       defaultValue={defaultCategoryOption}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="originUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Source URL (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending || isComplete}
+                      placeholder="Link to the post or article the image came from"
+                      type="url"
                     />
                   </FormControl>
                   <FormMessage />
