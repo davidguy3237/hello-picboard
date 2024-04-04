@@ -14,8 +14,10 @@ interface PostProps {
   thumbnailUrl: string;
   expandView: boolean;
   toggleSelectDelete?: boolean;
-  setPostsToDelete?: React.Dispatch<React.SetStateAction<string[]>>;
   postsToDelete?: string[];
+  setPostsToDelete?: React.Dispatch<React.SetStateAction<string[]>>;
+  setSourceUrlsToDelete?: React.Dispatch<React.SetStateAction<string[]>>;
+  setThumbnailUrlsToDelete?: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
@@ -28,8 +30,10 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
       thumbnailUrl,
       expandView,
       toggleSelectDelete,
-      setPostsToDelete,
       postsToDelete,
+      setPostsToDelete,
+      setSourceUrlsToDelete,
+      setThumbnailUrlsToDelete,
     },
     ref,
   ) {
@@ -40,12 +44,28 @@ export const PostCard = React.forwardRef<HTMLDivElement, PostProps>(
 
     const handleCheckedChange = (checked: boolean | "indeterminate") => {
       if (checked === true) {
-        if (setPostsToDelete) {
+        if (
+          setPostsToDelete &&
+          setSourceUrlsToDelete &&
+          setThumbnailUrlsToDelete
+        ) {
           setPostsToDelete((prev) => [...prev, id]);
+          setSourceUrlsToDelete((prev) => [...prev, sourceUrl]);
+          setThumbnailUrlsToDelete((prev) => [...prev, thumbnailUrl]);
         }
       } else if (checked === false) {
-        if (setPostsToDelete) {
+        if (
+          setPostsToDelete &&
+          setSourceUrlsToDelete &&
+          setThumbnailUrlsToDelete
+        ) {
           setPostsToDelete((prev) => prev.filter((postId) => postId !== id));
+          setSourceUrlsToDelete((prev) =>
+            prev.filter((url) => url !== sourceUrl),
+          );
+          setThumbnailUrlsToDelete((prev) =>
+            prev.filter((url) => url !== thumbnailUrl),
+          );
         }
       }
     };

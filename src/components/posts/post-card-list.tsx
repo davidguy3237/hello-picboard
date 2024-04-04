@@ -37,6 +37,10 @@ export function PostCardList({
   const [cursor, setCursor] = useState("");
   const [toggleSelectDelete, setToggleSelectDelete] = useState<boolean>(false);
   const [postsToDelete, setPostsToDelete] = useState<string[]>([]);
+  const [sourceUrlsToDelete, setSourceUrlsToDelete] = useState<string[]>([]);
+  const [thumbnailUrlsToDelete, setThumbnailUrlsToDelete] = useState<string[]>(
+    [],
+  );
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
   const user = useCurrentUser();
@@ -76,7 +80,11 @@ export function PostCardList({
 
   const handleDeleteSelectedPosts = () => {
     startTransition(async () => {
-      const deleteManyPostsResults = await deleteManyPosts(postsToDelete);
+      const deleteManyPostsResults = await deleteManyPosts(
+        postsToDelete,
+        sourceUrlsToDelete,
+        thumbnailUrlsToDelete,
+      );
       if (!deleteManyPostsResults.success) {
         toast.error(deleteManyPostsResults.error);
       } else if (deleteManyPostsResults.success) {
@@ -205,6 +213,8 @@ export function PostCardList({
                 toggleSelectDelete={toggleSelectDelete}
                 postsToDelete={postsToDelete}
                 setPostsToDelete={setPostsToDelete}
+                setSourceUrlsToDelete={setSourceUrlsToDelete}
+                setThumbnailUrlsToDelete={setThumbnailUrlsToDelete}
               />
             );
           })}

@@ -4,7 +4,12 @@ import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { EditPostSchema, NewPostSchema } from "@/schemas";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { customAlphabet } from "nanoid";
 import { revalidatePath } from "next/cache";
 import sharp from "sharp";
@@ -193,6 +198,7 @@ export async function editPost(editData: z.infer<typeof EditPostSchema>) {
     },
     data: {
       description: validatedFields.data.description,
+      category: validatedFields.data.category,
       tags: {
         connectOrCreate: formattedUpdatedTags,
         disconnect: tagsToDisconnect,
@@ -211,12 +217,22 @@ export async function editPost(editData: z.infer<typeof EditPostSchema>) {
   }
 }
 
-export async function deletePost(publicId: string) {
+export async function deletePost(
+  publicId: string,
+  sourceUrl: string,
+  thumbnailUrl: string,
+) {
   const user = await currentUser();
 
   if (!user) {
     return {
       error: "Unauthorized",
+    };
+  }
+
+  if (!publicId || !sourceUrl || !thumbnailUrl) {
+    return {
+      error: "Invalid fields",
     };
   }
 
@@ -231,19 +247,46 @@ export async function deletePost(publicId: string) {
     return {
       error: "There was a problem deleting this post",
     };
-  } else {
-    return {
-      success: "Post successfully deleted!",
-    };
   }
+
+  const deleteSource = new DeleteObjectCommand({
+    Bucket: process.env.B2_BUCKET_NAME,
+    Key: sourceUrl,
+  });
+  const deleteThumbnail = new DeleteObjectCommand({
+    Bucket: process.env.B2_BUCKET_NAME,
+    Key: thumbnailUrl,
+  });
+
+  try {
+    await s3.send(deleteSource);
+    await s3.send(deleteThumbnail);
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to delete image" };
+  }
+
+  return {
+    success: "Post successfully deleted!",
+  };
 }
 
-export async function deleteManyPosts(publicIds: string[]) {
+export async function deleteManyPosts(
+  publicIds: string[],
+  sourceUrls: string[],
+  thumbnailUrls: string[],
+) {
   const user = await currentUser();
 
   if (!user) {
     return {
       error: "Unauthorized",
+    };
+  }
+
+  if (!publicIds || !sourceUrls || !thumbnailUrls) {
+    return {
+      error: "Invalid fields",
     };
   }
 
@@ -260,12 +303,41 @@ export async function deleteManyPosts(publicIds: string[]) {
     return {
       error: "There was a problem deleting these posts",
     };
-  } else {
-    revalidatePath(`/user/${user.name}/posts`);
-    return {
-      success: "Posts successfully deleted!",
-    };
   }
+
+  const deleteSources = new DeleteObjectsCommand({
+    Bucket: process.env.B2_BUCKET_NAME,
+    Delete: {
+      Objects: sourceUrls.map((url) => {
+        return {
+          Key: url,
+        };
+      }),
+    },
+  });
+  const deleteThumbnails = new DeleteObjectsCommand({
+    Bucket: process.env.B2_BUCKET_NAME,
+    Delete: {
+      Objects: thumbnailUrls.map((url) => {
+        return {
+          Key: url,
+        };
+      }),
+    },
+  });
+
+  try {
+    await s3.send(deleteSources);
+    await s3.send(deleteThumbnails);
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to delete images" };
+  }
+
+  revalidatePath(`/user/${user.name}/posts`);
+  return {
+    success: "Posts successfully deleted!",
+  };
 }
 
 export async function favoritePost(
