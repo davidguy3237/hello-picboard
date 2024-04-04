@@ -17,7 +17,7 @@ declare module "react-select/base" {
     IsMulti extends boolean,
     Group extends GroupBase<Option>,
   > {
-    onPaste: (e: React.ClipboardEvent<HTMLInputElement>) => void;
+    onPaste?: (e: React.ClipboardEvent<HTMLInputElement>) => void;
   }
 }
 

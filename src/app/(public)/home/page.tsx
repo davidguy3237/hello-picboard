@@ -10,6 +10,7 @@ interface HomePageProps {
     strict?: string;
     from?: string;
     to?: string;
+    category?: string;
   };
 }
 
@@ -19,8 +20,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const isStrictSearch = searchParams?.strict === "true";
   const fromDate = searchParams?.from || "";
   const toDate = searchParams?.to || "";
+  const category = searchParams?.category || "";
 
-  const queryString = `query=${query}&sort=${sortBy}&strict=${isStrictSearch}&from=${fromDate}&to=${toDate}`;
+  const queryString = `query=${query}&sort=${sortBy}&strict=${isStrictSearch}&from=${fromDate}&to=${toDate}&category=${category}`;
 
   return <PostCardList key={Math.random()} queryString={queryString} />;
 }

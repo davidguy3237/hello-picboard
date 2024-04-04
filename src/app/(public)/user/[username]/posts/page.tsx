@@ -12,6 +12,7 @@ interface PostTabsProps {
     strict?: string;
     from?: string;
     to?: string;
+    category?: string;
   };
 }
 
@@ -21,8 +22,9 @@ export default function UserPostsTab({ params, searchParams }: PostTabsProps) {
   const isStrictSearch = searchParams?.strict === "true";
   const fromDate = searchParams?.from || "";
   const toDate = searchParams?.to || "";
+  const category = searchParams?.category || "";
 
-  const queryString = `query=${query}&sort=${sortBy}&strict=${isStrictSearch}&from=${fromDate}&to=${toDate}&username=${params.username}`;
+  const queryString = `query=${query}&sort=${sortBy}&strict=${isStrictSearch}&from=${fromDate}&to=${toDate}&category=${category}&username=${params.username}`;
 
   return (
     <div className="flex h-full w-full flex-col items-center overflow-y-auto">

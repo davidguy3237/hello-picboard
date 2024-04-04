@@ -2,6 +2,7 @@
 "use client";
 
 import { deletePost, editPost } from "@/actions/posts";
+import { CategorySelect } from "@/components/category-select";
 import { CustomAsyncCreatableSelect } from "@/components/custom-async-creatable-select";
 import {
   AlertDialog,
@@ -66,6 +67,10 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
     value: tag.name,
     label: tag.name,
   }));
+  const defaultCategoryOption: TagOption = {
+    value: post.category,
+    label: post.category.slice(0, 1).toUpperCase() + post.category.slice(1),
+  };
 
   const form = useForm<z.infer<typeof EditPostSchema>>({
     resolver: zodResolver(EditPostSchema),
@@ -73,6 +78,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
       publicId: post.publicId,
       originalTags: originalTags,
       updatedTags: originalTags,
+      category: post.category,
       description: post.description || undefined,
     },
   });
@@ -93,7 +99,11 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
 
   const handleDeletePost = () => {
     startTransition(async () => {
-      const deletePostResult = await deletePost(post.publicId);
+      const deletePostResult = await deletePost(
+        post.publicId,
+        post.sourceUrl,
+        post.thumbnailUrl,
+      );
       if (!deletePostResult.success) {
         toast.error(deletePostResult.error);
       } else if (deletePostResult.success) {
@@ -173,6 +183,23 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
                       onChangeFromForm={onChange}
                       defaultValue={defaultTagOptions}
                       disabled={isPending || isComplete}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field: { onChange } }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <CategorySelect
+                      disabled={isPending || isComplete}
+                      onChangeFromForm={onChange}
+                      defaultValue={defaultCategoryOption}
                     />
                   </FormControl>
                   <FormMessage />

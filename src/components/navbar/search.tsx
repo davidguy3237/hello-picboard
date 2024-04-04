@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useDebounceFunction } from "@/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import { SearchSchema } from "@/schemas";
+import { PostCategory } from "@prisma/client";
 import { Loader2, SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -30,6 +31,7 @@ export function Search() {
   const [sortBy, setSortBy] = useState<"asc" | "desc" | undefined>();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(0);
+  const [category, setCategory] = useState<PostCategory | undefined>();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -104,6 +106,9 @@ export function Search() {
         params.set("from", dateRange.from.toISOString());
         dateRange.to && params.set("to", dateRange.to.toISOString());
       }
+      if (category) {
+        params.set("category", category);
+      }
 
       if (pathname.includes("/post/")) {
         router.push(`/home?${params.toString()}`);
@@ -124,6 +129,14 @@ export function Search() {
       setSortBy(value);
     } else {
       setSortBy(undefined);
+    }
+  };
+
+  const handleCategory = (value: string) => {
+    if ((Object.values(PostCategory) as string[]).includes(value)) {
+      setCategory(value as PostCategory);
+    } else {
+      setCategory(undefined);
     }
   };
 
@@ -260,6 +273,7 @@ export function Search() {
         handleStrictSearch={handleStrictSearch}
         sortBy={sortBy}
         handleSortBy={handleSortBy}
+        handleCategory={handleCategory}
       >
         <DatePickerWithRange
           className="w-full"

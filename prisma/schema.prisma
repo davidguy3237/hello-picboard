@@ -97,23 +97,37 @@ model TwoFactorConfirmation {
   
   @@map("two_factor_confirmation")
 }
+
+enum PostCategory {
+  twitter
+  instagram
+  blog
+  goods
+  news
+  magazine
+  photobook
+  website
+  other
+}
+
 model Post {
-  id           String  @id @default(cuid())
-  publicId     String  @unique @map("public_id")
-  userId       String? @map("user_id")
-  sourceUrl    String  @unique @map("source_url")
-  thumbnailUrl String  @unique @map("thumbnail_url")
-  description  String? @db.VarChar(500)
+  id           String       @id @default(cuid())
+  publicId     String       @unique @map("public_id")
+  userId       String?      @map("user_id")
+  sourceUrl    String       @unique @map("source_url")
+  thumbnailUrl String       @unique @map("thumbnail_url")
+  description  String?      @db.VarChar(500)
   width        Int?
   height       Int?
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  category     PostCategory @default(other)
   tags         Tag[]
   albums       PostsAlbums[]
   favorites    Favorites[]
   reports      Report[]
 
-  user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user        User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("post")
 }

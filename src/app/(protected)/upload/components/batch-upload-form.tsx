@@ -28,6 +28,8 @@ import { FileWithPath } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import Select from "react-select";
+import { CategorySelect } from "@/components/category-select";
 
 interface GroupUploadProps {
   files: FileWithPath[];
@@ -72,6 +74,7 @@ export function BatchUpload({
           const tag = batchUploadData.tags[i];
           newPostData.append("tags[]", tag);
         }
+        newPostData.append("category", batchUploadData.category);
 
         promises.push(
           fetch("/api/posts/upload", {
@@ -118,6 +121,26 @@ export function BatchUpload({
                       uploadedFiles.length > 0 ||
                       failedUploads.length > 0
                     }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field: { onChange } }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <FormControl>
+                  <CategorySelect
+                    disabled={
+                      isPending ||
+                      uploadedFiles.length > 0 ||
+                      failedUploads.length > 0
+                    }
+                    onChangeFromForm={onChange}
                   />
                 </FormControl>
                 <FormMessage />

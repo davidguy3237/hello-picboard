@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { CategorySelect } from "@/components/category-select";
 import { CustomAsyncCreatableSelect } from "@/components/custom-async-creatable-select";
 import { Button } from "@/components/ui/button";
 import {
@@ -62,6 +63,7 @@ export function UploadForm({
       for (let i = 0; i < uploadData.tags.length; i++) {
         newPostData.append("tags[]", uploadData.tags[i]);
       }
+      newPostData.append("category", uploadData.category);
       const response = await fetch("/api/posts/upload", {
         method: "POST",
         body: newPostData,
@@ -152,6 +154,22 @@ export function UploadForm({
                     <CustomAsyncCreatableSelect
                       onChangeFromForm={onChange}
                       disabled={isPending || !!postUrl || uploadFailed}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field: { onChange } }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <CategorySelect
+                      disabled={isPending || !!postUrl || uploadFailed}
+                      onChangeFromForm={onChange}
                     />
                   </FormControl>
                   <FormMessage />

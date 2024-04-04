@@ -3,14 +3,12 @@ import {
   StrictSearchConditional,
   WhereClause,
 } from "@/app/api/posts/types";
-import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { SearchSchema } from "@/schemas";
+import { PostCategory } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const user = await currentUser();
-
   const searchParams = new URL(req.url).searchParams;
   const cursor = searchParams.get("cursor");
 
@@ -20,6 +18,7 @@ export async function GET(req: NextRequest) {
   const fromDate = searchParams.get("from");
   const toDate = searchParams.get("to");
   const username = searchParams.get("username");
+  const category = searchParams.get("category");
 
   const paramsObj = {
     query,
@@ -126,6 +125,15 @@ export async function GET(req: NextRequest) {
       user: {
         name: username,
       },
+    });
+  }
+
+  if (
+    category &&
+    (Object.values(PostCategory) as string[]).includes(category)
+  ) {
+    whereClause.AND.push({
+      category: category as PostCategory,
     });
   }
 

@@ -3,6 +3,7 @@ import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { NewPostSchema } from "@/schemas";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { PostCategory } from "@prisma/client";
 import { customAlphabet } from "nanoid";
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const image = formData.get("image") as File;
   const description = formData.get("description") as string;
+  const category = formData.get("category") as PostCategory;
   const tags = formData.getAll("tags[]");
 
   if (!image) {
@@ -68,6 +70,9 @@ export async function POST(req: NextRequest) {
   }
   if (tags.length === 0) {
     return NextResponse.json("No tags provided", { status: 400 });
+  }
+  if (!category) {
+    return NextResponse.json("No category provided", { status: 400 });
   }
 
   const sourcefileExtension = image.type === "image/jpeg" ? ".jpg" : ".png";
@@ -125,6 +130,7 @@ export async function POST(req: NextRequest) {
     description,
     width,
     height,
+    category,
   });
 
   if (!validatedFields.success) {
@@ -140,6 +146,7 @@ export async function POST(req: NextRequest) {
           width,
           height,
           userId: user.id,
+          category,
           tags: {
             connectOrCreate: validatedFields.data.tags.map((tag) => {
               return {

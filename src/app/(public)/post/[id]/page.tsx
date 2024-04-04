@@ -12,7 +12,7 @@ import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
-import { Clock, Ruler, User } from "lucide-react";
+import { Clock, Folder, Ruler, User } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -136,6 +136,12 @@ export default async function PostPage({ params }: PostPageProps) {
               Dimensions not available
             </span>
           )}
+        </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Folder className="h-4 w-4" />
+          <span>
+            {post.category.slice(0, 1).toUpperCase() + post.category.slice(1)}
+          </span>
         </div>
         <p
           className={cn(

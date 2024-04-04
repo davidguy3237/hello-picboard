@@ -1,3 +1,5 @@
+import { PostCategory } from "@prisma/client";
+
 export interface TagsQuery {
   tags: {
     some: {
@@ -42,12 +44,17 @@ export interface FavoritesQuery {
   };
 }
 
+export interface CategoryQuery {
+  category: PostCategory;
+}
+
 export interface WhereClause {
   AND: (
     | TagsQuery
     | DateFilterConditional
     | UserSpecificQuery
     | FavoritesQuery
+    | CategoryQuery
   )[];
   NOT?: StrictSearchConditional | undefined;
 }

@@ -125,6 +125,20 @@ export const UploadSchema = z
     tags: z
       .array(z.string())
       .min(1, { message: "Must include at least 1 tag" }),
+    category: z.enum(
+      [
+        "twitter",
+        "instagram",
+        "blog",
+        "goods",
+        "news",
+        "magazine",
+        "photobook",
+        "website",
+        "other",
+      ],
+      { required_error: "Must select a category" },
+    ),
     description: z.optional(
       z
         .string()
@@ -156,6 +170,20 @@ export const UploadSchema = z
 
 export const BatchUploadSchema = z.object({
   tags: z.array(z.string()).min(1, { message: "Must include at least 1 tag" }),
+  category: z.enum(
+    [
+      "twitter",
+      "instagram",
+      "blog",
+      "goods",
+      "news",
+      "magazine",
+      "photobook",
+      "website",
+      "other",
+    ],
+    { required_error: "Must select a category" },
+  ),
   description: z.optional(
     z
       .string()
@@ -185,6 +213,20 @@ export const NewPostSchema = z
     tags: z
       .array(z.string())
       .min(1, { message: "Must include at least 1 tag" }),
+    category: z.enum(
+      [
+        "twitter",
+        "instagram",
+        "blog",
+        "goods",
+        "news",
+        "magazine",
+        "photobook",
+        "website",
+        "other",
+      ],
+      { required_error: "Must select a category" },
+    ),
     description: z.optional(
       z
         .string()
@@ -216,6 +258,20 @@ export const EditPostSchema = z.object({
   updatedTags: z
     .array(z.string())
     .min(1, { message: "Must include at least 1 tag" }),
+  category: z.enum(
+    [
+      "twitter",
+      "instagram",
+      "blog",
+      "goods",
+      "news",
+      "magazine",
+      "photobook",
+      "website",
+      "other",
+    ],
+    { required_error: "Must select a category" },
+  ),
   description: z.optional(
     z
       .string()

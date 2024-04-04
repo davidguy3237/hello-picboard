@@ -18,6 +18,7 @@ interface SearchFilterProps {
   handleStrictSearch: (value: boolean) => void;
   sortBy: "asc" | "desc" | undefined;
   handleSortBy: (value: string) => void;
+  handleCategory: (value: string) => void;
 }
 
 export function SearchFilter({
@@ -26,6 +27,7 @@ export function SearchFilter({
   handleStrictSearch,
   sortBy,
   handleSortBy,
+  handleCategory,
 }: SearchFilterProps) {
   return (
     <Popover>
@@ -60,6 +62,22 @@ export function SearchFilter({
           <SelectContent>
             <SelectItem value="desc">Newest</SelectItem>
             <SelectItem value="asc">Oldest</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select onValueChange={handleCategory} value={sortBy}>
+          <SelectTrigger>
+            <SelectValue placeholder="Category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="twitter">Twitter</SelectItem>
+            <SelectItem value="instagram">Instagram</SelectItem>
+            <SelectItem value="blog">Blog</SelectItem>
+            <SelectItem value="goods">Goods</SelectItem>
+            <SelectItem value="news">News</SelectItem>
+            <SelectItem value="magazine">Magazine</SelectItem>
+            <SelectItem value="photobook">Photobook</SelectItem>
+            <SelectItem value="website">Website</SelectItem>
+            <SelectItem value="other">Other</SelectItem>
           </SelectContent>
         </Select>
         {children}
