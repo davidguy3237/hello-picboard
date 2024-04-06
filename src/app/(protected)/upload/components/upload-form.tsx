@@ -44,7 +44,6 @@ export function UploadForm({
 }: UploadFormProps) {
   const [isPending, startTransition] = useTransition();
   const [postUrl, setPostUrl] = useState<string>("");
-  const [uploadFailed, setUploadFailed] = useState<boolean>(false);
   const [blobUrl, setBlobUrl] = useState(URL.createObjectURL(file));
 
   const form = useForm<z.infer<typeof UploadSchema>>({
@@ -73,8 +72,9 @@ export function UploadForm({
       });
 
       if (!response.ok) {
-        setUploadFailed(true);
-        toast.error("Something went wrong uploading your image");
+        toast.error(
+          `Something went wrong uploading ${file.name}. Please try again later.`,
+        );
       } else {
         const data = await response.json();
         setUploadedFiles((prev) => [...prev, file]);
@@ -88,7 +88,7 @@ export function UploadForm({
       {(isPending || !!postUrl) && (
         <div
           className={cn(
-            "absolute inset-0 z-10 flex h-full w-full items-center justify-center rounded-lg bg-muted/50 backdrop-blur-sm",
+            "absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center",
           )}
         >
           {isPending ? (
@@ -106,11 +106,18 @@ export function UploadForm({
           ) : null}
         </div>
       )}
-      <div className="flex">
+      <div
+        className={cn(
+          "flex",
+          (isPending || !!postUrl) && "select-none blur-sm",
+        )}
+      >
         <Dialog>
           <DialogTrigger
-            className="grid basis-1/4 cursor-zoom-in place-items-center px-1"
-            disabled={isPending || !!postUrl || uploadFailed}
+            className={cn(
+              "grid basis-1/4 cursor-zoom-in place-items-center px-1 disabled:cursor-auto",
+            )}
+            disabled={isPending || !!postUrl}
           >
             <img
               alt=""
@@ -156,7 +163,7 @@ export function UploadForm({
                   <FormControl>
                     <CustomAsyncCreatableSelect
                       onChangeFromForm={onChange}
-                      disabled={isPending || !!postUrl || uploadFailed}
+                      disabled={isPending || !!postUrl}
                     />
                   </FormControl>
                   <FormMessage />
@@ -164,7 +171,6 @@ export function UploadForm({
               )}
             />
             <FormField
-              disabled={isPending || !!postUrl || uploadFailed}
               control={form.control}
               name="category"
               render={({ field: { onChange } }) => (
@@ -172,7 +178,7 @@ export function UploadForm({
                   <FormLabel>Category</FormLabel>
                   <FormControl>
                     <CategorySelect
-                      disabled={isPending || !!postUrl || uploadFailed}
+                      disabled={isPending || !!postUrl}
                       onChangeFromForm={onChange}
                     />
                   </FormControl>
@@ -189,9 +195,10 @@ export function UploadForm({
                   <FormControl>
                     <Input
                       {...field}
-                      disabled={isPending || !!postUrl || uploadFailed}
+                      disabled={isPending || !!postUrl}
                       placeholder="Link to the post or article the image came from"
                       type="url"
+                      className="disabled:cursor-auto disabled:select-none"
                     />
                   </FormControl>
                   <FormMessage />
@@ -199,7 +206,6 @@ export function UploadForm({
               )}
             />
             <FormField
-              disabled={isPending || !!postUrl || uploadFailed}
               control={form.control}
               name="description"
               render={({ field }) => (
@@ -209,23 +215,21 @@ export function UploadForm({
                     <Textarea
                       {...field}
                       maxLength={500}
-                      disabled={isPending || !!postUrl || uploadFailed}
+                      disabled={isPending || !!postUrl}
+                      className="disabled:cursor-auto disabled:select-none"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              disabled={isPending || !!postUrl || uploadFailed}
-            >
+            <Button type="submit" disabled={isPending || !!postUrl}>
               Submit
             </Button>
           </form>
         </Form>
         <Button
-          disabled={isPending || !!postUrl || uploadFailed}
+          disabled={isPending || !!postUrl}
           variant="ghost"
           size="icon"
           className="absolute right-0 top-0 rounded-full"
