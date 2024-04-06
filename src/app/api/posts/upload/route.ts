@@ -157,7 +157,7 @@ export async function POST(req: NextRequest) {
           height,
           userId: user.id,
           category,
-          originUrl,
+          originUrl: sanitizedUrl,
           tags: {
             connectOrCreate: validatedFields.data.tags.map((tag) => {
               return {
