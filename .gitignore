@@ -38,3 +38,4 @@ next-env.d.ts
 
 /src/app/(public)/test
 /src/actions/test.ts
+/prisma/db-updater.mjs

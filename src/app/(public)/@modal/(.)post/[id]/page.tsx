@@ -1,20 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
+import DateDisplay from "@/components/date-display";
 import { FavoriteButton } from "@/components/posts/favorite-button";
 import ImageDisplay from "@/components/posts/image-display";
 import { OptionsPopover } from "@/components/posts/options-popover";
 import { PostInterceptModal } from "@/components/posts/post-intercept-modal";
 import Tag from "@/components/posts/tag";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
-import { format, formatDistanceToNow } from "date-fns";
-import { Clock, Folder, Link2, Ruler, TagIcon, User } from "lucide-react";
+import { Folder, Link2, Ruler, User } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 interface InterceptedPostPageProps {
@@ -45,17 +40,6 @@ export default async function InterceptedPostPage({
   if (!post) {
     notFound();
   }
-
-  const distance = formatDistanceToNow(new Date(post.createdAt), {
-    addSuffix: true,
-  });
-
-  const fullDate = format(new Date(post.createdAt), "h:mm a · MMMM d, yyyy");
-
-  const dateToShow =
-    distance.includes("months") || distance.includes("years")
-      ? fullDate
-      : distance;
 
   const avatarImageUrl = post.user?.image?.includes("avatars/")
     ? `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post.user.image}`
@@ -111,17 +95,7 @@ export default async function InterceptedPostPage({
             </div>
           )}
           <div className="flex flex-wrap gap-x-4 gap-y-1 lg:flex-col lg:gap-x-0 lg:gap-y-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-end gap-2 text-sm text-muted-foreground">
-                  <Clock className="h-4 w-4" />
-                  <span>{dateToShow}</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{fullDate}</p>
-              </TooltipContent>
-            </Tooltip>
+            <DateDisplay date={post.createdAt} />
             <div className="flex items-end gap-2 text-sm text-muted-foreground">
               <Ruler className="h-4 w-4" />
               {post.width && post.height ? (
