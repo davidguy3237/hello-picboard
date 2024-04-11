@@ -9,7 +9,7 @@ export default async function UserAlbumsPage({
 }) {
   const dbUser = await db.user.findUnique({
     where: {
-      name: params.username,
+      name: decodeURIComponent(params.username),
     },
   });
 
