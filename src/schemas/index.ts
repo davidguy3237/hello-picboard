@@ -297,7 +297,7 @@ export const SearchSchema = z.object({
       .string()
       .min(3, { message: "Search must be at least 3 characters" })
       .refine((val) => {
-        const validCharactersRegex = /^[a-zA-Z0-9_,=!\- ]+$/;
+        const validCharactersRegex = /^[a-zA-Z0-9_,=!\-# ]+$/;
         return validCharactersRegex.test(val);
       }),
   ),
