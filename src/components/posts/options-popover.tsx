@@ -108,7 +108,7 @@ export function OptionsPopover({
         )}
         <SaveToAlbumModal postId={postId} />
         <ReportButton postId={postId} />
-        {userId === currentUser?.id && (
+        {(userId === currentUser?.id || currentUser?.role === "ADMIN") && (
           <Link href={`/edit/${publicId}`} prefetch={false}>
             <Button
               variant="ghost"

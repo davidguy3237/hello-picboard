@@ -77,6 +77,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
     resolver: zodResolver(EditPostSchema),
     defaultValues: {
       publicId: post.publicId,
+      userId: post.userId || "",
       originalTags: originalTags,
       updatedTags: originalTags,
       category: post.category,

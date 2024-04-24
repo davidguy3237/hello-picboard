@@ -169,7 +169,7 @@ export async function newPost(newPostData: FormData) {
 
 export async function editPost(editData: z.infer<typeof EditPostSchema>) {
   const user = await currentUser();
-  if (!user) {
+  if (!user || (user.id !== editData.userId && user.role !== "ADMIN")) {
     return {
       error: "Unauthorized",
     };
@@ -202,7 +202,7 @@ export async function editPost(editData: z.infer<typeof EditPostSchema>) {
   const updatedPost = await db.post.update({
     where: {
       publicId: validatedFields.data.publicId,
-      userId: user.id,
+      userId: editData.userId,
     },
     data: {
       description: validatedFields.data.description,

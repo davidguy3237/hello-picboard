@@ -261,6 +261,7 @@ export const NewPostSchema = z
 
 export const EditPostSchema = z.object({
   publicId: z.string(),
+  userId: z.string(),
   originalTags: z
     .array(z.string())
     .min(1, { message: "Must include at least 1 tag" }),
