@@ -126,8 +126,21 @@ export async function POST(req: NextRequest) {
   let sanitizedUrl: string | undefined;
 
   if (originUrl) {
+    const trackingParams = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      "fbclid",
+      "gclid",
+      "mc_cid",
+      "mc_eid",
+    ];
     const parsedUrl = new URL(originUrl);
-    parsedUrl.search = "";
+    trackingParams.forEach((param) => {
+      parsedUrl.searchParams.delete(param);
+    });
     sanitizedUrl = parsedUrl.toString();
   }
 

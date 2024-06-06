@@ -194,8 +194,21 @@ export async function editPost(editData: z.infer<typeof EditPostSchema>) {
   let sanitizedUrl: string | undefined;
 
   if (validatedFields.data.originUrl) {
+    const trackingParams = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      "fbclid",
+      "gclid",
+      "mc_cid",
+      "mc_eid",
+    ];
     const parsedUrl = new URL(validatedFields.data.originUrl);
-    parsedUrl.search = "";
+    trackingParams.forEach((param) => {
+      parsedUrl.searchParams.delete(param);
+    });
     sanitizedUrl = parsedUrl.toString();
   }
 
