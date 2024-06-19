@@ -1,4 +1,5 @@
 import { PostCardList } from "@/components/posts/post-card-list";
+import { Metadata, ResolvingMetadata } from "next";
 
 interface PostTabsProps {
   params: {
@@ -13,6 +14,15 @@ interface PostTabsProps {
     from?: string;
     to?: string;
     category?: string;
+  };
+}
+
+export async function generateMetadata(
+  { params }: PostTabsProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  return {
+    title: `${params.username}'s Posts - Hello! Picboard`,
   };
 }
 

@@ -1,5 +1,6 @@
 // import { HomePageProps } from "@/app/(public)/home/types";
 import { PostCardList } from "@/components/posts/post-card-list";
+import { Metadata } from "next";
 
 interface HomePageProps {
   searchParams?: {
@@ -13,6 +14,11 @@ interface HomePageProps {
     category?: string;
   };
 }
+
+export const metadata: Metadata = {
+  title: "Home - Hello! Picboard",
+  description: "Japanese Idols Picture Board",
+};
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const query = searchParams?.query || "";

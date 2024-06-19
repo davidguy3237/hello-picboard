@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
+import { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -11,6 +12,31 @@ interface AlbumPageProps {
   params: {
     username: string;
     albumPublicId: string;
+  };
+}
+
+export async function generateMetadata(
+  { params }: AlbumPageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const dbUser = await db.user.findUnique({
+    where: {
+      name: decodeURIComponent(params.username),
+    },
+  });
+
+  if (!dbUser) {
+    notFound();
+  }
+
+  const album = await db.album.findUnique({
+    where: {
+      publicId: params.albumPublicId,
+    },
+  });
+
+  return {
+    title: `${album?.name} - Hello! Picboard`,
   };
 }
 

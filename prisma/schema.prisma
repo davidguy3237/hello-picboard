@@ -190,6 +190,7 @@ enum ReportReason {
   unrelated
   other
 }
+// TODO: add createdAt date
 model Report {
   id String @id @default(cuid())
   postId  String @map("post_id")
