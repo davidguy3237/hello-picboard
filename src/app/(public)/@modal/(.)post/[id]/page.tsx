@@ -10,11 +10,44 @@ import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { Folder, Link2, Ruler, User } from "lucide-react";
+import { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 interface InterceptedPostPageProps {
   params: {
     id: string;
+  };
+}
+
+export async function generateMetadata(
+  { params }: InterceptedPostPageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const post = await db.post.findUnique({
+    where: {
+      publicId: params.id,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+      tags: true,
+      _count: {
+        select: {
+          reports: true,
+        },
+      },
+    },
+  });
+
+  const tags = post?.tags.map((tag) => tag.name).toString() || [].toString();
+  const formattedTags = tags.replace(/,/g, ", ");
+
+  return {
+    title: `${formattedTags} - Post on Hello! Picboard`,
   };
 }
 

@@ -1,12 +1,24 @@
 import { AlbumCardsList } from "@/app/(public)/user/[username]/albums/components/album-cards-list";
 import db from "@/lib/db";
+import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 
-export default async function UserAlbumsPage({
-  params,
-}: {
-  params: { username: string };
-}) {
+interface UserAlbumProps {
+  params: {
+    username: string;
+  };
+}
+
+export async function generateMetadata(
+  { params }: UserAlbumProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  return {
+    title: `${params.username}'s Albums - Hello! Picboard`,
+  };
+}
+
+export default async function UserAlbumsPage({ params }: UserAlbumProps) {
   const dbUser = await db.user.findUnique({
     where: {
       name: decodeURIComponent(params.username),

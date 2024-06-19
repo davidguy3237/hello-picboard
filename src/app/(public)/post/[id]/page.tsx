@@ -8,6 +8,7 @@ import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { Folder, Link2, Ruler, User } from "lucide-react";
+import { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -16,6 +17,39 @@ interface PostPageProps {
     id: string;
   };
 }
+
+export async function generateMetadata(
+  { params }: PostPageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const post = await db.post.findUnique({
+    where: {
+      publicId: params.id,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+      tags: true,
+      _count: {
+        select: {
+          reports: true,
+        },
+      },
+    },
+  });
+
+  const tags = post?.tags.map((tag) => tag.name).toString() || [].toString();
+  const formattedTags = tags.replace(/,/g, ", ");
+
+  return {
+    title: `${formattedTags} - Post on Hello! Picboard`,
+  };
+}
+
 export default async function PostPage({ params }: PostPageProps) {
   const user = await currentUser();
   const post = await db.post.findUnique({

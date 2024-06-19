@@ -1,10 +1,20 @@
 import { FavoritesPostCardList } from "@/components/posts/favorites-post-card-list";
 import { currentUser } from "@/lib/auth";
+import { Metadata, ResolvingMetadata } from "next";
 import { redirect } from "next/navigation";
 
 interface UserFavoritesPageProps {
   params: {
     username: string;
+  };
+}
+
+export async function generateMetadata(
+  { params }: UserFavoritesPageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  return {
+    title: `${params.username}'s Favorites - Hello! Picboard`,
   };
 }
 
