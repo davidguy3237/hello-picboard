@@ -42,7 +42,11 @@ export async function generateMetadata(
     },
   });
 
-  const tags = post?.tags.map((tag) => tag.name).toString() || [].toString();
+  const tags =
+    post?.tags
+      .map((tag) => tag.name)
+      .sort((a, b) => (a > b ? 1 : -1))
+      .toString() || [].toString();
   const formattedTags = tags.replace(/,/g, ", ");
 
   return {
