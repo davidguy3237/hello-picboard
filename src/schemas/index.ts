@@ -151,7 +151,7 @@ export const UploadSchema = z
       .instanceof(File)
       .refine(
         (file) => {
-          return file.size <= 1024 * 1024 * 4;
+          return file.size <= 1024 * 1024 * 8;
         },
         { message: "Image must be 4MB or smaller" },
       )
@@ -200,7 +200,7 @@ export const BatchUploadSchema = z.object({
       .instanceof(File)
       .refine(
         (file) => {
-          return file.size <= 1024 * 1024 * 4;
+          return file.size <= 1024 * 1024 * 8;
         },
         { message: "Image must be 4MB or smaller" },
       )

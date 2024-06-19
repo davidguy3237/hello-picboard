@@ -8,6 +8,12 @@ import { customAlphabet } from "nanoid";
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+};
+
 if (
   !process.env.B2_ENDPOINT ||
   !process.env.B2_REGION ||
@@ -20,7 +26,7 @@ if (
 }
 
 const acceptedFileTypes = ["image/jpeg", "image/png"];
-const maxFileSize = 1024 * 1024 * 4; // 4MB
+const maxFileSize = 1024 * 1024 * 8; // 4MB
 
 const s3 = new S3Client({
   endpoint: process.env.B2_ENDPOINT,
