@@ -68,7 +68,18 @@ export function ReportButton({ postId }: { postId: string }) {
   };
 
   if (!user) {
-    return null;
+    return (
+      <Link href={"/login"} prefetch={false}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex w-full justify-between active:bg-background"
+        >
+          <Flag className="mr-2 h-4 w-4" />
+          Report
+        </Button>
+      </Link>
+    );
   }
 
   return (
