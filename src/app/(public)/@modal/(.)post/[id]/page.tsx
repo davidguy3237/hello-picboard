@@ -59,7 +59,7 @@ export async function generateMetadata(
     twitter: {
       card: "summary_large_image",
       title: `${formattedTags} - Post | Hello! Picboard`,
-      description: post?.description || "Post on Hello! Picboard",
+      description: post?.description || "Post on Hello! Picboard TEST",
       images: post?.originUrl as string,
     },
   };
