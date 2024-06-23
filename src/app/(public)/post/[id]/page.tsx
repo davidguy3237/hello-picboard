@@ -54,8 +54,8 @@ export async function generateMetadata(
     description: post?.description || "Post on Hello! Picboard",
     openGraph: {
       images: {
-        url: post?.originUrl as string,
-        secureUrl: post?.originUrl as string,
+        url: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.originUrl}`,
+        secureUrl: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.originUrl}`,
         width: 1200,
         height: 630,
         alt: "This is a TEST",
@@ -68,7 +68,7 @@ export async function generateMetadata(
       description: post?.description || "Post on Hello! Picboard",
       creator: "@davidguy__",
       images: {
-        url: post?.originUrl as string,
+        url: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.originUrl}`,
         alt: "This is a TEST",
       },
     },
