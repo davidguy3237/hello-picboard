@@ -56,9 +56,6 @@ export async function generateMetadata(
       images: {
         url: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.sourceUrl}`,
         secureUrl: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.sourceUrl}`,
-        width: 1200,
-        height: 630,
-        alt: "This is a TEST",
       },
     },
     twitter: {
@@ -69,7 +66,6 @@ export async function generateMetadata(
       creator: "@davidguy__",
       images: {
         url: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.sourceUrl}`,
-        alt: "This is a TEST",
       },
     },
   };
