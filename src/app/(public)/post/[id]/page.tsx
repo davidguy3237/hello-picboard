@@ -53,13 +53,24 @@ export async function generateMetadata(
     title: `${formattedTags} - Post | Hello! Picboard`,
     description: post?.description || "Post on Hello! Picboard",
     openGraph: {
-      images: post?.originUrl as string,
+      images: {
+        url: post?.originUrl as string,
+        secureUrl: post?.originUrl as string,
+        width: 1200,
+        height: 630,
+        alt: "This is a TEST",
+      },
     },
     twitter: {
       card: "summary_large_image",
+      site: "@davidguy__",
       title: `${formattedTags} - Post | Hello! Picboard`,
       description: post?.description || "Post on Hello! Picboard",
-      images: post?.originUrl as string,
+      creator: "@davidguy__",
+      images: {
+        url: post?.originUrl as string,
+        alt: "This is a TEST",
+      },
     },
   };
 }
