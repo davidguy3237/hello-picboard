@@ -50,7 +50,17 @@ export async function generateMetadata(
   const formattedTags = tags.replace(/,/g, ", ");
 
   return {
-    title: `${formattedTags} - Post on Hello! Picboard`,
+    title: `${formattedTags} - Post | Hello! Picboard`,
+    description: post?.description || "Post on Hello! Picboard",
+    openGraph: {
+      images: post?.originUrl as string,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${formattedTags} - Post | Hello! Picboard`,
+      description: post?.description || "Post on Hello! Picboard",
+      images: post?.originUrl as string,
+    },
   };
 }
 
