@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface BackButtonProps {
   label: string;
@@ -9,11 +10,20 @@ interface BackButtonProps {
 }
 
 export function BackButton({ label, href }: BackButtonProps) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.replace(href);
+  };
+
   return (
-    <Button variant="link" className="w-full font-normal" size="sm" asChild>
-      <Link href={href} prefetch={false} scroll={false}>
-        {label}
-      </Link>
+    <Button
+      variant="link"
+      className="w-full font-normal"
+      size="sm"
+      onClick={handleClick}
+    >
+      {label}
     </Button>
   );
 }

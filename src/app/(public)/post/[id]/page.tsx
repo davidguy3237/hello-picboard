@@ -50,7 +50,24 @@ export async function generateMetadata(
   const formattedTags = tags.replace(/,/g, ", ");
 
   return {
-    title: `${formattedTags} - Post on Hello! Picboard`,
+    title: `${formattedTags} - Post | Hello! Picboard`,
+    description: post?.description || "Post on Hello! Picboard",
+    openGraph: {
+      images: {
+        url: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.sourceUrl}`,
+        secureUrl: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.sourceUrl}`,
+      },
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@davidguy__",
+      title: `${formattedTags} - Post | Hello! Picboard`,
+      description: post?.description || "Post on Hello! Picboard",
+      creator: "@davidguy__",
+      images: {
+        url: `${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post?.sourceUrl}`,
+      },
+    },
   };
 }
 
