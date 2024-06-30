@@ -6,7 +6,7 @@ import { Clock } from "lucide-react";
 
 export default function DateDisplay({ date }: { date: Date }) {
   const distance = formatDistanceToNow(new Date(date), { addSuffix: true });
-  const fullDate = format(new Date(date), "h:mm a · MMMM d, yyyy");
+  const fullDate = format(new Date(date), "MMMM d, yyyy");
   const dateToShow =
     distance.includes("months") || distance.includes("years")
       ? fullDate
