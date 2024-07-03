@@ -28,6 +28,7 @@ import { NewAlbumSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Album, PostsAlbums } from "@prisma/client";
 import { AlbumIcon, Loader2, Plus } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -108,7 +109,18 @@ export function SaveToAlbumModal({ postId }: SaveToAlbumModalProps) {
   };
 
   if (!user) {
-    return null;
+    return (
+      <Link href={"/login"} prefetch={false}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex w-full justify-between active:bg-background"
+        >
+          <AlbumIcon className="mr-2 h-4 w-4" />
+          Add To Album
+        </Button>
+      </Link>
+    );
   }
 
   return (

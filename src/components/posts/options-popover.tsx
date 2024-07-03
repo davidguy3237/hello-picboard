@@ -95,7 +95,7 @@ export function OptionsPopover({
           <Copy className="mr-2 h-4 w-4" />
           Copy URL
         </Button>
-        {currentUser && (
+        {currentUser ? (
           <Button
             variant="ghost"
             size="sm"
@@ -105,6 +105,17 @@ export function OptionsPopover({
             <Download className="mr-2 h-4 w-4" />
             Download
           </Button>
+        ) : (
+          <Link href={"/login"} prefetch={false}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex w-full justify-between active:bg-background"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download
+            </Button>
+          </Link>
         )}
         <SaveToAlbumModal postId={postId} />
         <ReportButton postId={postId} />

@@ -58,7 +58,7 @@ export function FavoritesPostCardList({ endpoint }: { endpoint?: string }) {
     <div
       className={cn(
         "flex w-full max-w-screen-2xl flex-col items-center justify-center pb-4",
-        expandView && " max-w-full lg:px-4",
+        expandView && " max-w-full lg:px-1",
       )}
     >
       <div className="sticky top-0 z-10 flex  w-full items-center justify-end bg-background">

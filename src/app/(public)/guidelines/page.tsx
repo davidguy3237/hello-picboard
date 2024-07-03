@@ -5,6 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Content Guidelines - Hello! Picboard",
+};
 
 export default function ContentGuidelinesPage() {
   return (
