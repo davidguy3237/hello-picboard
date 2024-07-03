@@ -11,7 +11,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ExtendedUser } from "@/next-auth";
-import { Album, Heart, Images, LogOut, Settings, User } from "lucide-react";
+import {
+  Album,
+  Heart,
+  Images,
+  LockKeyhole,
+  LogOut,
+  Settings,
+  User,
+} from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -71,6 +79,17 @@ export function UserButton({ user }: UserButtonProps) {
           </DropdownMenuItem>
         </Link>
         <DarkModeToggle />
+        {user.role === "ADMIN" && (
+          <>
+            <DropdownMenuSeparator />
+            <Link href={`/admin`}>
+              <DropdownMenuItem>
+                <LockKeyhole className="mr-2 h-4 w-4" />
+                Admin Page
+              </DropdownMenuItem>
+            </Link>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="mr-2 h-4 w-4" />
