@@ -131,6 +131,16 @@ export function OptionsPopover({
             </Button>
           </Link>
         )}
+        <Link href={`/replace/${publicId}`} prefetch={false}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex w-full justify-between active:bg-background"
+          >
+            <Pencil className="mr-2 h-4 w-4" />
+            REPLACE
+          </Button>
+        </Link>
       </PopoverContent>
     </Popover>
   );
