@@ -204,3 +204,10 @@ model Report {
 
   @@map("report")
 }
+
+model Feedback {
+  id String @id @default(cuid())
+  username String
+  details String
+  createdAt DateTime @default(now()) @map("created_at")
+}
