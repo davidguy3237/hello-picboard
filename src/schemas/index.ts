@@ -383,3 +383,11 @@ export const ReportSchema = z
       path: ["url"],
     },
   );
+
+export const FeedbackSchema = z.object({
+  username: z.string().min(1, { message: "Name is required" }),
+  details: z
+    .string()
+    .min(3, { message: "Feedback must be at least 3 characters" })
+    .max(1000, { message: "Feedback must be 1000 characters or fewer" }),
+});

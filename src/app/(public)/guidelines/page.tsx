@@ -34,8 +34,8 @@ export default function ContentGuidelinesPage() {
           </li>
           <li>
             <strong>Relevance:</strong> Ensure that uploaded images are relevant
-            to the theme of Japanese idols. Off-topic or unrelated content may
-            be subject to removal.
+            to the theme of Japanese idols, any Japanese idols are allowed.
+            Off-topic or unrelated content may be subject to removal.
           </li>
           <li>
             <strong>Tag Creation:</strong> To ensure accurate and high quality
