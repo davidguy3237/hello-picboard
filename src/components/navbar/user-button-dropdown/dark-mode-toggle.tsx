@@ -7,16 +7,19 @@ import { useTheme } from "next-themes";
 import { MouseEvent } from "react";
 
 export function DarkModeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, systemTheme, setTheme } = useTheme();
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
-    const currentTheme = localStorage.getItem("theme");
-    if (currentTheme === "light") {
+    if (theme === "system") {
+      if (systemTheme === "dark") {
+        setTheme("light");
+      } else if (systemTheme === "light") {
+        setTheme("dark");
+      }
+    } else if (theme === "light") {
       setTheme("dark");
-    } else if (currentTheme === "dark") {
-      setTheme("light");
-    } else {
+    } else if (theme === "dark") {
       setTheme("light");
     }
   };
@@ -31,7 +34,9 @@ export function DarkModeToggle() {
         Dark Mode
       </label>
       <Switch
-        checked={localStorage.getItem("theme") === "dark"}
+        checked={
+          theme === "dark" || (theme === "system" && systemTheme === "dark")
+        }
         id="dark-mode-toggle"
       />
     </DropdownMenuItem>
