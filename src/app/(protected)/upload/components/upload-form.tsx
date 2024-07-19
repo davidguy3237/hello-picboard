@@ -156,6 +156,16 @@ export function UploadForm({
             </div>
             <FormField
               control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>IMAGE</FormLabel>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="tags"
               render={({ field: { onChange } }) => (
                 <FormItem>
