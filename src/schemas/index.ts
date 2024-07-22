@@ -159,7 +159,7 @@ export const UploadSchema = z
         async (file) => {
           return await isValidImageFile(file);
         },
-        { message: "Must be valid JPEG or PNG file" },
+        { message: "Must be valid JPG, JPEG, PNG, WebP or AVIF file" },
       ),
   })
   .refine((data) => data.tags.every((el) => el.length >= 3), {
@@ -208,7 +208,7 @@ export const BatchUploadSchema = z.object({
         async (file) => {
           return await isValidImageFile(file);
         },
-        { message: "Must be valid JPEG or PNG file" },
+        { message: "Must be valid JPG, JPEG, PNG, WebP or AVIF file" },
       ),
   ),
 });
@@ -243,7 +243,14 @@ export const NewPostSchema = z
     ),
     sourceUrl: z
       .string()
-      .refine((val) => val.endsWith(".jpg") || val.endsWith(".png")),
+      .refine(
+        (val) =>
+          val.endsWith(".jpg") ||
+          val.endsWith(".jpeg") ||
+          val.endsWith(".png") ||
+          val.endsWith(".webp") ||
+          val.endsWith(".avif"),
+      ),
     thumbnailUrl: z
       .string()
       .refine((val) => val.startsWith("thumbnails/") && val.endsWith(".webp")),

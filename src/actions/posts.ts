@@ -26,7 +26,12 @@ if (
   );
 }
 
-const acceptedFileTypes = ["image/jpeg", "image/png"];
+const acceptedFileTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/avif",
+];
 const maxFileSize = 1024 * 1024 * 4; // 4MB
 
 const s3 = new S3Client({
@@ -77,7 +82,7 @@ export async function newPost(newPostData: FormData) {
     return { error: "No tags provided" };
   }
 
-  const sourcefileExtension = image.type === "image/jpeg" ? ".jpg" : ".png";
+  const sourcefileExtension = `.${image.type.slice(image.type.lastIndexOf("/") + 1)}`;
   const thumbnailFileExtension = ".webp";
   const folderName = "thumbnails";
   const nanoid = customAlphabet(process.env.NANOID_ALPHABET, 12);

@@ -155,7 +155,7 @@ export function SettingsForm({ user }: SettingsFormProps) {
               onChange={handleUploadAvatar}
               type="file"
               className="hidden"
-              accept="image/jpeg, image/png"
+              accept="image/jpeg, image/png, image/webp, image/avif"
               disabled={isPending}
             />
           </Label>
