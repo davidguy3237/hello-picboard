@@ -38,7 +38,7 @@ export default function UploadPage() {
         message: "JPG, JPEG, PNG, WEBP, or AVIF files only",
       };
     }
-    if (file.size > 1024 * 1024 * 8) {
+    if (file.size > 1024 * 1024 * 50) {
       return {
         code: "size-too-large",
         message: "Image must be 4MB or smaller",
