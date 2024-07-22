@@ -25,8 +25,13 @@ if (
   );
 }
 
-const acceptedFileTypes = ["image/jpeg", "image/png"];
-const maxFileSize = 1024 * 1024 * 8; // 4MB
+const acceptedFileTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/avif",
+];
+const maxFileSize = 1024 * 1024 * 4; // 4MB
 
 const s3 = new S3Client({
   endpoint: process.env.B2_ENDPOINT,
@@ -66,23 +71,30 @@ export async function POST(req: NextRequest) {
   const tags = formData.getAll("tags[]");
   const originUrl = formData.get("originUrl") as string;
 
+  console.log(formData);
+
   if (!image) {
+    console.log("no image");
     return NextResponse.json("Missing image", { status: 400 });
   }
   if (!acceptedFileTypes.includes(image.type)) {
+    console.log("invalid file type");
     return NextResponse.json("Invalid file type", { status: 400 });
   }
   if (image.size > maxFileSize) {
+    console.log("file too large");
     return NextResponse.json("File too large", { status: 400 });
   }
   if (tags.length === 0) {
+    console.log("no tags");
     return NextResponse.json("No tags provided", { status: 400 });
   }
   if (!category) {
+    console.log("no category");
     return NextResponse.json("No category provided", { status: 400 });
   }
 
-  const sourcefileExtension = image.type === "image/jpeg" ? ".jpg" : ".png";
+  const sourcefileExtension = `.${image.type.slice(image.type.lastIndexOf("/") + 1)}`;
   const thumbnailFileExtension = ".webp";
   const folderName = "thumbnails";
   const nanoid = customAlphabet(process.env.NANOID_ALPHABET, 12);
@@ -128,7 +140,7 @@ export async function POST(req: NextRequest) {
   }
   const sourceUrl = `${publicId}${sourcefileExtension}`;
   const thumbnailUrl = `${folderName}/${thumbnailName}${thumbnailFileExtension}`;
-
+  console.log(sourceUrl, thumbnailUrl);
   let sanitizedUrl: string | undefined;
 
   if (originUrl) {
@@ -163,6 +175,7 @@ export async function POST(req: NextRequest) {
   });
 
   if (!validatedFields.success) {
+    console.log("invalid fields");
     return NextResponse.json("Something went wrong", { status: 400 });
   } else {
     try {

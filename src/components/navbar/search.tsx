@@ -272,6 +272,7 @@ export function Search() {
         isStrictSearch={isStrictSearch}
         handleStrictSearch={handleStrictSearch}
         sortBy={sortBy}
+        category={category}
         handleSortBy={handleSortBy}
         handleCategory={handleCategory}
       >

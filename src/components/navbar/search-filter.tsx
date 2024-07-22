@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PostCategory } from "@prisma/client";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { SlidersHorizontal } from "lucide-react";
 
@@ -17,6 +18,7 @@ interface SearchFilterProps {
   isStrictSearch: boolean | undefined;
   handleStrictSearch: (value: boolean) => void;
   sortBy: "asc" | "desc" | undefined;
+  category: PostCategory | undefined;
   handleSortBy: (value: string) => void;
   handleCategory: (value: string) => void;
 }
@@ -26,6 +28,7 @@ export function SearchFilter({
   isStrictSearch,
   handleStrictSearch,
   sortBy,
+  category,
   handleSortBy,
   handleCategory,
 }: SearchFilterProps) {
@@ -64,7 +67,7 @@ export function SearchFilter({
             <SelectItem value="asc">Oldest</SelectItem>
           </SelectContent>
         </Select>
-        <Select onValueChange={handleCategory} value={sortBy}>
+        <Select onValueChange={handleCategory} value={category}>
           <SelectTrigger>
             <SelectValue placeholder="Category" />
           </SelectTrigger>

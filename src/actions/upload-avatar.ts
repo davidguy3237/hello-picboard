@@ -28,7 +28,12 @@ const s3 = new S3Client({
   },
 });
 
-const acceptedFileTypes = ["image/jpeg", "image/png"];
+const acceptedFileTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/avif",
+];
 const maxFileSize = 1024 * 1024 * 4; // 4MB
 
 export async function uploadAvatar(uploadAvatarData: FormData) {

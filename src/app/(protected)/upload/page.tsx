@@ -27,10 +27,15 @@ export default function UploadPage() {
   );
 
   const validateFile = (file: File) => {
-    if (file.type !== "image/png" && file.type !== "image/jpeg") {
+    if (
+      file.type !== "image/png" &&
+      file.type !== "image/jpeg" &&
+      file.type !== "image/webp" &&
+      file.type !== "image/avif"
+    ) {
       return {
         code: "file-invalid-type",
-        message: "JPG, JPEG, or PNG files only",
+        message: "JPG, JPEG, PNG, WEBP, or AVIF files only",
       };
     }
     if (file.size > 1024 * 1024 * 8) {
@@ -144,7 +149,10 @@ export default function UploadPage() {
                 </span>{" "}
                 or drag and drop
               </p>
-              <p>up to 200 images (JPG or PNG only), 4MB per file</p>
+              <p>
+                up to 200 images (JPG, JPEG, PNG, WEBP, or AVIF only), 4MB per
+                file
+              </p>
             </div>
           </div>
         </CardContent>

@@ -110,7 +110,7 @@ export function AlbumsPostCardList({
     <div
       className={cn(
         "flex w-full max-w-screen-2xl flex-col items-center justify-center pb-4",
-        expandView && " max-w-full lg:px-4",
+        expandView && "max-w-full lg:px-1",
       )}
     >
       <div

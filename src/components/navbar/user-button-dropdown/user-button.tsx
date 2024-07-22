@@ -11,9 +11,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ExtendedUser } from "@/next-auth";
-import { Album, Heart, Images, LogOut, Settings, User } from "lucide-react";
+import {
+  Album,
+  BookText,
+  Heart,
+  Images,
+  LogOut,
+  MessageSquareWarning,
+  Settings,
+  User,
+} from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { FaGithub } from "react-icons/fa";
 
 interface UserButtonProps {
   user?: ExtendedUser | undefined;
@@ -71,6 +81,29 @@ export function UserButton({ user }: UserButtonProps) {
           </DropdownMenuItem>
         </Link>
         <DarkModeToggle />
+        <DropdownMenuSeparator />
+        <Link href="/guidelines" prefetch={false} target="_blank">
+          <DropdownMenuItem>
+            <BookText className="mr-2 h-4 w-4" />
+            Content Guidelines
+          </DropdownMenuItem>
+        </Link>
+        <Link href="/feedback" prefetch={false}>
+          <DropdownMenuItem>
+            <MessageSquareWarning className="mr-2 h-4 w-4" />
+            Send Feedback
+          </DropdownMenuItem>
+        </Link>
+        <Link
+          href="https://github.com/davidguy3237/hello-picboard"
+          prefetch={false}
+          target="_blank"
+        >
+          <DropdownMenuItem>
+            <FaGithub className="mr-2 h-4 w-4" />
+            GitHub
+          </DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>
           <LogOut className="mr-2 h-4 w-4" />

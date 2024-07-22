@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { currentUser } from "@/lib/auth";
 import { Upload } from "lucide-react";
 import Link from "next/link";
+import { OptionsButton } from "./options-button";
 
 interface NavbarProps {
   showSearch?: boolean;
@@ -38,10 +39,10 @@ export async function Navbar({ showSearch = true }: NavbarProps) {
           <UserButton user={user} />
         ) : (
           <>
-            <ThemeToggleButton />
             <Link href="/register" prefetch={false} scroll={false}>
               <Button variant="outline">Sign Up</Button>
             </Link>
+            <OptionsButton />
           </>
         )}
       </div>

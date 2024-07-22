@@ -6,9 +6,12 @@ import { Clock } from "lucide-react";
 
 export default function DateDisplay({ date }: { date: Date }) {
   const distance = formatDistanceToNow(new Date(date), { addSuffix: true });
-  const fullDate = format(new Date(date), "h:mm a · MMMM d, yyyy");
+  const fullDate = format(new Date(date), "MMMM d, yyyy");
+  const fullTimeAndDate = format(new Date(date), "h:mm a · MMMM d, yyyy");
   const dateToShow =
-    distance.includes("months") || distance.includes("years")
+    distance.includes("month") ||
+    distance.includes("months") ||
+    distance.includes("years")
       ? fullDate
       : distance;
 
@@ -21,7 +24,7 @@ export default function DateDisplay({ date }: { date: Date }) {
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        <p>{fullDate}</p>
+        <p>{fullTimeAndDate}</p>
       </TooltipContent>
     </Tooltip>
   );
