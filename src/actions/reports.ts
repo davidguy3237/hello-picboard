@@ -2,6 +2,7 @@
 import { currentUser } from "@/lib/auth";
 import db from "@/lib/db";
 import { ReportSchema } from "@/schemas";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export async function reportPost(reportData: z.infer<typeof ReportSchema>) {
@@ -43,4 +44,31 @@ export async function reportPost(reportData: z.infer<typeof ReportSchema>) {
   } else {
     return { success: "Post reported successfully" };
   }
+}
+
+export async function deleteReport(id: string) {
+  const user = await currentUser();
+  if (!user) {
+    return { error: "Unauthorized" };
+  }
+  if (user.role !== "ADMIN") {
+    return { error: "Unauthorized" };
+  }
+
+  const deletedReport = await db.report.delete({
+    where: {
+      id,
+    },
+  });
+
+  if (!deletedReport) {
+    return {
+      error: "There was a problem deleting this report",
+    };
+  }
+
+  revalidatePath("/admin");
+  return {
+    success: "Report successfully deleted",
+  };
 }

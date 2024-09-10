@@ -28,7 +28,10 @@ export default auth((req) => {
       );
     }
 
-    if (req.auth?.user.role !== "ADMIN") {
+    if (
+      nextUrl.pathname.includes("/admin") &&
+      req.auth?.user.role !== "ADMIN"
+    ) {
       return Response.redirect(new URL("/", nextUrl));
     }
   }

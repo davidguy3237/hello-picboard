@@ -192,6 +192,7 @@ model Report {
   id String @id @default(cuid())
   postId  String @map("post_id")
   userId  String @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
   reason  ReportReason
   url     String?
   details String?
