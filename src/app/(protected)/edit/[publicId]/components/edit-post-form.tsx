@@ -106,6 +106,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
         post.publicId,
         post.sourceUrl,
         post.thumbnailUrl,
+        post.userId,
       );
       if (!deletePostResult.success) {
         toast.error(deletePostResult.error);
