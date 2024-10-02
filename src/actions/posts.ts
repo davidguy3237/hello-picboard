@@ -248,10 +248,17 @@ export async function deletePost(
   publicId: string,
   sourceUrl: string,
   thumbnailUrl: string,
+  userId: string | null,
 ) {
   const user = await currentUser();
 
   if (!user) {
+    return {
+      error: "Unauthorized",
+    };
+  }
+
+  if (user.id !== userId && user.role !== "ADMIN") {
     return {
       error: "Unauthorized",
     };
@@ -266,7 +273,7 @@ export async function deletePost(
   const deletedPost = await db.post.delete({
     where: {
       publicId: publicId,
-      userId: user.id,
+      userId: userId,
     },
   });
 
