@@ -16,6 +16,7 @@ import {
   BookText,
   Heart,
   Images,
+  LockKeyhole,
   LogOut,
   MessageSquareWarning,
   Settings,
@@ -81,6 +82,17 @@ export function UserButton({ user }: UserButtonProps) {
           </DropdownMenuItem>
         </Link>
         <DarkModeToggle />
+        {user.role === "ADMIN" && (
+          <>
+            <DropdownMenuSeparator />
+            <Link href={`/admin`}>
+              <DropdownMenuItem>
+                <LockKeyhole className="mr-2 h-4 w-4" />
+                Admin Page
+              </DropdownMenuItem>
+            </Link>
+          </>
+        )}
         <DropdownMenuSeparator />
         <Link href="/guidelines" prefetch={false} target="_blank">
           <DropdownMenuItem>

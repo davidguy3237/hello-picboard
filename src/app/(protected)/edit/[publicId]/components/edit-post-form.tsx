@@ -77,6 +77,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
     resolver: zodResolver(EditPostSchema),
     defaultValues: {
       publicId: post.publicId,
+      userId: post.userId || "",
       originalTags: originalTags,
       updatedTags: originalTags,
       category: post.category,
@@ -145,7 +146,7 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
           </div>
         )}
         <Dialog>
-          <DialogTrigger className=" flex w-1/4 items-center justify-center pr-2">
+          <DialogTrigger className="flex w-1/4 items-center justify-center pr-2">
             <img
               alt=""
               src={`${process.env.NEXT_PUBLIC_PHOTOS_DOMAIN}/${post.thumbnailUrl}`}
@@ -249,6 +250,14 @@ export function EditPostForm({ post }: { post: PostWithTags }) {
             </Button>
           </form>
         </Form>
+        <Button
+          disabled={isPending || isComplete}
+          variant="secondary"
+          className="absolute left-2 top-2 flex items-center justify-between"
+          onClick={() => router.back()}
+        >
+          <span>Cancel</span>
+        </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button

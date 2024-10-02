@@ -32,7 +32,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 
   if (!post) {
     notFound();
-  } else if (post.userId !== user.id) {
+  } else if (post.userId !== user.id && user.role !== "ADMIN") {
     notFound();
   }
 

@@ -18,13 +18,22 @@ export default auth((req) => {
     return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
-  if (isProtectedRoute && !isLoggedIn) {
-    let callbackUrl = nextUrl.pathname + (nextUrl.search || "");
-    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+  if (isProtectedRoute) {
+    if (!isLoggedIn) {
+      let callbackUrl = nextUrl.pathname + (nextUrl.search || "");
+      const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
-    return Response.redirect(
-      new URL(`/login?cbu=${encodedCallbackUrl}`, nextUrl),
-    );
+      return Response.redirect(
+        new URL(`/login?cbu=${encodedCallbackUrl}`, nextUrl),
+      );
+    }
+
+    if (
+      nextUrl.pathname.includes("/admin") &&
+      req.auth?.user.role !== "ADMIN"
+    ) {
+      return Response.redirect(new URL("/", nextUrl));
+    }
   }
 
   if (
@@ -50,5 +59,6 @@ export const config = {
     "/upload",
     "/edit/:id*",
     "/user/:username/favorites",
+    "/admin",
   ],
 };
