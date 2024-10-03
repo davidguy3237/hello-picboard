@@ -31,6 +31,8 @@ export function Search() {
   const [sortBy, setSortBy] = useState<"asc" | "desc" | undefined>();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(0);
+  const [enteredSearchSuggestions, setEnteredSearchSuggestions] =
+    useState<boolean>(false);
   const [category, setCategory] = useState<PostCategory | undefined>();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -145,14 +147,19 @@ export function Search() {
 
     if (key === "ArrowDown") {
       e.preventDefault();
-      if (searchSuggestions.length > 0) {
-        setSelectedSuggestion((prev) => {
-          if (prev === searchSuggestions.length - 1) {
-            return 0;
-          } else {
-            return prev + 1;
-          }
-        });
+      if (!enteredSearchSuggestions) {
+        setEnteredSearchSuggestions(true);
+        setSelectedSuggestion(0);
+      } else {
+        if (searchSuggestions.length > 0) {
+          setSelectedSuggestion((prev) => {
+            if (prev === searchSuggestions.length - 1) {
+              return 0;
+            } else {
+              return prev + 1;
+            }
+          });
+        }
       }
     }
 
@@ -171,19 +178,24 @@ export function Search() {
 
     if (key === "Enter") {
       e.preventDefault();
-      if (inputRef.current) {
-        const inputValueArray = inputRef.current.value
-          .trim()
-          .split(",")
-          .map((word) => word.trim());
+      if (!enteredSearchSuggestions) {
+        handleSubmit();
+      } else {
+        if (inputRef.current) {
+          const inputValueArray = inputRef.current.value
+            .trim()
+            .split(",")
+            .map((word) => word.trim());
 
-        const lastSearchValue = inputValueArray[inputValueArray.length - 1];
+          const lastSearchValue = inputValueArray[inputValueArray.length - 1];
 
-        if (lastSearchValue.length === 0) {
-          handleSubmit();
-        } else if (searchSuggestions.length > 0) {
-          const suggestion = searchSuggestions[selectedSuggestion];
-          handleClick(suggestion);
+          if (lastSearchValue.length === 0) {
+            handleSubmit();
+          } else if (searchSuggestions.length > 0) {
+            const suggestion = searchSuggestions[selectedSuggestion];
+            handleClick(suggestion);
+            setEnteredSearchSuggestions(false);
+          }
         }
       }
     }
@@ -219,6 +231,7 @@ export function Search() {
           defaultValue={searchParams.get("query")?.toString()}
           onKeyDown={navigateSuggestions}
           onBlur={() => {
+            setEnteredSearchSuggestions(false);
             setSelectedSuggestion(0);
           }}
           className="peer flex-grow pr-10 placeholder:italic"
@@ -258,7 +271,9 @@ export function Search() {
                   }}
                   className={cn(
                     "flex h-8 items-center pl-2 text-sm hover:cursor-pointer hover:bg-secondary",
-                    selectedSuggestion === index && "bg-secondary",
+                    enteredSearchSuggestions &&
+                      selectedSuggestion === index &&
+                      "bg-secondary",
                   )}
                 >
                   {suggestion}
