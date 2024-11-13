@@ -52,7 +52,7 @@ export default function UploadPage() {
       onDrop,
       accept: {
         "image/png": [".png"],
-        "image/jpeg": [".jpg", "jpeg"],
+        "image/jpeg": [".jpg", ".jpeg"],
         "image/webp": [".webp"],
         "image/avif": [".avif"],
       },
