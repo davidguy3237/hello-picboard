@@ -50,6 +50,12 @@ export default function UploadPage() {
   const { getRootProps, getInputProps, isDragReject, isDragAccept } =
     useDropzone({
       onDrop,
+      accept: {
+        "image/png": [".png"],
+        "image/jpeg": [".jpg", ".jpeg"],
+        "image/webp": [".webp"],
+        "image/avif": [".avif"],
+      },
       maxFiles: 200,
       validator: validateFile,
     });
