@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"], // If your code runs in the DOM, tells TypeScript what built-in types to include.
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ], // If your code runs in the DOM, tells TypeScript what built-in types to include.
     "allowJs": true, // Allows you to import .js files
     "skipLibCheck": true, // Skips checking the types of .d.ts files. This is important for performance, because otherwise all node_modules will be checked.
     "strict": true, // Enables all strict type checking features
@@ -14,15 +18,24 @@
     "incremental": true, // Tells TypeScript to save information about the project graph from the last compilation to files stored on disk.
     "plugins": [
       {
-        "name": "next",
-      },
+        "name": "next"
+      }
     ],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": [
+        "./src/*"
+      ]
     },
+    "target": "ES2017"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
-
 // https://www.totaltypescript.com/tsconfig-cheat-sheet

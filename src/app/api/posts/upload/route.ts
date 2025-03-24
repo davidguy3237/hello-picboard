@@ -46,15 +46,19 @@ export async function POST(req: NextRequest) {
       "Missing environment variable: NANOID_ALPHABET, B2_BUCKET_NAME or NEXT_PUBLIC_PHOTOS_DOMAIN",
     );
   }
+  console.log("INSIDE POST REQUEST FOR NEW POST");
+  console.log("CHECKING USER");
   const user = await currentUser();
 
   if (!user || !user.id) {
+    console.log("NOT A USER");
     return NextResponse.json("Unauthorized", { status: 401 });
   }
 
   const dbUser = await getUserById(user.id);
 
   if (!dbUser) {
+    console.log("NOT AUTHORIZED USER");
     return NextResponse.json("Unauthorized", { status: 401 });
   }
 
@@ -94,7 +98,7 @@ export async function POST(req: NextRequest) {
   const nanoid = customAlphabet(process.env.NANOID_ALPHABET, 12);
   const publicId = nanoid();
   const thumbnailName = publicId + "-thumbnail";
-
+  console.log("CREATING THUMBNAIL");
   const fileBuffer = Buffer.from(await image.arrayBuffer());
 
   const { width, height } = await sharp(fileBuffer).metadata();
@@ -106,7 +110,7 @@ export async function POST(req: NextRequest) {
     .toBuffer({ resolveWithObject: true });
 
   const { data: thumbnailBuffer, info: thumbnailInfo } = thumbnailObject;
-
+  console.log("CREATING PUT OBJECT COMMANDS");
   const putSource = new PutObjectCommand({
     Bucket: process.env.B2_BUCKET_NAME,
     Key: publicId + sourcefileExtension,
@@ -124,6 +128,7 @@ export async function POST(req: NextRequest) {
   });
 
   try {
+    console.log("UPLOADING IMAGES TO BUCKET");
     await s3.send(putSource);
     await s3.send(putThumbnail);
   } catch (error) {
@@ -173,6 +178,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json("Something went wrong", { status: 400 });
   } else {
     try {
+      console.log("UPLOADING POST TO DATABASE");
       const newPost = await db.post.create({
         data: {
           publicId,
@@ -194,12 +200,14 @@ export async function POST(req: NextRequest) {
           },
         },
       });
+      console.log("RETURNING RESPONSE TO FRONT END");
       return NextResponse.json(
         { postUrl: `/post/${newPost.publicId}` },
         { status: 201 },
       );
     } catch (error) {
       // TODO: If adding to database fails, delete uploaded files?
+      console.error("UPLOADING POST TO DATABASE FAILED");
       console.error(error);
       return NextResponse.json(
         { error: "Failed to create post" },
