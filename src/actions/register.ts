@@ -17,8 +17,8 @@ export async function register(registerData: z.infer<typeof RegisterSchema>) {
 
   const { email, username, password } = validatedFields.data;
   const hashedPassword = hashPassword(password);
-
-  const existingUserEmail = await getUserByEmail(email);
+  const formattedEmail = email.toLowerCase();
+  const existingUserEmail = await getUserByEmail(formattedEmail);
 
   if (existingUserEmail) {
     return { error: "This email is already taken!" };
@@ -34,7 +34,7 @@ export async function register(registerData: z.infer<typeof RegisterSchema>) {
     await db.user.create({
       data: {
         name: username,
-        email,
+        email: formattedEmail,
         password: hashedPassword,
       },
     });
@@ -43,7 +43,7 @@ export async function register(registerData: z.infer<typeof RegisterSchema>) {
     return { error: "Something went wrong registering your account." };
   }
 
-  const verificationToken = await generateVerificationToken(email);
+  const verificationToken = await generateVerificationToken(formattedEmail);
 
   sendVerificationEmail(
     username,

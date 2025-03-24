@@ -25,7 +25,8 @@ export async function login(
 
   const { email, password, code } = validatedFields.data;
 
-  const existingUser = await getUserByEmail(email);
+  const formattedEmail = email.toLowerCase();
+  const existingUser = await getUserByEmail(formattedEmail);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: "Incorrect Email or Password!" };
